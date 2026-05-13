@@ -1105,9 +1105,8 @@ async function checkSurveyHistory() {
                             <div style="font-size:0.82rem;color:var(--lg-gray);white-space:nowrap;">🏨 숙소 신청</div>
                             <div style="font-size:1rem;font-weight:700;color:#1a1a2e;text-align:right;">${data.accommodation || '-'}</div>
                         </div>
-                        <div style="background:#fff;border:1px solid var(--lg-border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-                            <div style="font-size:0.82rem;color:var(--lg-gray);white-space:nowrap;">🕐 답변 일시</div>
-                            <div style="font-size:0.9rem;font-weight:600;color:#1a1a2e;text-align:right;">${data.date || '-'}</div>
+                        <div style="text-align:right;margin-top:6px;">
+                            <span style="font-size:0.75rem;color:#bbb;">답변 일시 · ${data.date || '-'}</span>
                         </div>
                     </div>
                 </div>`;
