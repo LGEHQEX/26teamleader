@@ -426,7 +426,7 @@
     <div class="section">
         <div class="section-header">
             <div class="section-tag">Education</div>
-            <h2>교육 안내</h2>
+            <h2>과정 안내</h2>
             <p>경영사상을 내재화하고 팀장 스스로 변화의 설계자가 되어, 워크플로우를 혁신하고 구성원의 실행을 이끄는 리더십을 내재화한다</p>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:0 0 16px;align-items:stretch;">
@@ -714,7 +714,7 @@
 <!-- ===== 설문 이력 확인 팝업 ===== -->
 <div id="surveyHistoryModal" style="visibility:hidden;opacity:0;transition:opacity 0.2s;position:fixed;top:0;left:0;width:100%;height:100%;z-index:1100;display:flex;align-items:center;justify-content:center;">
     <div onclick="closeSurveyHistoryModal()" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);"></div>
-    <div style="position:relative;background:#fff;border-radius:20px;padding:36px 32px;max-width:420px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,0.2);">
+    <div style="position:relative;background:#fff;border-radius:20px;padding:36px 32px;max-width:520px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,0.2);">
         <button onclick="closeSurveyHistoryModal()" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid #e0e0e0;background:#fff;font-size:1rem;cursor:pointer;color:#666;">✕</button>
         <div style="display:inline-block;background:#1a1a2e;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.76rem;font-weight:700;margin-bottom:12px;font-family:'DM Sans',sans-serif;">🔍 설문 이력 확인</div>
         <h3 style="font-size:1.2rem;font-weight:800;color:var(--lg-dark);margin-bottom:6px;">나의 설문 이력 확인하기</h3>
@@ -1097,13 +1097,13 @@ async function checkSurveyHistory() {
                     <div style="font-size:0.82rem;color:var(--lg-gray);margin-bottom:8px;">조회 결과</div>
                     <div style="font-size:1.1rem;font-weight:800;color:var(--lg-dark);margin-bottom:14px;">${data.name} 님</div>
                     <div style="display:grid;grid-template-columns:1fr;gap:10px;">
-                        <div style="background:#fff;border:1px solid var(--lg-border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
-                            <div style="font-size:0.82rem;color:var(--lg-gray);">📅 신청 차수</div>
-                            <div style="font-size:1rem;font-weight:700;color:#1a1a2e;">${data.round || '-'}</div>
+                        <div style="background:#fff;border:1px solid var(--lg-border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                            <div style="font-size:0.82rem;color:var(--lg-gray);white-space:nowrap;">📅 신청 차수</div>
+                            <div style="font-size:1rem;font-weight:700;color:#1a1a2e;text-align:right;">${data.round || '-'}</div>
                         </div>
-                        <div style="background:#fff;border:1px solid var(--lg-border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
-                            <div style="font-size:0.82rem;color:var(--lg-gray);">🏨 숙소 신청</div>
-                            <div style="font-size:1rem;font-weight:700;color:#1a1a2e;">${data.accommodation || '-'}</div>
+                        <div style="background:#fff;border:1px solid var(--lg-border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                            <div style="font-size:0.82rem;color:var(--lg-gray);white-space:nowrap;">🏨 숙소 신청</div>
+                            <div style="font-size:1rem;font-weight:700;color:#1a1a2e;text-align:right;">${data.accommodation || '-'}</div>
                         </div>
                     </div>
                 </div>`;
