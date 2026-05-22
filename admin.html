@@ -199,30 +199,27 @@
 
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgRr95d2zQKAWnyFshjxvPmheTU3fG1CmzEV-8Aj-bizzB-tfSouUXqBg/exec';
-let allData = [], filtered = [], selected = null, localState = {};
+let allData = [], filtered = [], selected = null;
 
+// ── 데이터 로드 (실제 Google Sheets) ──
 async function loadData() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
   document.getElementById('listLoading').style.display = 'block';
   try {
-    await new Promise(r => setTimeout(r, 700));
-    allData = getDemoData();
-    allData.forEach(d => { if (localState[d.submitId]) { d.checked = localState[d.submitId].checked ?? d.checked; d.comment = localState[d.submitId].comment ?? d.comment; } });
-    updateStats(); applyFilter();
-    showToast('데이터를 불러왔습니다.', 'ok');
-  } catch(e) { showToast('데이터 로딩 실패.', ''); }
-  finally { btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침'; document.getElementById('listLoading').style.display = 'none'; }
-}
-
-function getDemoData() {
-  return [
-    { submitId:'JBMD3K2A', cohort:'2026년 1차', classNum:'A반', teamNum:'1팀', teamName:'Alpha AI', members:'김민준 (240012), 이서연 (240078), 박지훈 (240034)', taskTitle:'HR 채용 프로세스 AI 자동화 방안', problemDef:'현재 채용 과정에서 이력서 검토에 평균 3일이 소요되며, 담당자별 주관적 기준 편차가 크다.', expectedEffect:'AI 기반 이력서 스크리닝으로 검토 시간 80% 단축, 객관성 향상 및 우수 인재 확보율 향상.', fileName:'과제정의서_Alpha_AI.pdf', submittedAt:'2026. 5. 22. 오전 10:23', checked:false, comment:'' },
-    { submitId:'JBND7F1Q', cohort:'2026년 1차', classNum:'A반', teamNum:'2팀', teamName:'Nova', members:'최영호 (239987), 정수아 (240101), 한동현 (240056), 윤지은 (240077)', taskTitle:'제조 품질 검사 비전 AI 도입', problemDef:'수동 검사로 인한 불량률 1.2%, 검사자 피로로 인한 오류 발생이 주요 문제.', expectedEffect:'비전 AI 적용 시 불량률 0.2% 이하로 감소, 검사 속도 5배 향상.', fileName:'과제정의서_Nova팀.pptx', submittedAt:'2026. 5. 22. 오전 11:05', checked:true, comment:'문제 정의가 매우 구체적이고 좋습니다. 기대 효과 수치의 근거 자료를 발표 시 함께 제시해 주세요.' },
-    { submitId:'JBXQ9R4T', cohort:'2026년 1차', classNum:'B반', teamNum:'1팀', teamName:'Sigma', members:'오민재 (240003), 강혜린 (240091)', taskTitle:'고객 CS 챗봇 AX 전환', problemDef:'반복 문의 처리에 CS 팀의 60% 리소스가 소요, 대기 시간 평균 15분.', expectedEffect:'챗봇 도입으로 단순 문의 90% 자동화, CS 대응 시간 3분 이내.', fileName:'과제정의서_Sigma.docx', submittedAt:'2026. 5. 22. 오후 1:47', checked:false, comment:'' },
-    { submitId:'JBWL2M8Z', cohort:'2026년 1차', classNum:'B반', teamNum:'2팀', teamName:'Delta Force', members:'이주원 (240065), 김태양 (240033), 박수민 (240088), 최현우 (240012), 신지아 (240099)', taskTitle:'영업 데이터 분석 AI 대시보드', problemDef:'영업팀의 실적 분석이 주 1회 수동 보고서로만 이루어져 실시간 의사결정 불가.', expectedEffect:'실시간 AI 분석 대시보드로 전략 수립 시간 50% 단축.', fileName:'영업AX_과제정의서.xlsx', submittedAt:'2026. 5. 22. 오후 3:12', checked:true, comment:'' },
-    { submitId:'JBP01H6Y', cohort:'2026년 1차', classNum:'C반', teamNum:'1팀', teamName:'Orion', members:'배민서 (240044), 조하린 (240055), 문정훈 (240066)', taskTitle:'공장 예지보전 AI 솔루션', problemDef:'설비 돌발 고장으로 연간 생산 손실이 약 30억, 현행 정기 점검 방식의 한계.', expectedEffect:'IoT 센서 + AI 이상 탐지로 고장 예측률 95% 달성, 다운타임 60% 감소.', fileName:'과제정의서_Orion_v2.pdf', submittedAt:'2026. 5. 22. 오후 4:38', checked:false, comment:'' }
-  ];
+    const res = await fetch(APPS_SCRIPT_URL);
+    const result = await res.json();
+    if (result.status === 'ok') {
+      allData = result.data || [];
+      updateStats(); applyFilter();
+      showToast('데이터를 불러왔습니다.', 'ok');
+    } else throw new Error(result.message);
+  } catch(e) {
+    showToast('데이터 로딩 실패: ' + e.message, '');
+  } finally {
+    btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
+    document.getElementById('listLoading').style.display = 'none';
+  }
 }
 
 function updateStats() {
@@ -234,7 +231,7 @@ function updateStats() {
 
 function applyFilter() {
   const cohort = document.getElementById('filterCohort').value;
-  const cls = document.getElementById('filterClass').value;
+  const cls    = document.getElementById('filterClass').value;
   const status = document.getElementById('filterStatus').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
   filtered = allData.filter(d => {
@@ -242,7 +239,7 @@ function applyFilter() {
     if (cls && d.classNum !== cls) return false;
     if (status === 'done' && !d.checked) return false;
     if (status === 'pending' && d.checked) return false;
-    if (search && ![d.teamName, d.taskTitle, d.members, d.classNum].join(' ').toLowerCase().includes(search)) return false;
+    if (search && ![d.teamName, d.mainTitle, d.org, d.author, d.classNum, d.cohort].join(' ').toLowerCase().includes(search)) return false;
     return true;
   });
   renderList();
@@ -255,19 +252,19 @@ function renderList() {
   panel.innerHTML = filtered.map(d => `
     <div class="sub-item ${d.checked?'done':''} ${selected&&selected.submitId===d.submitId?'selected':''}" onclick="selectItem('${d.submitId}')">
       <div class="item-header">
-        <div class="item-team">${d.classNum} ${d.teamNum} · ${d.teamName}</div>
+        <div class="item-team">${d.classNum||''} ${d.teamNum||''} · ${d.teamName||'(팀명없음)'}</div>
         <div class="item-badges">
-          <span class="badge badge-class">${d.cohort.replace('2026년 ','')}</span>
+          <span class="badge badge-class">${(d.cohort||'').replace(/ — .+/,'')}</span>
           <span class="badge ${d.checked?'badge-done':'badge-pending'}">${d.checked?'✓ 완료':'미확인'}</span>
         </div>
       </div>
-      <div class="item-task">${d.taskTitle}</div>
+      <div class="item-task">${d.mainTitle||'(제목없음)'}</div>
       <div class="item-meta">
-        <span>${d.submittedAt.split(' ').slice(0,3).join(' ')}</span>
+        <span>${(d.submittedAt||'').split(' ').slice(0,3).join(' ')}</span>
         <div class="item-dot"></div>
-        <span>${d.members.split(',').length}명</span>
+        <span>${d.author||'-'}</span>
         <div class="item-dot"></div>
-        <span>${d.fileName.split('.').pop().toUpperCase()}</span>
+        <span>${d.org||'-'}</span>
       </div>
     </div>`).join('');
 }
@@ -281,50 +278,46 @@ function selectItem(id) {
 function renderDetail() {
   document.getElementById('emptyState').style.display = 'none';
   const d = selected;
-  const members = d.members.split(',').map(m => `<span class="member-chip">${m.trim()}</span>`).join('');
-  const ext = d.fileName.split('.').pop().toLowerCase();
-  const emoji = ext==='pdf'?'📄':ext==='pptx'||ext==='ppt'?'📊':ext==='xlsx'?'📈':'📁';
+  const hasPreview = !!d.previewUrl;
+
   document.getElementById('detailContent').style.display = 'block';
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-card">
-      <div class="detail-title-main">${d.taskTitle}</div>
+      <div class="detail-title-main">${d.mainTitle||'(제목없음)'}</div>
       <div class="detail-meta">
-        <span>${d.cohort}</span><span class="detail-meta-dot">·</span>
-        <span>${d.classNum} ${d.teamNum}</span><span class="detail-meta-dot">·</span>
-        <strong style="color:var(--lg)">${d.teamName}</strong><span class="detail-meta-dot">·</span>
-        <span style="color:var(--muted)">${d.submittedAt}</span>
+        <span>${d.cohort||''}</span><span class="detail-meta-dot">·</span>
+        <span>${d.classNum||''} ${d.teamNum||''}</span><span class="detail-meta-dot">·</span>
+        <strong style="color:var(--lg)">${d.teamName||''}</strong><span class="detail-meta-dot">·</span>
+        <span style="color:var(--muted)">${d.submittedAt||''}</span>
       </div>
     </div>
+
     <div class="detail-card">
-      <div class="detail-card-title">👥 팀원 정보</div>
-      <div class="info-grid" style="margin-bottom:12px">
-        <div><div class="info-key">제출번호</div><div class="info-val" style="font-family:monospace;font-size:12px">${d.submitId}</div></div>
-        <div><div class="info-key">팀원 수</div><div class="info-val">${d.members.split(',').length}명</div></div>
-      </div>
-      <div class="members-list">${members}</div>
+      <div class="detail-card-title">📋 과제 정의서 미리보기</div>
+      ${hasPreview ? `
+        <iframe src="${d.previewUrl}"
+          style="width:100%;height:520px;border:1px solid var(--border);border-radius:8px;background:#f2f0ed"
+          allowfullscreen></iframe>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <a href="${d.previewUrl.replace('/preview','/view')}" target="_blank"
+            style="font-size:12px;color:var(--lg);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">
+            ↗ 새 탭으로 열기
+          </a>
+        </div>` :
+        `<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:13px">미리보기 파일이 없습니다.</div>`
+      }
     </div>
+
     <div class="detail-card">
-      <div class="detail-card-title">📝 과제 내용</div>
-      <div class="task-section">
-        <div class="task-section-label">핵심 문제 정의</div>
-        <div class="task-section-content">${d.problemDef||'(내용 없음)'}</div>
-      </div>
-      <div class="task-section" style="margin-top:10px">
-        <div class="task-section-label">기대 효과 / AI 활용 방안</div>
-        <div class="task-section-content">${d.expectedEffect||'(내용 없음)'}</div>
+      <div class="detail-card-title">ℹ️ 제출 정보</div>
+      <div class="info-grid">
+        <div><div class="info-key">제출번호</div><div class="info-val" style="font-family:monospace;font-size:12px">${d.submitId||''}</div></div>
+        <div><div class="info-key">조직명</div><div class="info-val">${d.org||'-'}</div></div>
+        <div><div class="info-key">작성자</div><div class="info-val">${d.author||'-'}</div></div>
+        <div><div class="info-key">과제 유형</div><div class="info-val">${d.types||'-'}</div></div>
       </div>
     </div>
-    <div class="detail-card">
-      <div class="detail-card-title">📎 첨부 파일</div>
-      <button class="file-btn" onclick="openFile('${d.submitId}')">
-        <span class="file-btn-icon">${emoji}</span>
-        <span class="file-btn-info">
-          <span class="file-btn-name">${d.fileName}</span>
-          <span class="file-btn-hint">클릭하면 Google Drive에서 파일을 확인합니다</span>
-        </span>
-        <span class="file-btn-arrow">↗</span>
-      </button>
-    </div>
+
     <div class="detail-card">
       <div class="detail-card-title">✅ 확인 및 피드백</div>
       <div class="check-row">
@@ -345,28 +338,28 @@ function renderDetail() {
     </div>`;
 }
 
-function toggleCheck(id) {
+async function toggleCheck(id) {
   const item = allData.find(d => d.submitId === id);
   if (!item) return;
   item.checked = !item.checked;
-  if (!localState[id]) localState[id] = {};
-  localState[id].checked = item.checked;
   if (selected && selected.submitId === id) selected = item;
   updateStats(); applyFilter(); renderDetail();
   showToast(item.checked ? '확인 완료로 표시했습니다.' : '미확인으로 변경했습니다.', 'ok');
+  try {
+    await fetch(`${APPS_SCRIPT_URL}?action=update&submitId=${id}&checked=${item.checked?'Y':'N'}`);
+  } catch(e) { showToast('저장 실패 (네트워크 오류)', ''); }
 }
 
-function saveComment(id) {
+async function saveComment(id) {
   const txt = document.getElementById('commentBox_' + id)?.value || '';
   const item = allData.find(d => d.submitId === id);
   if (!item) return;
   item.comment = txt;
-  if (!localState[id]) localState[id] = {};
-  localState[id].comment = txt;
   showToast('피드백이 저장되었습니다.', 'ok');
+  try {
+    await fetch(`${APPS_SCRIPT_URL}?action=update&submitId=${id}&comment=${encodeURIComponent(txt)}`);
+  } catch(e) { showToast('저장 실패 (네트워크 오류)', ''); }
 }
-
-function openFile(id) { showToast('Google Drive에서 파일을 여는 중... (실제 환경에서 동작)', ''); }
 
 function showToast(msg, type) {
   const t = document.getElementById('toast');
