@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과제 확인 | 강사용</title>
+<style>
+  :root {
+    --lg: #A50034;
+    --lg-light: #f9eaee;
+    --bg: #f4f2ef;
+    --card: #ffffff;
+    --sidebar: #1e1e1e;
+    --border: #e8e4df;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --success: #0f7a4a;
+    --success-bg: #e6f5ee;
+    --warning: #b45309;
+    --warning-bg: #fffbeb;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-logo-mark { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .logo-sq { width: 26px; height: 26px; background: var(--lg); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; }
+  .sidebar-title { font-size: 13px; font-weight: 700; color: white; }
+  .sidebar-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+  .sidebar-section { padding: 14px 12px 6px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.25); }
+  .filter-group { padding: 0 12px 8px; }
+  .filter-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; padding-left: 2px; }
+  select.sidebar-select { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: rgba(255,255,255,0.85); padding: 7px 10px; font-size: 12px; font-family: inherit; outline: none; appearance: none; cursor: pointer; }
+  select.sidebar-select:focus { border-color: var(--lg); }
+  .sidebar-stats { margin: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; }
+  .stat-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .stat-row:last-child { margin-bottom: 0; }
+  .stat-val { font-weight: 700; color: white; }
+  .stat-val.done { color: #4ade80; }
+  .stat-val.pending { color: #fbbf24; }
+  .btn-refresh { margin: 0 12px 12px; background: rgba(165,0,52,0.2); border: 1px solid rgba(165,0,52,0.4); border-radius: 7px; color: #fca5a5; font-size: 12px; font-weight: 600; padding: 8px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
+  .btn-refresh:hover { background: rgba(165,0,52,0.35); }
+  .btn-refresh.loading { opacity: 0.5; pointer-events: none; }
+  .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .topbar-title { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+  .topbar-count { font-size: 12px; color: var(--muted); }
+  .search-box { height: 32px; border: 1px solid var(--border); border-radius: 7px; padding: 0 12px; font-size: 13px; width: 200px; font-family: inherit; color: var(--text); outline: none; background: var(--bg); transition: border-color 0.15s; }
+  .search-box:focus { border-color: var(--lg); background: white; }
+  .content-area { flex: 1; display: flex; overflow: hidden; }
+  .list-panel { width: 340px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid var(--border); background: var(--bg); padding: 12px; }
+  .sub-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+  .sub-item:hover { border-color: #c0bbb5; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .sub-item.selected { border-color: var(--lg); background: var(--lg-light); }
+  .sub-item.done { border-left: 3px solid var(--success); }
+  .sub-item.done.selected { background: #f0faf5; border-color: var(--success); }
+  .item-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+  .item-team { font-size: 13px; font-weight: 700; }
+  .item-badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+  .badge-class { background: #e8e4df; color: #555; }
+  .badge-done { background: var(--success-bg); color: var(--success); }
+  .badge-pending { background: var(--warning-bg); color: var(--warning); }
+  .item-task { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+  .item-meta { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #aaa; }
+  .item-dot { width: 3px; height: 3px; border-radius: 50%; background: #ccc; }
+  .detail-panel { flex: 1; overflow-y: auto; padding: 20px 24px; background: var(--bg); }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted); gap: 8px; }
+  .empty-icon { font-size: 36px; opacity: 0.4; }
+  .empty-text { font-size: 13px; }
+  .detail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; }
+  .detail-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 14px; }
+  .detail-title-main { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .detail-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .detail-meta-dot { color: #ccc; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .info-key { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .info-val { font-size: 13px; font-weight: 600; }
+  .members-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .member-chip { font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-weight: 500; }
+  .task-section { margin-bottom: 10px; }
+  .task-section:last-child { margin-bottom: 0; }
+  .task-section-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .task-section-content { font-size: 13px; line-height: 1.7; color: var(--text); background: var(--bg); border-radius: 7px; padding: 10px 13px; border: 1px solid var(--border); }
+  .file-btn { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; width: 100%; text-align: left; font-family: inherit; color: var(--text); }
+  .file-btn:hover { border-color: var(--lg); background: var(--lg-light); }
+  .file-btn-icon { font-size: 22px; }
+  .file-btn-info { flex: 1; }
+  .file-btn-name { font-size: 13px; font-weight: 600; display: block; margin-bottom: 2px; }
+  .file-btn-hint { font-size: 11px; color: var(--muted); display: block; }
+  .file-btn-arrow { font-size: 16px; color: var(--muted); }
+  .check-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .check-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .toggle-switch { position: relative; width: 44px; height: 24px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-track { position: absolute; inset: 0; background: #ddd; border-radius: 12px; transition: 0.2s; }
+  .toggle-switch input:checked + .toggle-track { background: var(--success); }
+  .toggle-thumb { position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .toggle-switch input:checked ~ .toggle-thumb { left: 23px; }
+  .toggle-label { font-size: 14px; font-weight: 600; }
+  .check-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+  .check-status.done { background: var(--success-bg); color: var(--success); }
+  .check-status.pending { background: var(--warning-bg); color: var(--warning); }
+  .comment-area { margin-top: 14px; }
+  .comment-area textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px; line-height: 1.6; color: var(--text); outline: none; transition: border-color 0.15s; background: var(--bg); }
+  .comment-area textarea:focus { border-color: var(--lg); background: white; }
+  .btn-save { margin-top: 8px; background: var(--lg); color: white; border: none; border-radius: 7px; padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .btn-save:hover { background: #8a002b; }
+  .list-loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+  .spin-sm { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(165,0,52,0.2); border-top-color: var(--lg); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .toast { position: fixed; bottom: 20px; right: 20px; background: #1a1a1a; color: white; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; transform: translateY(60px); transition: transform 0.25s; z-index: 999; }
+  .toast.show { transform: translateY(0); }
+  .toast.ok { background: var(--success); }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">
+      <div class="logo-sq">LG</div>
+      <span class="sidebar-title">과제 관리</span>
+    </div>
+    <div class="sidebar-sub">강사용 · JB-AX 2026</div>
+  </div>
+  <div class="sidebar-section">필터</div>
+  <div class="filter-group">
+    <div class="filter-label">기수 / 차수</div>
+    <select class="sidebar-select" id="filterCohort" onchange="applyFilter()">
+      <option value="">전체</option>
+      <option>1차수 — 6/16(화)~6/17(수)</option><option>2차수 — 6/18(목)~6/19(금)</option><option>3차수 — 6/23(화)~6/24(수)</option><option>4차수 — 6/25(목)~6/26(금)</option><option>5차수 — 7/2(목)~7/3(금)</option><option>6차수 — 7/7(화)~7/8(수)</option><option>7차수 — 7/9(목)~7/10(금)</option><option>8차수 — 7/14(화)~7/15(수)</option><option>9차수 — 7/21(화)~7/22(수)</option><option>10차수 — 7/23(목)~7/24(금)</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <div class="filter-label">반</div>
+    <select class="sidebar-select" id="filterClass" onchange="applyFilter()">
+      <option value="">전체</option>
+      <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <div class="filter-label">제출 상태</div>
+    <select class="sidebar-select" id="filterStatus" onchange="applyFilter()">
+      <option value="">전체</option>
+      <option value="done">확인 완료</option>
+      <option value="pending">미확인</option>
+    </select>
+  </div>
+  <div class="sidebar-stats">
+    <div class="stat-row"><span>전체 제출</span><span class="stat-val" id="statTotal">-</span></div>
+    <div class="stat-row"><span>확인 완료</span><span class="stat-val done" id="statDone">-</span></div>
+    <div class="stat-row"><span>미확인</span><span class="stat-val pending" id="statPending">-</span></div>
+  </div>
+  <button class="btn-refresh" id="refreshBtn" onclick="loadData()">↻ 데이터 새로고침</button>
+</div>
+
+<div class="main-area">
+  <div class="topbar">
+    <div>
+      <span class="topbar-title">과제 제출 현황</span>
+      <span class="topbar-count" id="topbarCount"></span>
+    </div>
+    <input class="search-box" type="text" placeholder="팀명, 주제, 팀원 검색..." id="searchBox" oninput="applyFilter()">
+  </div>
+  <div class="content-area">
+    <div class="list-panel" id="listPanel">
+      <div class="list-loading" id="listLoading"><span class="spin-sm"></span> 데이터 불러오는 중...</div>
+    </div>
+    <div class="detail-panel" id="detailPanel">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📋</div>
+        <div class="empty-text">왼쪽 목록에서 팀을 선택하세요</div>
+      </div>
+      <div id="detailContent" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+let allData = [], filtered = [], selected = null, localState = {};
+
+async function loadData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('loading'); btn.textContent = '불러오는 중...';
+  document.getElementById('listLoading').style.display = 'block';
+  try {
+    await new Promise(r => setTimeout(r, 700));
+    allData = getDemoData();
+    allData.forEach(d => { if (localState[d.submitId]) { d.checked = localState[d.submitId].checked ?? d.checked; d.comment = localState[d.submitId].comment ?? d.comment; } });
+    updateStats(); applyFilter();
+    showToast('데이터를 불러왔습니다.', 'ok');
+  } catch(e) { showToast('데이터 로딩 실패.', ''); }
+  finally { btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침'; document.getElementById('listLoading').style.display = 'none'; }
+}
+
+function getDemoData() {
+  return [
+    { submitId:'JBMD3K2A', cohort:'2026년 1차', classNum:'A반', teamNum:'1팀', teamName:'Alpha AI', members:'김민준 (240012), 이서연 (240078), 박지훈 (240034)', taskTitle:'HR 채용 프로세스 AI 자동화 방안', problemDef:'현재 채용 과정에서 이력서 검토에 평균 3일이 소요되며, 담당자별 주관적 기준 편차가 크다.', expectedEffect:'AI 기반 이력서 스크리닝으로 검토 시간 80% 단축, 객관성 향상 및 우수 인재 확보율 향상.', fileName:'과제정의서_Alpha_AI.pdf', submittedAt:'2026. 5. 22. 오전 10:23', checked:false, comment:'' },
+    { submitId:'JBND7F1Q', cohort:'2026년 1차', classNum:'A반', teamNum:'2팀', teamName:'Nova', members:'최영호 (239987), 정수아 (240101), 한동현 (240056), 윤지은 (240077)', taskTitle:'제조 품질 검사 비전 AI 도입', problemDef:'수동 검사로 인한 불량률 1.2%, 검사자 피로로 인한 오류 발생이 주요 문제.', expectedEffect:'비전 AI 적용 시 불량률 0.2% 이하로 감소, 검사 속도 5배 향상.', fileName:'과제정의서_Nova팀.pptx', submittedAt:'2026. 5. 22. 오전 11:05', checked:true, comment:'문제 정의가 매우 구체적이고 좋습니다. 기대 효과 수치의 근거 자료를 발표 시 함께 제시해 주세요.' },
+    { submitId:'JBXQ9R4T', cohort:'2026년 1차', classNum:'B반', teamNum:'1팀', teamName:'Sigma', members:'오민재 (240003), 강혜린 (240091)', taskTitle:'고객 CS 챗봇 AX 전환', problemDef:'반복 문의 처리에 CS 팀의 60% 리소스가 소요, 대기 시간 평균 15분.', expectedEffect:'챗봇 도입으로 단순 문의 90% 자동화, CS 대응 시간 3분 이내.', fileName:'과제정의서_Sigma.docx', submittedAt:'2026. 5. 22. 오후 1:47', checked:false, comment:'' },
+    { submitId:'JBWL2M8Z', cohort:'2026년 1차', classNum:'B반', teamNum:'2팀', teamName:'Delta Force', members:'이주원 (240065), 김태양 (240033), 박수민 (240088), 최현우 (240012), 신지아 (240099)', taskTitle:'영업 데이터 분석 AI 대시보드', problemDef:'영업팀의 실적 분석이 주 1회 수동 보고서로만 이루어져 실시간 의사결정 불가.', expectedEffect:'실시간 AI 분석 대시보드로 전략 수립 시간 50% 단축.', fileName:'영업AX_과제정의서.xlsx', submittedAt:'2026. 5. 22. 오후 3:12', checked:true, comment:'' },
+    { submitId:'JBP01H6Y', cohort:'2026년 1차', classNum:'C반', teamNum:'1팀', teamName:'Orion', members:'배민서 (240044), 조하린 (240055), 문정훈 (240066)', taskTitle:'공장 예지보전 AI 솔루션', problemDef:'설비 돌발 고장으로 연간 생산 손실이 약 30억, 현행 정기 점검 방식의 한계.', expectedEffect:'IoT 센서 + AI 이상 탐지로 고장 예측률 95% 달성, 다운타임 60% 감소.', fileName:'과제정의서_Orion_v2.pdf', submittedAt:'2026. 5. 22. 오후 4:38', checked:false, comment:'' }
+  ];
+}
+
+function updateStats() {
+  const total = allData.length, done = allData.filter(d => d.checked).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statPending').textContent = total - done;
+}
+
+function applyFilter() {
+  const cohort = document.getElementById('filterCohort').value;
+  const cls = document.getElementById('filterClass').value;
+  const status = document.getElementById('filterStatus').value;
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  filtered = allData.filter(d => {
+    if (cohort && d.cohort !== cohort) return false;
+    if (cls && d.classNum !== cls) return false;
+    if (status === 'done' && !d.checked) return false;
+    if (status === 'pending' && d.checked) return false;
+    if (search && ![d.teamName, d.taskTitle, d.members, d.classNum].join(' ').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  renderList();
+}
+
+function renderList() {
+  const panel = document.getElementById('listPanel');
+  document.getElementById('topbarCount').textContent = ` · ${filtered.length}건`;
+  if (!filtered.length) { panel.innerHTML = '<div class="list-loading" style="color:#aaa">검색 결과가 없습니다.</div>'; return; }
+  panel.innerHTML = filtered.map(d => `
+    <div class="sub-item ${d.checked?'done':''} ${selected&&selected.submitId===d.submitId?'selected':''}" onclick="selectItem('${d.submitId}')">
+      <div class="item-header">
+        <div class="item-team">${d.classNum} ${d.teamNum} · ${d.teamName}</div>
+        <div class="item-badges">
+          <span class="badge badge-class">${d.cohort.replace('2026년 ','')}</span>
+          <span class="badge ${d.checked?'badge-done':'badge-pending'}">${d.checked?'✓ 완료':'미확인'}</span>
+        </div>
+      </div>
+      <div class="item-task">${d.taskTitle}</div>
+      <div class="item-meta">
+        <span>${d.submittedAt.split(' ').slice(0,3).join(' ')}</span>
+        <div class="item-dot"></div>
+        <span>${d.members.split(',').length}명</span>
+        <div class="item-dot"></div>
+        <span>${d.fileName.split('.').pop().toUpperCase()}</span>
+      </div>
+    </div>`).join('');
+}
+
+function selectItem(id) {
+  selected = allData.find(d => d.submitId === id);
+  if (!selected) return;
+  renderList(); renderDetail();
+}
+
+function renderDetail() {
+  document.getElementById('emptyState').style.display = 'none';
+  const d = selected;
+  const members = d.members.split(',').map(m => `<span class="member-chip">${m.trim()}</span>`).join('');
+  const ext = d.fileName.split('.').pop().toLowerCase();
+  const emoji = ext==='pdf'?'📄':ext==='pptx'||ext==='ppt'?'📊':ext==='xlsx'?'📈':'📁';
+  document.getElementById('detailContent').style.display = 'block';
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-card">
+      <div class="detail-title-main">${d.taskTitle}</div>
+      <div class="detail-meta">
+        <span>${d.cohort}</span><span class="detail-meta-dot">·</span>
+        <span>${d.classNum} ${d.teamNum}</span><span class="detail-meta-dot">·</span>
+        <strong style="color:var(--lg)">${d.teamName}</strong><span class="detail-meta-dot">·</span>
+        <span style="color:var(--muted)">${d.submittedAt}</span>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-card-title">👥 팀원 정보</div>
+      <div class="info-grid" style="margin-bottom:12px">
+        <div><div class="info-key">제출번호</div><div class="info-val" style="font-family:monospace;font-size:12px">${d.submitId}</div></div>
+        <div><div class="info-key">팀원 수</div><div class="info-val">${d.members.split(',').length}명</div></div>
+      </div>
+      <div class="members-list">${members}</div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-card-title">📝 과제 내용</div>
+      <div class="task-section">
+        <div class="task-section-label">핵심 문제 정의</div>
+        <div class="task-section-content">${d.problemDef||'(내용 없음)'}</div>
+      </div>
+      <div class="task-section" style="margin-top:10px">
+        <div class="task-section-label">기대 효과 / AI 활용 방안</div>
+        <div class="task-section-content">${d.expectedEffect||'(내용 없음)'}</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-card-title">📎 첨부 파일</div>
+      <button class="file-btn" onclick="openFile('${d.submitId}')">
+        <span class="file-btn-icon">${emoji}</span>
+        <span class="file-btn-info">
+          <span class="file-btn-name">${d.fileName}</span>
+          <span class="file-btn-hint">클릭하면 Google Drive에서 파일을 확인합니다</span>
+        </span>
+        <span class="file-btn-arrow">↗</span>
+      </button>
+    </div>
+    <div class="detail-card">
+      <div class="detail-card-title">✅ 확인 및 피드백</div>
+      <div class="check-row">
+        <label class="check-toggle">
+          <div class="toggle-switch">
+            <input type="checkbox" id="chk_${d.submitId}" ${d.checked?'checked':''} onchange="toggleCheck('${d.submitId}')">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+          <span class="toggle-label">${d.checked?'확인 완료':'확인 표시'}</span>
+        </label>
+        <span class="check-status ${d.checked?'done':'pending'}">${d.checked?'✓ 확인 완료':'미확인'}</span>
+      </div>
+      <div class="comment-area">
+        <textarea id="commentBox_${d.submitId}" placeholder="팀에게 전달할 피드백을 입력하세요...">${d.comment||''}</textarea>
+        <button class="btn-save" onclick="saveComment('${d.submitId}')">피드백 저장</button>
+      </div>
+    </div>`;
+}
+
+function toggleCheck(id) {
+  const item = allData.find(d => d.submitId === id);
+  if (!item) return;
+  item.checked = !item.checked;
+  if (!localState[id]) localState[id] = {};
+  localState[id].checked = item.checked;
+  if (selected && selected.submitId === id) selected = item;
+  updateStats(); applyFilter(); renderDetail();
+  showToast(item.checked ? '확인 완료로 표시했습니다.' : '미확인으로 변경했습니다.', 'ok');
+}
+
+function saveComment(id) {
+  const txt = document.getElementById('commentBox_' + id)?.value || '';
+  const item = allData.find(d => d.submitId === id);
+  if (!item) return;
+  item.comment = txt;
+  if (!localState[id]) localState[id] = {};
+  localState[id].comment = txt;
+  showToast('피드백이 저장되었습니다.', 'ok');
+}
+
+function openFile(id) { showToast('Google Drive에서 파일을 여는 중... (실제 환경에서 동작)', ''); }
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type==='ok'?'ok':'') + ' show';
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+loadData();
+</script>
+</body>
+</html>
