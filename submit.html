@@ -192,7 +192,7 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
           <select id="s_team"><option value="">팀</option><option>A팀</option><option>B팀</option><option>C팀</option><option>D팀</option><option>E팀</option><option>F팀</option></select>
         </div>
       </div>
-      <div class="field"><label>팀명</label><input type="text" id="s_teamname" placeholder="예: Alpha AI"></div>
+
       <div class="field"><label>조직명</label><input type="text" id="s_org" placeholder="조직명 입력"></div>
       <div class="field"><label>작성자 (팀장)</label><input type="text" id="s_author" placeholder="이름 / 직책"></div>
     </div>
@@ -218,7 +218,7 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
         <div class="step-item" id="nav1" onclick="scrollTo_(1)"><div class="step-num">2</div>문제 배경 (Why)</div>
         <div class="step-item" id="nav2" onclick="scrollTo_(2)"><div class="step-num">3</div>바꾸고 싶은 모습 (To-Be)</div>
         <div class="step-item" id="nav3" onclick="scrollTo_(3)"><div class="step-num">4</div>과제 한 줄 정의</div>
-        <div class="step-item" id="nav4" onclick="scrollTo_(4)"><div class="step-num">5</div>근원인·정량화·목표</div>
+        <div class="step-item" id="nav4" onclick="scrollTo_(4)"><div class="step-num">5</div>근본원인·정량화·목표</div>
       </div>
     </div>
 
@@ -520,22 +520,85 @@ function validate(){
   return true;
 }
 
+function buildPreviewHTML(d){
+  const blist=arr=>arr.length
+    ?arr.map(t=>`<div style="display:flex;gap:6px;margin-bottom:4px;font-size:13px;line-height:1.6"><span style="color:#A50034;flex-shrink:0">•</span><span>${t}</span></div>`).join('')
+    :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
+  const imgTag=d.imgData
+    ?`<img src="${d.imgData}" style="width:100%;border-radius:6px;object-fit:cover;max-height:160px">`
+    :`<div style="width:100%;height:140px;background:#f2f0ed;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">이미지 없음</div>`;
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${d.cohort} ${d.classNum} ${d.teamNum} ${d.author} - 과제정의서</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f2f0ed;padding:20px}
+.doc{max-width:860px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.1)}
+.doc-hd{background:#A50034;color:white;padding:10px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.doc-body{border:1px solid #e2ddd8;border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
+.main-title{background:#fff;padding:12px 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e2ddd8}
+.title-badge{background:#A50034;color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.two-col{display:grid;grid-template-columns:200px 1fr;background:white}
+.img-area{border-right:1px solid #e2ddd8;padding:14px;background:#fafaf9}
+.right-area{}
+.section{border-bottom:1px solid #e2ddd8;padding:10px 14px}
+.section:last-child{border-bottom:none}
+.sec-label{font-size:10px;font-weight:700;color:#A50034;background:#fff0f3;display:inline-block;padding:2px 8px;border-radius:4px;margin-bottom:7px}
+.oneliner{background:#A50034;color:white;padding:14px 18px}
+.ol-label{font-size:9px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;margin-bottom:5px}
+.ol-text{font-size:14px;font-weight:700;line-height:1.5}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);background:white}
+.bot{border-right:1px solid #e2ddd8;padding:12px 14px}
+.bot:last-child{border-right:none}
+.bot-title{font-size:10px;font-weight:700;color:#A50034;margin-bottom:7px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e2ddd8;background:white}
+.info-cell{padding:8px 12px;border-right:1px solid #e2ddd8}
+.info-cell:last-child{border-right:none}
+.info-label{font-size:9px;color:#888;font-weight:600;margin-bottom:2px}
+.info-val{font-size:12px;font-weight:600}
+.foot{background:#A50034;color:rgba(255,255,255,.6);padding:8px 16px;font-size:11px;text-align:right;font-style:italic}
+</style></head><body>
+<div class="doc">
+  <div class="doc-hd"><span>우리팀 REINVENT 과제</span><span>${d.cohort} ${d.classNum} ${d.teamNum}</span></div>
+  <div class="doc-body">
+    <div class="main-title"><span class="title-badge">문제 드러내기</span><strong>${d.mainTitle}</strong></div>
+    <div class="two-col">
+      <div class="img-area">${imgTag}</div>
+      <div class="right-area">
+        <div class="section"><div class="sec-label">지금 우리 팀의 문제 / 배경 (Why)</div>${blist(d.whys.split('\n').filter(Boolean))}</div>
+        <div class="section"><div class="sec-label">우리가 바꾸고 싶은 모습 (To-Be)</div>${blist(d.tobes.split('\n').filter(Boolean))}</div>
+      </div>
+    </div>
+    <div class="oneliner"><div class="ol-label">과제의 범위 / 한 줄 정의</div><div class="ol-text">"${d.oneliner}"</div></div>
+    <div class="three-col">
+      <div class="bot"><div class="bot-title">근본원인 분석</div>${blist(d.causes.split('\n').filter(Boolean))}</div>
+      <div class="bot"><div class="bot-title">정량화 (Gap)</div>${blist(d.gaps.split('\n').filter(Boolean))}</div>
+      <div class="bot"><div class="bot-title">개선과제 목표</div>${blist(d.goals.split('\n').filter(Boolean))}</div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-label">조직명</div><div class="info-val">${d.org}</div></div>
+      <div class="info-cell"><div class="info-label">작성자</div><div class="info-val">${d.author}</div></div>
+      <div class="info-cell"><div class="info-label">과제 유형</div><div class="info-val">${d.types}</div></div>
+    </div>
+  </div>
+  <div class="foot">Powered by REINVENT 2.0</div>
+</div>
+</body></html>`;
+}
+
 async function submitForm(){
   if(!validate())return;
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.textContent='제출 중...';
   try{
     const submitId='JB'+Date.now().toString(36).toUpperCase();
-    const payload={
-      submitId,
-      cohort:document.getElementById('s_cohort').value,
-      classNum:document.getElementById('s_class').value,
-      teamNum:document.getElementById('s_team').value,
-      teamName:document.getElementById('s_teamname').value.trim(),
+    const cohort=document.getElementById('s_cohort').value;
+    const classNum=document.getElementById('s_class').value;
+    const teamNum=document.getElementById('s_team').value;
+    const author=document.getElementById('r_author').value.trim();
+    const d={
+      submitId, cohort, classNum, teamNum,
+      teamName:'',
       org:document.getElementById('r_org').value.trim(),
-      author:document.getElementById('r_author').value.trim(),
-      members:'',
-      types:document.getElementById('r_types').value,
+      author, types:document.getElementById('r_types').value,
       mainTitle:document.getElementById('mainTitle').value.trim(),
       whys:getBullets('why_list').join('\n'),
       tobes:getBullets('tobe_list').join('\n'),
@@ -546,7 +609,11 @@ async function submitForm(){
       imgData:imgDataUrl||'',
       submittedAt:new Date().toLocaleString('ko-KR')
     };
-    const res=await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    // 파일명: 차수-반-팀-작성자
+    const cohortShort=cohort.replace(/ — .+/,'');
+    d.previewFileName=`${cohortShort}-${classNum}-${teamNum}-${author||'미입력'}.html`;
+    d.previewHtml=buildPreviewHTML(d);
+    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)});
     document.getElementById('formArea').style.display='none';
     document.getElementById('doneArea').classList.add('show');
     document.getElementById('doneId').textContent='제출번호: '+submitId;
