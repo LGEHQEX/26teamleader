@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과제 정의서 작성 | '26 피플 리더십</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lg:#A50034;--lg2:#c0003d;--lg-light:#fdf0f3;--lg-pale:#fff5f7;
+  --bg:#f2f0ed;--card:#fff;--border:#e2ddd8;--border2:#d0cbc4;
+  --text:#1a1a1a;--muted:#6b6b6b;--hint:#aaa;
+  --pink-bg:#fff0f3;--pink-border:#f5c6d0;
+  --gray-bg:#f7f5f2;
+  --r8:8px;--r12:12px;
+}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── 헤더 ── */
+.hd{background:var(--lg);padding:0 28px;height:50px;display:flex;align-items:center;justify-content:space-between}
+.hd-left{display:flex;align-items:center;gap:10px}
+.hd-badge{background:rgba(255,255,255,0.18);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px}
+.hd-title{color:white;font-size:14px;font-weight:700;letter-spacing:-.3px}
+.btn-preview{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);color:white;font-size:12px;font-weight:600;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-preview:hover{background:rgba(255,255,255,0.25)}
+
+/* ── 레이아웃 ── */
+.layout{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 50px)}
+
+/* ── 사이드바 ── */
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:0}
+.sb-section{margin-bottom:20px}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--hint);margin-bottom:8px}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:var(--text);background:#fafaf9;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lg);background:white}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+
+.task-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.type-chip{border:1px solid var(--border2);border-radius:6px;padding:6px 8px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);text-align:center;transition:all .15s;user-select:none}
+.type-chip:hover{border-color:var(--lg);color:var(--lg)}
+.type-chip.on{background:var(--lg-light);border-color:var(--lg);color:var(--lg)}
+
+.sb-divider{border:none;border-top:1px solid var(--border);margin:4px 0 16px}
+
+.step-list{display:flex;flex-direction:column;gap:4px}
+.step-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--hint);padding:4px 6px;border-radius:6px;cursor:pointer;transition:background .1s}
+.step-item:hover{background:var(--gray-bg)}
+.step-item.active{color:var(--lg);font-weight:600;background:var(--lg-light)}
+.step-num{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.step-item.active .step-num{background:var(--lg);border-color:var(--lg);color:white}
+.step-item.done .step-num{background:#0f7a4a;border-color:#0f7a4a;color:white}
+.step-item.done{color:#0f7a4a}
+
+.btn-submit-main{margin-top:auto;width:100%;height:44px;background:var(--lg);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;letter-spacing:-.2px}
+.btn-submit-main:hover{background:var(--lg2)}
+.btn-submit-main:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── 메인 편집 영역 ── */
+.editor{padding:24px 28px;overflow-y:auto}
+.editor-inner{max-width:860px;margin:0 auto}
+
+/* ── 섹션 카드 ── */
+.sec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);margin-bottom:16px;overflow:hidden}
+.sec-head{padding:14px 18px 0;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:.3px}
+.sec-badge.red{background:var(--lg);color:white}
+.sec-badge.pink{background:var(--lg-light);color:var(--lg)}
+.sec-badge.gray{background:var(--gray-bg);color:var(--muted)}
+.sec-title{font-size:15px;font-weight:700;color:var(--text)}
+.sec-body{padding:0 18px 18px}
+
+/* ── 2단 레이아웃 ── */
+.top-grid{display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start}
+.image-placeholder{border:1.5px dashed var(--border2);border-radius:var(--r8);height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--hint);font-size:12px;cursor:pointer;transition:all .15s;background:var(--gray-bg);position:relative;overflow:hidden}
+.image-placeholder:hover{border-color:var(--lg);color:var(--lg);background:var(--lg-pale)}
+.image-placeholder input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.image-placeholder img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r8)}
+.img-icon{font-size:24px;opacity:.4}
+.img-hint{font-size:11px}
+
+.info-table{display:flex;flex-direction:column;gap:0}
+.info-row{display:flex;align-items:flex-start;border-bottom:1px solid var(--border);padding:8px 0}
+.info-row:last-child{border-bottom:none}
+.info-key{font-size:12px;font-weight:600;color:var(--muted);min-width:60px;padding-top:2px}
+.info-val{flex:1}
+.info-val input,.info-val select{border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text);outline:none;width:100%;padding:2px 4px;border-radius:4px}
+.info-val input:focus,.info-val select:focus{background:#f7f5f2}
+
+/* ── Why / ToBe 섹션 ── */
+.why-card{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:var(--r8);padding:14px 16px;margin-bottom:10px}
+.why-title{font-size:11px;font-weight:700;color:var(--lg);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.bullet-list{display:flex;flex-direction:column;gap:4px}
+.bullet-row{display:flex;align-items:flex-start;gap:8px}
+.bullet-dot{width:5px;height:5px;background:var(--lg);border-radius:50%;flex-shrink:0;margin-top:7px}
+.bullet-row textarea{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text);outline:none;resize:none;line-height:1.6;min-height:22px;padding:2px 4px;border-radius:4px}
+.bullet-row textarea:focus{background:rgba(165,0,52,0.04)}
+.btn-add-bullet{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--lg);font-weight:600;background:none;border:1px dashed var(--pink-border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:inherit;margin-top:6px;transition:background .15s}
+.btn-add-bullet:hover{background:rgba(165,0,52,0.06)}
+.btn-rm-bullet{background:none;border:none;color:var(--lg);opacity:.4;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px}
+.btn-rm-bullet:hover{opacity:.8}
+
+/* ── 한 줄 정의 ── */
+.oneliner-card{background:var(--lg);border-radius:var(--r8);padding:16px 20px;margin-bottom:10px}
+.oneliner-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.8px;margin-bottom:6px}
+.oneliner-input{background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.35);width:100%;font-size:15px;font-weight:700;color:white;font-family:inherit;outline:none;padding:4px 0;line-height:1.5}
+.oneliner-input::placeholder{color:rgba(255,255,255,.45)}
+.oneliner-input:focus{border-bottom-color:rgba(255,255,255,.8)}
+
+/* ── 3단 하단 ── */
+.bottom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:0}
+.bot-card{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:var(--r8);padding:14px 14px}
+.bot-card-title{font-size:11px;font-weight:700;color:var(--lg);margin-bottom:8px}
+
+/* ── 빈 상태 / 제출완료 ── */
+.submit-done{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:40px 24px;text-align:center;display:none}
+.submit-done.show{display:block}
+.done-icon{font-size:40px;margin-bottom:12px}
+.done-title{font-size:18px;font-weight:700;color:#0f7a4a;margin-bottom:8px}
+.done-msg{font-size:13px;color:#6b6b6b;line-height:1.7}
+.done-id{margin-top:16px;display:inline-block;font-size:13px;background:#e6f5ee;color:#0f7a4a;padding:6px 16px;border-radius:20px;font-weight:700;font-family:monospace}
+
+/* ── 토스트 ── */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:white;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(60px);transition:transform .25s;z-index:999}
+.toast.show{transform:translateY(0)}
+.toast.err{background:#c62828}
+.toast.ok{background:#0f7a4a}
+
+/* ── 미리보기 모달 ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:white;border-radius:12px;width:100%;max-width:900px;max-height:90vh;overflow-y:auto;padding:28px 32px}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-size:16px;font-weight:700}
+.btn-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0}
+
+/* 미리보기 스타일 */
+.prev-doc{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+.prev-header{background:var(--lg);color:white;padding:10px 16px;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700}
+.prev-body{border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden}
+.prev-main-title{background:#fff;padding:12px 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.prev-title-badge{background:var(--lg);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.prev-2col{display:grid;grid-template-columns:180px 1fr;background:white}
+.prev-img{border-right:1px solid var(--border);padding:12px;display:flex;align-items:center;justify-content:center;background:#fafaf9}
+.prev-img img{width:100%;border-radius:6px;object-fit:cover}
+.prev-img-ph{width:100%;height:130px;background:var(--gray-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--hint);font-size:11px}
+.prev-right{padding:0}
+.prev-section{border-bottom:1px solid var(--border);padding:10px 14px}
+.prev-section:last-child{border-bottom:none}
+.prev-section-title{font-size:10px;font-weight:700;color:var(--lg);margin-bottom:6px;background:var(--lg-light);display:inline-block;padding:2px 8px;border-radius:4px}
+.prev-bullet{font-size:12px;line-height:1.6;color:var(--text);display:flex;gap:6px;margin-bottom:3px}
+.prev-bullet::before{content:'•';color:var(--lg);flex-shrink:0}
+.prev-oneliner{background:var(--lg);color:white;padding:12px 16px}
+.prev-oneliner-label{font-size:9px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.prev-oneliner-text{font-size:13px;font-weight:700;line-height:1.5}
+.prev-3col{display:grid;grid-template-columns:repeat(3,1fr);background:white}
+.prev-bot{border-right:1px solid var(--border);padding:10px 12px}
+.prev-bot:last-child{border-right:none}
+.prev-bot-title{font-size:10px;font-weight:700;color:var(--lg);margin-bottom:6px}
+.prev-foot{background:var(--lg);color:rgba(255,255,255,.7);padding:8px 16px;border-radius:0 0 8px 8px;font-size:11px;text-align:right;font-style:italic}
+.prev-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.prev-info-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px 10px}
+.prev-info-cell:nth-child(2n){border-right:none}
+.prev-info-cell:nth-last-child(-n+2){border-bottom:none}
+.prev-info-label{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.prev-info-val{font-size:12px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-left">
+    <span class="hd-badge">'26 피플 리더십</span>
+    <span class="hd-title">우리팀 REINVENT 과제 정의서</span>
+  </div>
+  <button class="btn-preview" onclick="openPreview()">미리보기</button>
+</div>
+
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">팀 기본 정보</div>
+      <div class="field"><label>기수 / 차수</label>
+        <select id="s_cohort"><option value="">선택</option><option>1차수 — 6/16(화)~6/17(수)</option><option>2차수 — 6/18(목)~6/19(금)</option><option>3차수 — 6/23(화)~6/24(수)</option><option>4차수 — 6/25(목)~6/26(금)</option><option>5차수 — 7/2(목)~7/3(금)</option><option>6차수 — 7/7(화)~7/8(수)</option><option>7차수 — 7/9(목)~7/10(금)</option><option>8차수 — 7/14(화)~7/15(수)</option><option>9차수 — 7/21(화)~7/22(수)</option><option>10차수 — 7/23(목)~7/24(금)</option></select>
+      </div>
+      <div class="field"><label>반 · 팀</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <select id="s_class"><option value="">반</option><option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option></select>
+          <select id="s_team"><option value="">팀</option><option>A팀</option><option>B팀</option><option>C팀</option><option>D팀</option><option>E팀</option><option>F팀</option></select>
+        </div>
+      </div>
+      <div class="field"><label>팀명</label><input type="text" id="s_teamname" placeholder="예: Alpha AI"></div>
+      <div class="field"><label>조직명</label><input type="text" id="s_org" placeholder="조직명 입력"></div>
+      <div class="field"><label>작성자 (팀장)</label><input type="text" id="s_author" placeholder="이름 / 직책"></div>
+    </div>
+
+    <hr class="sb-divider">
+
+    <div class="sb-section">
+      <div class="sb-label">과제 유형 <span style="font-weight:400;font-style:italic;text-transform:none">(1개 선택)</span></div>
+      <div class="task-type-grid" id="typeGrid">
+        <div class="type-chip" onclick="selectType(this)">팀 업무 개선</div>
+        <div class="type-chip" onclick="selectType(this)">리더십</div>
+        <div class="type-chip" onclick="selectType(this)">조직문화</div>
+        <div class="type-chip" onclick="selectType(this)">기타</div>
+      </div>
+    </div>
+
+    <hr class="sb-divider">
+
+    <div class="sb-section" style="flex:1">
+      <div class="sb-label">작성 진행 상황</div>
+      <div class="step-list">
+        <div class="step-item active" id="nav0" onclick="scrollTo_(0)"><div class="step-num">1</div>제목 / 이미지</div>
+        <div class="step-item" id="nav1" onclick="scrollTo_(1)"><div class="step-num">2</div>문제 배경 (Why)</div>
+        <div class="step-item" id="nav2" onclick="scrollTo_(2)"><div class="step-num">3</div>바꾸고 싶은 모습 (To-Be)</div>
+        <div class="step-item" id="nav3" onclick="scrollTo_(3)"><div class="step-num">4</div>과제 한 줄 정의</div>
+        <div class="step-item" id="nav4" onclick="scrollTo_(4)"><div class="step-num">5</div>근원인·정량화·목표</div>
+      </div>
+    </div>
+
+    <button class="btn-submit-main" id="submitBtn" onclick="submitForm()">제출하기</button>
+  </aside>
+
+  <!-- ── 에디터 ── -->
+  <main class="editor" id="editorMain">
+    <div class="editor-inner" id="formArea">
+
+      <!-- 섹션 1: 제목 + 이미지 + 기본정보 -->
+      <div class="sec-card" data-sec="0">
+        <div class="sec-head">
+          <span class="sec-badge red">문제 드러내기</span>
+          <div style="flex:1">
+            <textarea id="mainTitle" rows="1" style="width:100%;border:none;font-size:18px;font-weight:700;font-family:inherit;color:var(--text);outline:none;resize:none;background:transparent;line-height:1.4" placeholder="과제 제목을 입력하세요" oninput="autoGrow(this)"></textarea>
+          </div>
+        </div>
+        <div class="sec-body">
+          <div class="top-grid">
+            <div class="image-placeholder" id="imgDrop">
+              <input type="file" accept="image/*" onchange="loadImg(event)">
+              <img id="imgPreview" style="display:none">
+              <div class="img-icon" id="imgIcon">🖼</div>
+              <div class="img-hint" id="imgHint">이미지 클릭/드롭</div>
+            </div>
+            <div class="info-table">
+              <div class="info-row"><span class="info-key">조직명</span><div class="info-val"><input type="text" id="r_org" placeholder="조직명 입력" oninput="sync('r_org','s_org')"></div></div>
+              <div class="info-row"><span class="info-key">작성자</span><div class="info-val"><input type="text" id="r_author" placeholder="이름 / 직책" oninput="sync('r_author','s_author')"></div></div>
+              <div class="info-row"><span class="info-key">과제 유형</span><div class="info-val"><input type="text" id="r_types" placeholder="자동 반영됩니다" readonly style="color:var(--muted)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 섹션 2: Why -->
+      <div class="sec-card" data-sec="1">
+        <div class="sec-head">
+          <span class="sec-badge pink">지금 우리 팀의 문제 / 배경</span>
+          <span style="font-size:13px;font-weight:600;color:var(--lg)">(Why)</span>
+        </div>
+        <div class="sec-body">
+          <div class="why-card">
+            <div class="why-title">문제 상황</div>
+            <div class="bullet-list" id="why_list">
+              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 내용을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 내용을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+            </div>
+            <button class="btn-add-bullet" onclick="addBullet('why_list')">＋ 항목 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 섹션 3: To-Be -->
+      <div class="sec-card" data-sec="2">
+        <div class="sec-head">
+          <span class="sec-badge pink">우리가 바꾸고 싶은 모습</span>
+          <span style="font-size:13px;font-weight:600;color:var(--lg)">(To-Be)</span>
+        </div>
+        <div class="sec-body">
+          <div class="why-card">
+            <div class="why-title">목표 상태</div>
+            <div class="bullet-list" id="tobe_list">
+              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="개선 후 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="개선 후 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+            </div>
+            <button class="btn-add-bullet" onclick="addBullet('tobe_list')">＋ 항목 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 섹션 4: 한 줄 정의 -->
+      <div class="sec-card" data-sec="3">
+        <div class="sec-head">
+          <span class="sec-badge gray">과제의 범위 / 한 줄 정의</span>
+        </div>
+        <div class="sec-body">
+          <div class="oneliner-card">
+            <div class="oneliner-label">과제 한 줄 정의</div>
+            <textarea id="oneliner" class="oneliner-input" rows="2" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"' oninput="autoGrow(this)"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 섹션 5: 3단 하단 -->
+      <div class="sec-card" data-sec="4">
+        <div class="sec-head">
+          <span class="sec-badge gray">근본원인 · 정량화 · 개선과제 목표</span>
+        </div>
+        <div class="sec-body">
+          <div class="bottom-grid">
+            <div class="bot-card">
+              <div class="bot-card-title">근본원인 분석</div>
+              <div class="bullet-list" id="cause_list">
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              </div>
+              <button class="btn-add-bullet" onclick="addBullet('cause_list')">＋ 추가</button>
+            </div>
+            <div class="bot-card">
+              <div class="bot-card-title">정량화 (Gap)</div>
+              <div class="bullet-list" id="gap_list">
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표 수치..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표 수치..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              </div>
+              <button class="btn-add-bullet" onclick="addBullet('gap_list')">＋ 추가</button>
+            </div>
+            <div class="bot-card">
+              <div class="bot-card-title">개선과제 목표</div>
+              <div class="bullet-list" id="goal_list">
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              </div>
+              <button class="btn-add-bullet" onclick="addBullet('goal_list')">＋ 추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /formArea -->
+
+    <!-- 제출 완료 -->
+    <div class="submit-done" id="doneArea">
+      <div class="done-icon">✅</div>
+      <div class="done-title">과제 정의서가 제출되었습니다!</div>
+      <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
+      <div class="done-id" id="doneId">-</div>
+    </div>
+  </main>
+</div><!-- /layout -->
+
+<!-- ── 미리보기 모달 ── -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closePreview()">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title">과제 정의서 미리보기</span>
+      <button class="btn-close" onclick="closePreview()">×</button>
+    </div>
+    <div id="previewDoc"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+let imgDataUrl = null;
+
+function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
+
+function sync(srcId,destId){
+  const v=document.getElementById(srcId).value;
+  const dest=document.getElementById(destId);
+  if(dest)dest.value=v;
+}
+
+function selectType(el){
+  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('r_types').value=el.textContent;
+}
+
+function addBullet(listId){
+  const list=document.getElementById(listId);
+  const row=document.createElement('div');
+  row.className='bullet-row';
+  row.innerHTML='<div class="bullet-dot"></div><textarea rows="1" placeholder="내용 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button>';
+  list.appendChild(row);
+}
+function rmBullet(btn){
+  const list=btn.closest('.bullet-list');
+  if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요해요','err');return;}
+  btn.closest('.bullet-row').remove();
+}
+
+function loadImg(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=r=>{
+    imgDataUrl=r.result;
+    const img=document.getElementById('imgPreview');
+    img.src=imgDataUrl;img.style.display='block';
+    document.getElementById('imgIcon').style.display='none';
+    document.getElementById('imgHint').style.display='none';
+  };reader.readAsDataURL(file);
+}
+
+// 이미지 드래그앤드롭
+const imgDrop=document.getElementById('imgDrop');
+imgDrop.addEventListener('dragover',e=>{e.preventDefault();imgDrop.style.borderColor='var(--lg)'});
+imgDrop.addEventListener('dragleave',()=>imgDrop.style.borderColor='');
+imgDrop.addEventListener('drop',e=>{
+  e.preventDefault();imgDrop.style.borderColor='';
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')){
+    const reader=new FileReader();
+    reader.onload=r=>{
+      imgDataUrl=r.result;
+      const img=document.getElementById('imgPreview');
+      img.src=imgDataUrl;img.style.display='block';
+      document.getElementById('imgIcon').style.display='none';
+      document.getElementById('imgHint').style.display='none';
+    };reader.readAsDataURL(file);
+  }
+});
+
+// 스크롤 네비게이션
+function scrollTo_(idx){
+  const sec=document.querySelectorAll('[data-sec]')[idx];
+  if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.getElementById('editorMain').addEventListener('scroll',()=>{
+  const secs=document.querySelectorAll('[data-sec]');
+  const scrollTop=document.getElementById('editorMain').scrollTop;
+  let cur=0;
+  secs.forEach((s,i)=>{if(s.offsetTop-60<=scrollTop)cur=i});
+  document.querySelectorAll('.step-item').forEach((el,i)=>el.classList.toggle('active',i===cur));
+});
+
+// 미리보기
+function getBullets(listId){
+  return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
+}
+function openPreview(){
+  const title=document.getElementById('mainTitle').value.trim()||'(제목 미입력)';
+  const org=document.getElementById('r_org').value.trim()||'-';
+  const author=document.getElementById('r_author').value.trim()||'-';
+  const types=document.getElementById('r_types').value||'-';
+  const oneliner=document.getElementById('oneliner').value.trim()||'(한 줄 정의 미입력)';
+  const whys=getBullets('why_list');
+  const tobes=getBullets('tobe_list');
+  const causes=getBullets('cause_list');
+  const gaps=getBullets('gap_list');
+  const goals=getBullets('goal_list');
+  const cohort=document.getElementById('s_cohort').value;
+  const cls=document.getElementById('s_class').value;
+  const team=document.getElementById('s_team').value;
+
+  const blist=(arr,cls='prev-bullet')=>arr.length
+    ?arr.map(t=>`<div class="${cls}">${t}</div>`).join('')
+    :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
+
+  const imgTag=imgDataUrl
+    ?`<img src="${imgDataUrl}" style="width:100%;border-radius:6px;object-fit:cover;max-height:150px">`
+    :`<div class="prev-img-ph">이미지 없음</div>`;
+
+  document.getElementById('previewDoc').innerHTML=`
+  <div class="prev-doc">
+    <div class="prev-header">
+      <span>우리팀 REINVENT 과제</span>
+      <span>${cohort} ${cls} ${team}</span>
+    </div>
+    <div class="prev-body">
+      <div class="prev-main-title">
+        <span class="prev-title-badge">문제 드러내기</span>
+        <strong style="font-size:14px">${title}</strong>
+      </div>
+      <div class="prev-2col">
+        <div class="prev-img">${imgTag}</div>
+        <div class="prev-right">
+          <div class="prev-section">
+            <div class="prev-section-title">지금 우리 팀의 문제 / 배경 (Why)</div>
+            ${blist(whys)}
+          </div>
+          <div class="prev-section">
+            <div class="prev-section-title">우리가 바꾸고 싶은 모습 (To-Be)</div>
+            ${blist(tobes)}
+          </div>
+        </div>
+      </div>
+      <div class="prev-oneliner">
+        <div class="prev-oneliner-label">과제의 범위 / 한 줄 정의</div>
+        <div class="prev-oneliner-text">"${oneliner}"</div>
+      </div>
+      <div class="prev-3col">
+        <div class="prev-bot"><div class="prev-bot-title">근본원인 분석</div>${blist(causes)}</div>
+        <div class="prev-bot"><div class="prev-bot-title">정량화 (Gap)</div>${blist(gaps)}</div>
+        <div class="prev-bot" style="border-right:none"><div class="prev-bot-title">개선과제 목표</div>${blist(goals)}</div>
+      </div>
+      <div class="prev-info-grid" style="border-top:1px solid var(--border)">
+        <div class="prev-info-cell"><div class="prev-info-label">조직명</div><div class="prev-info-val">${org}</div></div>
+        <div class="prev-info-cell"><div class="prev-info-label">작성자</div><div class="prev-info-val">${author}</div></div>
+        <div class="prev-info-cell" style="border-right:none"><div class="prev-info-label">과제 유형</div><div class="prev-info-val">${types}</div></div>
+      </div>
+    </div>
+    <div class="prev-foot">Powered by REINVENT 2.0</div>
+  </div>`;
+  document.getElementById('modalBg').classList.add('open');
+}
+function closePreview(){document.getElementById('modalBg').classList.remove('open')}
+
+// 제출
+function validate(){
+  if(!document.getElementById('s_cohort').value){showToast('기수를 선택해 주세요','err');return false;}
+  if(!document.getElementById('s_class').value){showToast('반을 선택해 주세요','err');return false;}
+  if(!document.getElementById('s_team').value){showToast('팀을 선택해 주세요','err');return false;}
+  if(!document.getElementById('mainTitle').value.trim()){showToast('과제 제목을 입력해 주세요','err');return false;}
+  if(!document.getElementById('oneliner').value.trim()){showToast('과제 한 줄 정의를 입력해 주세요','err');return false;}
+  return true;
+}
+
+async function submitForm(){
+  if(!validate())return;
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='제출 중...';
+  try{
+    const submitId='JB'+Date.now().toString(36).toUpperCase();
+    const payload={
+      submitId,
+      cohort:document.getElementById('s_cohort').value,
+      classNum:document.getElementById('s_class').value,
+      teamNum:document.getElementById('s_team').value,
+      teamName:document.getElementById('s_teamname').value.trim(),
+      org:document.getElementById('r_org').value.trim(),
+      author:document.getElementById('r_author').value.trim(),
+      members:'',
+      types:document.getElementById('r_types').value,
+      mainTitle:document.getElementById('mainTitle').value.trim(),
+      whys:getBullets('why_list').join('\n'),
+      tobes:getBullets('tobe_list').join('\n'),
+      oneliner:document.getElementById('oneliner').value.trim(),
+      causes:getBullets('cause_list').join('\n'),
+      gaps:getBullets('gap_list').join('\n'),
+      goals:getBullets('goal_list').join('\n'),
+      imgData:imgDataUrl||'',
+      submittedAt:new Date().toLocaleString('ko-KR')
+    };
+    const res=await fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+    const result=await res.json();
+    if(result.status==='ok'){
+      document.getElementById('formArea').style.display='none';
+      document.getElementById('doneArea').classList.add('show');
+      document.getElementById('doneId').textContent='제출번호: '+submitId;
+      document.querySelectorAll('.step-item').forEach(el=>{el.classList.remove('active');el.classList.add('done');el.querySelector('.step-num').textContent='✓';});
+    }else throw new Error(result.message);
+  }catch(err){
+    showToast('제출 중 오류가 발생했습니다. 다시 시도해 주세요.','err');
+    btn.disabled=false;btn.textContent='제출하기';
+  }
+}
+
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type||'')+' show';
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// 사이드바 ↔ 에디터 동기화
+document.getElementById('s_org').addEventListener('input',()=>document.getElementById('r_org').value=document.getElementById('s_org').value);
+document.getElementById('s_author').addEventListener('input',()=>document.getElementById('r_author').value=document.getElementById('s_author').value);
+</script>
+</body>
+</html>
