@@ -268,9 +268,8 @@ function renderList() {
   panel.innerHTML = filtered.map(d => `
     <div class="sub-item ${d.checked?'done':''} ${selected&&selected.submitId===d.submitId?'selected':''}" onclick="selectItem('${d.submitId}')">
       <div class="item-header">
-        <div class="item-team">${d.classNum||''} ${d.teamNum||''} · ${d.teamName||'(팀명없음)'}</div>
+        <div class="item-team">${(d.cohort||'').replace(/ — .+/,'')} · ${d.classNum||''} ${d.teamNum||''} · ${d.author||'(이름없음)'}</div>
         <div class="item-badges">
-          <span class="badge badge-class">${(d.cohort||'').replace(/ — .+/,'')}</span>
           <span class="badge ${d.checked?'badge-done':'badge-pending'}">${d.checked?'✓ 완료':'미확인'}</span>
         </div>
       </div>
@@ -294,34 +293,22 @@ function selectItem(id) {
 function renderDetail() {
   document.getElementById('emptyState').style.display = 'none';
   const d = selected;
-  const hasPreview = !!d.previewUrl;
 
   document.getElementById('detailContent').style.display = 'block';
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-card">
-      <div class="detail-title-main">${d.mainTitle||'(제목없음)'}</div>
+      <div class="detail-title-main">${(d.cohort||'').replace(/ — .+/,'')} · ${d.classNum||''} ${d.teamNum||''} · ${d.author||''}</div>
       <div class="detail-meta">
-        <span>${d.cohort||''}</span><span class="detail-meta-dot">·</span>
-        <span>${d.classNum||''} ${d.teamNum||''}</span><span class="detail-meta-dot">·</span>
-        <strong style="color:var(--lg)">${d.teamName||''}</strong><span class="detail-meta-dot">·</span>
+        <span>${d.mainTitle||'(제목없음)'}</span><span class="detail-meta-dot">·</span>
         <span style="color:var(--muted)">${d.submittedAt||''}</span>
       </div>
     </div>
 
     <div class="detail-card">
       <div class="detail-card-title">📋 과제 정의서 미리보기</div>
-      ${hasPreview ? `
-        <iframe src="${d.previewUrl}"
-          style="width:100%;height:520px;border:1px solid var(--border);border-radius:8px;background:#f2f0ed"
-          allowfullscreen></iframe>
-        <div style="margin-top:8px;display:flex;gap:8px">
-          <a href="${d.previewUrl.replace('/preview','/view')}" target="_blank"
-            style="font-size:12px;color:var(--lg);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">
-            ↗ 새 탭으로 열기
-          </a>
-        </div>` :
-        `<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:13px">미리보기 파일이 없습니다.</div>`
-      }
+      <div id="previewFrame" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#f2f0ed">
+        ${buildPreviewHTML(d)}
+      </div>
     </div>
 
     <div class="detail-card">
@@ -352,6 +339,68 @@ function renderDetail() {
         <button class="btn-save" onclick="saveComment('${d.submitId}')">피드백 저장</button>
       </div>
     </div>`;
+}
+
+function buildPreviewHTML(d) {
+  const blist = arr => (arr||[]).filter(Boolean).map(t =>
+    `<div style="display:flex;gap:6px;margin-bottom:4px;font-size:12px;line-height:1.6">
+      <span style="color:#A50034;flex-shrink:0">•</span><span>${t}</span></div>`
+  ).join('') || '<div style="font-size:11px;color:#aaa">(내용 없음)</div>';
+
+  const splitLines = str => (str||'').split('\n').filter(Boolean);
+
+  return `
+  <div style="font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif">
+    <div style="background:#A50034;color:white;padding:9px 14px;display:flex;justify-content:space-between;font-size:12px;font-weight:700">
+      <span>우리팀 REINVENT 과제</span>
+      <span>${d.cohort||''} ${d.classNum||''} ${d.teamNum||''}</span>
+    </div>
+    <div style="border:1px solid #e2ddd8;border-top:none">
+      <div style="background:#fff;padding:10px 14px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e2ddd8">
+        <span style="background:#A50034;color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px">문제 드러내기</span>
+        ${d.mainTitle||''}
+      </div>
+      <div style="display:grid;grid-template-columns:180px 1fr;background:white">
+        <div style="border-right:1px solid #e2ddd8;padding:12px;background:#fafaf9;display:flex;align-items:center;justify-content:center">
+          <div style="width:100%;height:120px;background:#f2f0ed;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:11px">이미지</div>
+        </div>
+        <div>
+          <div style="border-bottom:1px solid #e2ddd8;padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;color:#A50034;background:#fff0f3;display:inline-block;padding:2px 7px;border-radius:3px;margin-bottom:6px">지금 우리 팀의 문제 / 배경 (Why)</div>
+            ${blist(splitLines(d.whys))}
+          </div>
+          <div style="padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;color:#A50034;background:#fff0f3;display:inline-block;padding:2px 7px;border-radius:3px;margin-bottom:6px">우리가 바꾸고 싶은 모습 (To-Be)</div>
+            ${blist(splitLines(d.tobes))}
+          </div>
+        </div>
+      </div>
+      <div style="background:#A50034;color:white;padding:12px 16px">
+        <div style="font-size:9px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;margin-bottom:4px">과제의 범위 / 한 줄 정의</div>
+        <div style="font-size:13px;font-weight:700;line-height:1.5">"${d.oneliner||''}"</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);background:white">
+        <div style="border-right:1px solid #e2ddd8;padding:10px 12px">
+          <div style="font-size:9px;font-weight:700;color:#A50034;margin-bottom:6px">근본원인 분석</div>
+          ${blist(splitLines(d.causes))}
+        </div>
+        <div style="border-right:1px solid #e2ddd8;padding:10px 12px">
+          <div style="font-size:9px;font-weight:700;color:#A50034;margin-bottom:6px">정량화 (Gap)</div>
+          ${blist(splitLines(d.gaps))}
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:9px;font-weight:700;color:#A50034;margin-bottom:6px">개선과제 목표</div>
+          ${blist(splitLines(d.goals))}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e2ddd8;background:white">
+        <div style="border-right:1px solid #e2ddd8;padding:7px 12px"><div style="font-size:9px;color:#888;margin-bottom:2px">조직명</div><div style="font-size:12px;font-weight:600">${d.org||'-'}</div></div>
+        <div style="border-right:1px solid #e2ddd8;padding:7px 12px"><div style="font-size:9px;color:#888;margin-bottom:2px">작성자</div><div style="font-size:12px;font-weight:600">${d.author||'-'}</div></div>
+        <div style="padding:7px 12px"><div style="font-size:9px;color:#888;margin-bottom:2px">과제 유형</div><div style="font-size:12px;font-weight:600">${d.types||'-'}</div></div>
+      </div>
+      <div style="background:#A50034;color:rgba(255,255,255,.6);padding:7px 14px;font-size:10px;text-align:right;font-style:italic">Powered by REINVENT 2.0</div>
+    </div>
+  </div>`;
 }
 
 async function toggleCheck(id) {
