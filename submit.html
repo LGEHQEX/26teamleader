@@ -4,384 +4,640 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>과제 정의서 작성 | '26 피플 리더십</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --lg:#A50034;--lg2:#c0003d;--lg-light:#fdf0f3;--lg-pale:#fff5f7;
-  --bg:#f2f0ed;--card:#fff;--border:#e2ddd8;--border2:#d0cbc4;
-  --text:#1a1a1a;--muted:#6b6b6b;--hint:#aaa;
-  --pink-bg:#fff0f3;--pink-border:#f5c6d0;
-  --gray-bg:#f7f5f2;
-  --r8:8px;--r12:12px;
+/* ============================
+   기본 설정 & 예시 문서 스타일 (그대로 유지)
+   ============================ */
+:root {
+  --reinvent-red: #C8102E;
+  --reinvent-red-dark: #A50C25;
+  --reinvent-red-deep: #8C0A1F;
+  --pink-light: #FCE4E8;
+  --pink-bg: #FFF5F7;
+  --pink-border: #F0B4BE;
+  --cream-bg: #FFFAFB;
+  --text-dark: #1F1F1F;
+  --text-mid: #444;
+  --text-soft: #6B6B6B;
+  --label-red: #C8102E;
+  --sidebar-w: 280px;
 }
-body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--text-dark);
+  -webkit-font-smoothing:antialiased;
+  height:100%;
+}
+body{display:flex;flex-direction:column;background:#E8E8E8;}
 
-/* ── 헤더 ── */
-.hd{background:var(--lg);padding:0 28px;height:50px;display:flex;align-items:center;justify-content:space-between}
-.hd-left{display:flex;align-items:center;gap:10px}
-.hd-badge{background:rgba(255,255,255,0.18);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px}
-.hd-title{color:white;font-size:14px;font-weight:700;letter-spacing:-.3px}
-.btn-preview{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);color:white;font-size:12px;font-weight:600;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:inherit;transition:background .15s}
-.btn-preview:hover{background:rgba(255,255,255,0.25)}
+/* ============================
+   앱 헤더
+   ============================ */
+.app-header{
+  background:var(--reinvent-red);height:48px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;flex-shrink:0;z-index:200;
+}
+.app-header-left{display:flex;align-items:center;gap:12px}
+.app-logo{font-weight:900;font-size:16px;letter-spacing:1.5px;color:#fff}
+.app-title-text{color:rgba(255,255,255,.85);font-size:13px;font-weight:500}
+.app-header-right{display:flex;align-items:center;gap:8px}
+.btn-hd{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:5px;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-hd:hover{background:rgba(255,255,255,.25)}
+.btn-hd.primary{background:white;color:var(--reinvent-red);border-color:white}
+.btn-hd.primary:hover{background:#ffe8ec}
+.btn-hd:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── 레이아웃 ── */
-.layout{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 50px)}
+/* ============================
+   메인 레이아웃
+   ============================ */
+.app-body{display:flex;flex:1;overflow:hidden}
 
-/* ── 사이드바 ── */
-.sidebar{background:var(--card);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:0}
-.sb-section{margin-bottom:20px}
-.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--hint);margin-bottom:8px}
-.field{margin-bottom:10px}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px}
-.field input,.field select,.field textarea{width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:var(--text);background:#fafaf9;outline:none;transition:border-color .15s}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lg);background:white}
+/* ============================
+   사이드바
+   ============================ */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:#fff;border-right:1px solid #e0dbd6;
+  display:flex;flex-direction:column;overflow-y:auto;
+}
+.sb-section{padding:16px 16px 0}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:4px}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid #ddd;border-radius:6px;
+  padding:7px 10px;font-size:13px;font-family:inherit;
+  color:var(--text-dark);background:#fafaf9;outline:none;transition:border-color .15s
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--reinvent-red);background:white}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sb-divider{border:none;border-top:1px solid #eee;margin:4px 0 14px}
 
-.task-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.type-chip{border:1px solid var(--border2);border-radius:6px;padding:6px 8px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);text-align:center;transition:all .15s;user-select:none}
-.type-chip:hover{border-color:var(--lg);color:var(--lg)}
-.type-chip.on{background:var(--lg-light);border-color:var(--lg);color:var(--lg)}
+/* 과제 유형 체크 */
+.type-grid{display:flex;flex-direction:column;gap:6px}
+.type-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #ddd;transition:all .15s;font-size:12px;font-weight:600;color:#777}
+.type-item:hover{border-color:var(--reinvent-red);color:var(--reinvent-red)}
+.type-item.on{background:#fff5f7;border-color:var(--reinvent-red);color:var(--reinvent-red)}
+.type-item .cb{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;background:#fff;flex-shrink:0}
+.type-item.on .cb{background:var(--reinvent-red);border-color:var(--reinvent-red);color:#fff}
 
-.sb-divider{border:none;border-top:1px solid var(--border);margin:4px 0 16px}
+/* 불러오기 버튼 */
+.btn-load{
+  width:100%;background:#f7f5f2;border:1px solid #ddd;border-radius:6px;
+  padding:8px;font-size:12px;font-weight:600;color:var(--reinvent-red);
+  cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px
+}
+.btn-load:hover{background:#fff5f7;border-color:var(--reinvent-red)}
+.btn-load:disabled{opacity:.5;cursor:not-allowed}
+.load-status{font-size:11px;margin-top:6px;padding:6px 8px;border-radius:6px;line-height:1.4}
+.load-status.ok{background:#e6f5ee;color:#0f7a4a}
+.load-status.err{background:#fef2f2;color:#c62828}
+.load-status.info{background:#fff8e1;color:#7a5c00}
 
-.step-list{display:flex;flex-direction:column;gap:4px}
-.step-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--hint);padding:4px 6px;border-radius:6px;cursor:pointer;transition:background .1s}
-.step-item:hover{background:var(--gray-bg)}
-.step-item.active{color:var(--lg);font-weight:600;background:var(--lg-light)}
-.step-num{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-.step-item.active .step-num{background:var(--lg);border-color:var(--lg);color:white}
-.step-item.done .step-num{background:#0f7a4a;border-color:#0f7a4a;color:white}
-.step-item.done{color:#0f7a4a}
+/* 이미지 선택 */
+.img-selector{
+  border:1.5px dashed #ddd;border-radius:8px;min-height:100px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;color:#aaa;font-size:12px;cursor:pointer;transition:all .15s;
+  background:#fafaf9;position:relative;overflow:hidden
+}
+.img-selector:hover{border-color:var(--reinvent-red);color:var(--reinvent-red);background:#fff5f7}
+.img-selector img{width:100%;height:auto;display:block;object-fit:contain;border-radius:6px}
+.img-selector-icon{font-size:22px;opacity:.4}
 
-.btn-load{width:100%;background:var(--gray-bg);border:1px solid var(--border2);border-radius:6px;padding:8px;font-size:12px;font-weight:600;color:var(--lg);cursor:pointer;font-family:inherit;transition:all .15s;margin-top:2px}
-.btn-load:hover{background:var(--lg-light);border-color:var(--lg)}
-.btn-submit-main{margin-top:auto;width:100%;height:44px;background:var(--lg);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;letter-spacing:-.2px}
-.btn-submit-main:hover{background:var(--lg2)}
-.btn-submit-main:disabled{opacity:.5;cursor:not-allowed}
+/* 사이드바 하단 버튼 */
+.sb-footer{padding:16px;margin-top:auto;border-top:1px solid #eee}
+.btn-submit{
+  width:100%;height:44px;background:var(--reinvent-red);color:white;
+  border:none;border-radius:8px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:background .15s
+}
+.btn-submit:hover{background:var(--reinvent-red-dark)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── 메인 편집 영역 ── */
-.editor{padding:24px 28px;overflow-y:auto}
-.editor-inner{max-width:860px;margin:0 auto}
+/* ============================
+   에디터 영역
+   ============================ */
+.editor-area{flex:1;overflow-y:auto;padding:24px 28px}
+.editor-inner{max-width:1000px;margin:0 auto}
 
-/* ── 섹션 카드 ── */
-.sec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);margin-bottom:16px;overflow:hidden}
-.sec-head{padding:14px 18px 0;display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.sec-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:.3px}
-.sec-badge.red{background:var(--lg);color:white}
-.sec-badge.pink{background:var(--lg-light);color:var(--lg)}
-.sec-badge.gray{background:var(--gray-bg);color:var(--muted)}
-.sec-title{font-size:15px;font-weight:700;color:var(--text)}
-.sec-body{padding:0 18px 18px}
+/* ============================
+   문서 미리보기 (예시와 동일 레이아웃)
+   ============================ */
+.doc-preview{
+  background:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.12);
+  overflow:hidden;
+}
 
-/* ── 2단 레이아웃 ── */
-.top-grid{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}
-.image-placeholder{border:1.5px dashed var(--border2);border-radius:var(--r8);min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--hint);font-size:12px;cursor:pointer;transition:all .15s;background:var(--gray-bg);position:relative;overflow:hidden}
-.image-placeholder:hover{border-color:var(--lg);color:var(--lg);background:var(--lg-pale)}
-.image-placeholder img{width:100%;height:auto;display:block;object-fit:contain;border-radius:var(--r8)}
-.img-icon{font-size:24px;opacity:.4}
-.img-hint{font-size:11px}
+/* Header */
+.doc-header{
+  background:var(--reinvent-red);color:#fff;
+  height:48px;display:flex;align-items:center;padding:0 20px;
+  font-size:13px;font-weight:500;
+}
+.doc-header .brand{font-weight:900;font-size:17px;letter-spacing:1.5px;margin-right:24px}
+.doc-header .doc-type{
+  margin-left:auto;color:#fff;font-size:13px;font-weight:700;letter-spacing:2px;
+  padding:4px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px
+}
 
-.info-table{display:flex;flex-direction:column;gap:0}
-.info-row{display:flex;align-items:flex-start;border-bottom:1px solid var(--border);padding:8px 0}
-.info-row:last-child{border-bottom:none}
-.info-key{font-size:12px;font-weight:600;color:var(--muted);min-width:60px;padding-top:2px}
-.info-val{flex:1}
-.info-val input,.info-val select{border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text);outline:none;width:100%;padding:2px 4px;border-radius:4px}
-.info-val input:focus,.info-val select:focus{background:#f7f5f2}
+/* Title row */
+.doc-title-row{
+  padding:18px 24px 12px;display:flex;align-items:center;gap:14px
+}
+.doc-badge{
+  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
+  padding:8px 18px;border-radius:999px;flex-shrink:0;white-space:nowrap
+}
+.doc-badge-input{
+  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
+  padding:8px 18px;border-radius:999px;flex-shrink:0;white-space:nowrap;
+  border:none;cursor:pointer;font-family:inherit;position:relative
+}
+.doc-main-title{
+  flex:1;font-size:24px;font-weight:800;color:var(--text-dark);
+  letter-spacing:-.5px;line-height:1.25
+}
+.doc-main-title input{
+  width:100%;background:transparent;border:none;border-bottom:2px solid transparent;
+  font-size:24px;font-weight:800;font-family:inherit;color:var(--text-dark);
+  letter-spacing:-.5px;line-height:1.25;outline:none;transition:border-color .15s
+}
+.doc-main-title input:focus{border-bottom-color:var(--reinvent-red);background:rgba(200,16,46,.03)}
+.doc-main-title input::placeholder{color:#ccc}
+.accent{color:var(--reinvent-red)}
 
-/* ── Why / ToBe 섹션 ── */
-.why-card{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:var(--r8);padding:14px 16px;margin-bottom:10px}
-.why-title{font-size:11px;font-weight:700;color:var(--lg);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.bullet-list{display:flex;flex-direction:column;gap:4px}
+/* Body grid */
+.doc-body{display:grid;grid-template-columns:260px 1fr;gap:14px;padding:4px 24px 16px}
+
+/* Left: poster card */
+.poster-card{
+  border:1px solid #EAD0D5;border-radius:6px;overflow:hidden;
+  display:flex;flex-direction:column;background:#fff
+}
+.poster-visual{background:#fff;position:relative;overflow:hidden;display:block;cursor:pointer}
+.poster-visual:hover::after{
+  content:'이미지 변경';position:absolute;inset:0;background:rgba(200,16,46,.7);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;display:flex;justify-content:center;align-items:center
+}
+.poster-img{width:100%;height:auto;display:block}
+.poster-img-placeholder{
+  width:100%;height:180px;background:#f7f3f4;
+  display:flex;align-items:center;justify-content:center;
+  color:#ccc;font-size:13px;flex-direction:column;gap:6px
+}
+.poster-img-placeholder span{font-size:28px;opacity:.4}
+
+/* Info block */
+.info-block{
+  background:var(--pink-bg);padding:12px 16px;font-size:12.5px;
+  color:var(--text-mid);border-top:1px solid var(--pink-border);flex-shrink:0
+}
+.info-row{display:flex;align-items:baseline;gap:10px;padding:4px 0;line-height:1.6}
+.info-row+.info-row{border-top:1px dashed rgba(200,16,46,.15);padding-top:7px;margin-top:3px}
+.info-label{color:var(--text-soft);font-size:11px;font-weight:600;flex-shrink:0;width:52px;letter-spacing:.3px}
+.info-val-display{color:var(--text-dark);font-size:12.5px;flex:1}
+.info-val-display b{color:var(--text-dark);font-weight:700}
+.info-input{
+  flex:1;border:none;background:transparent;font-size:12.5px;
+  font-family:inherit;color:var(--text-dark);outline:none;border-bottom:1px dashed transparent;
+  transition:border-color .15s;padding:0 2px
+}
+.info-input:focus{border-bottom-color:var(--reinvent-red);background:rgba(200,16,46,.03)}
+
+/* Type check items (in doc) */
+.info-row-types .info-val-display{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;align-items:center
+}
+.check-item{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:12px;color:var(--text-soft);font-weight:500;white-space:nowrap;
+  cursor:pointer;user-select:none
+}
+.check-item .check-mark{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border:1.5px solid #C8B0B5;border-radius:3px;
+  font-size:10px;color:transparent;background:#fff;line-height:1;font-weight:900;flex-shrink:0
+}
+.check-item.checked{color:var(--reinvent-red);font-weight:700}
+.check-item.checked .check-mark{background:var(--reinvent-red);border-color:var(--reinvent-red);color:#fff}
+
+/* Right: sections */
+.right-col{display:flex;flex-direction:column;gap:10px}
+.section{
+  border-left:4px solid var(--reinvent-red);
+  background:var(--cream-bg);
+  border-top:1px solid var(--pink-border);
+  border-right:1px solid var(--pink-border);
+  border-bottom:1px solid var(--pink-border);
+}
+.section-title{
+  background:var(--pink-light);padding:7px 14px;
+  font-size:13.5px;font-weight:800;color:var(--reinvent-red);letter-spacing:-.2px
+}
+.section-body{padding:10px 16px 12px}
+
+/* Bullet list editing */
+.bullet-list{display:flex;flex-direction:column;gap:3px}
 .bullet-row{display:flex;align-items:flex-start;gap:8px}
-.bullet-dot{width:5px;height:5px;background:var(--lg);border-radius:50%;flex-shrink:0;margin-top:7px}
-.bullet-row textarea{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text);outline:none;resize:none;line-height:1.6;min-height:22px;padding:2px 4px;border-radius:4px}
-.bullet-row textarea:focus{background:rgba(165,0,52,0.04)}
-.btn-add-bullet{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--lg);font-weight:600;background:none;border:1px dashed var(--pink-border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:inherit;margin-top:6px;transition:background .15s}
-.btn-add-bullet:hover{background:rgba(165,0,52,0.06)}
-.btn-rm-bullet{background:none;border:none;color:var(--lg);opacity:.4;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px}
-.btn-rm-bullet:hover{opacity:.8}
+.bullet-dot{
+  width:5px;height:5px;background:var(--text-dark);border-radius:50%;
+  flex-shrink:0;margin-top:8px
+}
+.bullet-row textarea{
+  flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;
+  color:var(--text-dark);outline:none;resize:none;line-height:1.6;
+  min-height:22px;padding:2px 4px;border-radius:4px
+}
+.bullet-row textarea:focus{background:rgba(200,16,46,.04)}
+.bullet-row textarea::placeholder{color:#ccc}
+.btn-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px}
+.btn-rm:hover{color:var(--reinvent-red)}
+.btn-add{
+  display:flex;align-items:center;gap:5px;font-size:11px;color:var(--reinvent-red);
+  font-weight:600;background:none;border:1px dashed var(--pink-border);
+  border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:5px;
+  font-family:inherit;transition:background .15s
+}
+.btn-add:hover{background:rgba(200,16,46,.06)}
 
-/* ── 한 줄 정의 ── */
-.oneliner-card{background:var(--lg);border-radius:var(--r8);padding:16px 20px;margin-bottom:10px}
-.oneliner-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.8px;margin-bottom:6px}
-.oneliner-input{background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.35);width:100%;font-size:15px;font-weight:700;color:white;font-family:inherit;outline:none;padding:4px 0;line-height:1.5}
-.oneliner-input::placeholder{color:rgba(255,255,255,.45)}
-.oneliner-input:focus{border-bottom-color:rgba(255,255,255,.8)}
+/* Range section */
+.range-section{
+  background:var(--reinvent-red);color:#fff;padding:12px 20px 15px
+}
+.range-title{font-size:13px;font-weight:700;margin-bottom:7px}
+.range-input{
+  background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.35);
+  width:100%;font-size:16px;font-weight:800;color:white;font-family:inherit;
+  outline:none;padding:3px 0;line-height:1.5
+}
+.range-input::placeholder{color:rgba(255,255,255,.4)}
+.range-input:focus{border-bottom-color:rgba(255,255,255,.8)}
 
-/* ── 3단 하단 ── */
-.bottom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:0}
-.bot-card{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:var(--r8);padding:14px 14px}
-.bot-card-title{font-size:11px;font-weight:700;color:var(--lg);margin-bottom:8px}
+/* Triple grid */
+.triple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.triple-grid .section-body{min-height:110px}
 
-/* ── 빈 상태 / 제출완료 ── */
-.submit-done{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:40px 24px;text-align:center;display:none}
-.submit-done.show{display:block}
-.done-icon{font-size:40px;margin-bottom:12px}
-.done-title{font-size:18px;font-weight:700;color:#0f7a4a;margin-bottom:8px}
-.done-msg{font-size:13px;color:#6b6b6b;line-height:1.7}
+/* Footer */
+.doc-footer{
+  background:var(--reinvent-red);color:#fff;padding:9px 20px;
+  display:flex;align-items:center;justify-content:flex-end;
+  font-size:11.5px;font-weight:600
+}
+.doc-footer .powered{font-style:italic;font-weight:500;opacity:.9;font-size:11px}
+
+/* ============================
+   뱃지 선택 모달
+   ============================ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:10px;padding:22px 24px;width:340px}
+.modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
+.badge-options{display:flex;flex-direction:column;gap:8px}
+.badge-opt{
+  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
+  padding:10px 18px;border-radius:999px;cursor:pointer;border:none;
+  font-family:inherit;text-align:center;transition:background .15s
+}
+.badge-opt:hover{background:var(--reinvent-red-dark)}
+.btn-modal-close{
+  width:100%;margin-top:12px;background:none;border:1px solid #ddd;
+  border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-family:inherit
+}
+
+/* ============================
+   이미지 선택 팝업
+   ============================ */
+.img-pick-label{display:none}
+.img-pick-item{border:2px solid #e0dbd6;border-radius:7px;overflow:hidden;cursor:pointer;transition:all .15s;background:#f7f5f2}
+.img-pick-item:hover{border-color:var(--reinvent-red);transform:scale(1.03)}
+.img-pick-item.selected{border-color:var(--reinvent-red);box-shadow:0 0 0 3px #fff5f7}
+.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
+
+/* ============================
+   완료 화면
+   ============================ */
+.done-card{
+  background:#fff;border-radius:12px;padding:48px 24px;
+  text-align:center;max-width:480px;margin:40px auto;
+  box-shadow:0 4px 20px rgba(0,0,0,.08)
+}
+.done-icon{font-size:44px;margin-bottom:14px}
+.done-title{font-size:20px;font-weight:800;color:#0f7a4a;margin-bottom:8px}
+.done-msg{font-size:13px;color:#666;line-height:1.7}
 .done-id{margin-top:16px;display:inline-block;font-size:13px;background:#e6f5ee;color:#0f7a4a;padding:6px 16px;border-radius:20px;font-weight:700;font-family:monospace}
 
-/* ── 토스트 ── */
+/* ============================
+   토스트
+   ============================ */
 .toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:white;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(60px);transition:transform .25s;z-index:999}
 .toast.show{transform:translateY(0)}
 .toast.err{background:#c62828}
 .toast.ok{background:#0f7a4a}
 
-/* ── 이미지 선택 팝업 ── */
-.img-pick-item{border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .15s;background:var(--gray-bg)}
-.img-pick-item:hover{border-color:var(--lg);transform:scale(1.03);box-shadow:0 2px 10px rgba(165,0,52,.15)}
-.img-pick-item.selected{border-color:var(--lg);box-shadow:0 0 0 3px var(--lg-light)}
-.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
-.img-pick-label{display:none}
-
-
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;padding:20px}
-.modal-bg.open{display:flex}
-.modal{background:white;border-radius:12px;width:100%;max-width:900px;max-height:90vh;overflow-y:auto;padding:28px 32px}
-.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modal-title{font-size:16px;font-weight:700}
-.btn-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0}
-
-/* 미리보기 스타일 */
-.prev-doc{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
-.prev-header{background:var(--lg);color:white;padding:10px 16px;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700}
-.prev-body{border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden}
-.prev-main-title{background:#fff;padding:12px 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
-.prev-title-badge{background:var(--lg);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap}
-.prev-2col{display:grid;grid-template-columns:180px 1fr;background:white}
-.prev-img{border-right:1px solid var(--border);padding:12px;display:flex;align-items:center;justify-content:center;background:#fafaf9}
-.prev-img img{width:100%;border-radius:6px;object-fit:cover}
-.prev-img-ph{width:100%;height:130px;background:var(--gray-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--hint);font-size:11px}
-.prev-right{padding:0}
-.prev-section{border-bottom:1px solid var(--border);padding:10px 14px}
-.prev-section:last-child{border-bottom:none}
-.prev-section-title{font-size:10px;font-weight:700;color:var(--lg);margin-bottom:6px;background:var(--lg-light);display:inline-block;padding:2px 8px;border-radius:4px}
-.prev-bullet{font-size:12px;line-height:1.6;color:var(--text);display:flex;gap:6px;margin-bottom:3px}
-.prev-bullet::before{content:'•';color:var(--lg);flex-shrink:0}
-.prev-oneliner{background:var(--lg);color:white;padding:12px 16px}
-.prev-oneliner-label{font-size:9px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;margin-bottom:4px}
-.prev-oneliner-text{font-size:13px;font-weight:700;line-height:1.5}
-.prev-3col{display:grid;grid-template-columns:repeat(3,1fr);background:white}
-.prev-bot{border-right:1px solid var(--border);padding:10px 12px}
-.prev-bot:last-child{border-right:none}
-.prev-bot-title{font-size:10px;font-weight:700;color:var(--lg);margin-bottom:6px}
-.prev-foot{background:var(--lg);color:rgba(255,255,255,.7);padding:8px 16px;border-radius:0 0 8px 8px;font-size:11px;text-align:right;font-style:italic}
-.prev-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.prev-info-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px 10px}
-.prev-info-cell:nth-child(2n){border-right:none}
-.prev-info-cell:nth-last-child(-n+2){border-bottom:none}
-.prev-info-label{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:2px}
-.prev-info-val{font-size:12px;font-weight:600}
+/* ============================
+   반응형
+   ============================ */
+@media(max-width:900px){
+  .doc-body{grid-template-columns:1fr}
+  .triple-grid{grid-template-columns:1fr}
+  .sidebar{width:240px}
+}
+@media(max-width:640px){
+  .app-body{flex-direction:column}
+  .sidebar{width:100%;max-height:50vh}
+  .editor-area{padding:12px}
+}
 </style>
 </head>
 <body>
 
-<div class="hd">
-  <div class="hd-left">
-    <span class="hd-badge">'26 피플 리더십</span>
-    <span class="hd-title">우리팀 REINVENT 과제 정의서</span>
+<!-- ============================
+     앱 헤더
+     ============================ -->
+<header class="app-header">
+  <div class="app-header-left">
+    <span class="app-logo">REINVENT</span>
+    <span class="app-title-text">'26 피플 리더십 과제 정의서</span>
   </div>
-  <button class="btn-preview" onclick="openPreview()">미리보기</button>
-</div>
+  <div class="app-header-right">
+    <button class="btn-hd" onclick="openPreview()">미리보기</button>
+    <button class="btn-hd primary" id="submitBtn" onclick="submitForm()">제출하기</button>
+  </div>
+</header>
 
-<div class="layout">
+<div class="app-body">
 
-  <!-- ── 사이드바 ── -->
+  <!-- ============================
+       사이드바
+       ============================ -->
   <aside class="sidebar">
     <div class="sb-section">
-      <div class="sb-label">팀 기본 정보</div>
-      <div class="field"><label>기수 / 차수</label>
-        <select id="s_cohort"><option value="">선택</option><option>1차수 — 6/16(화)~6/17(수)</option><option>2차수 — 6/18(목)~6/19(금)</option><option>3차수 — 6/23(화)~6/24(수)</option><option>4차수 — 6/25(목)~6/26(금)</option><option>5차수 — 7/2(목)~7/3(금)</option><option>6차수 — 7/7(화)~7/8(수)</option><option>7차수 — 7/9(목)~7/10(금)</option><option>8차수 — 7/14(화)~7/15(수)</option><option>9차수 — 7/21(화)~7/22(수)</option><option>10차수 — 7/23(목)~7/24(금)</option></select>
+      <div class="sb-label">기본 정보</div>
+      <div class="field"><label>차수</label>
+        <select id="s_cohort">
+          <option value="">선택</option>
+          <option>1차수 — 6/16(화)~6/17(수)</option>
+          <option>2차수 — 6/18(목)~6/19(금)</option>
+          <option>3차수 — 6/23(화)~6/24(수)</option>
+          <option>4차수 — 6/25(목)~6/26(금)</option>
+          <option>5차수 — 7/2(목)~7/3(금)</option>
+          <option>6차수 — 7/7(화)~7/8(수)</option>
+          <option>7차수 — 7/9(목)~7/10(금)</option>
+          <option>8차수 — 7/14(화)~7/15(수)</option>
+          <option>9차수 — 7/21(화)~7/22(수)</option>
+          <option>10차수 — 7/23(목)~7/24(금)</option>
+        </select>
       </div>
-      <div class="field"><label>반 · 팀</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <select id="s_class"><option value="">반</option><option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option></select>
-          <select id="s_team"><option value="">팀</option><option>A팀</option><option>B팀</option><option>C팀</option><option>D팀</option><option>E팀</option><option>F팀</option></select>
+      <div class="row-2">
+        <div class="field"><label>반</label>
+          <select id="s_class">
+            <option value="">반</option>
+            <option>1반</option><option>2반</option><option>3반</option>
+            <option>4반</option><option>5반</option>
+          </select>
+        </div>
+        <div class="field"><label>팀</label>
+          <select id="s_team">
+            <option value="">팀</option>
+            <option>A팀</option><option>B팀</option><option>C팀</option>
+            <option>D팀</option><option>E팀</option><option>F팀</option>
+          </select>
         </div>
       </div>
-
-      <div class="field"><label>조직명</label><input type="text" id="s_org" placeholder="조직명 입력"></div>
-      <div class="field"><label>작성자 (팀장)</label><input type="text" id="s_author" placeholder="이름 / 직책"></div>
-      <button class="btn-load" id="loadBtn" onclick="loadDraft()">↓ 기존 작성 내용 불러오기</button>
+      <div class="field"><label>조직명</label>
+        <input type="text" id="s_org" placeholder="조직명 입력" oninput="syncField('s_org','r_org')">
+      </div>
+      <div class="field"><label>작성자</label>
+        <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author')">
+      </div>
+      <button class="btn-load" id="loadBtn" onclick="loadDraft()">↓ 기존 내용 불러오기</button>
       <div id="loadStatus"></div>
     </div>
 
     <hr class="sb-divider">
 
     <div class="sb-section">
-      <div class="sb-label">과제 유형 <span style="font-weight:400;font-style:italic;text-transform:none">(1개 선택)</span></div>
-      <div class="task-type-grid" id="typeGrid">
-        <div class="type-chip" onclick="selectType(this)">팀 업무 개선</div>
-        <div class="type-chip" onclick="selectType(this)">리더십</div>
-        <div class="type-chip" onclick="selectType(this)">조직문화</div>
-        <div class="type-chip" onclick="selectType(this)">기타</div>
+      <div class="sb-label">과제 유형 (1개 선택)</div>
+      <div class="type-grid">
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>팀 업무 개선</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>리더십</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>조직문화</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>기타</div>
       </div>
     </div>
 
     <hr class="sb-divider">
 
-    <div class="sb-section" style="flex:1">
-      <div class="sb-label">작성 진행 상황</div>
-      <div class="step-list">
-        <div class="step-item active" id="nav0" onclick="scrollTo_(0)"><div class="step-num">1</div>제목 / 이미지</div>
-        <div class="step-item" id="nav1" onclick="scrollTo_(1)"><div class="step-num">2</div>문제 배경 (Why)</div>
-        <div class="step-item" id="nav2" onclick="scrollTo_(2)"><div class="step-num">3</div>바꾸고 싶은 모습 (To-Be)</div>
-        <div class="step-item" id="nav3" onclick="scrollTo_(3)"><div class="step-num">4</div>과제 한 줄 정의</div>
-        <div class="step-item" id="nav4" onclick="scrollTo_(4)"><div class="step-num">5</div>근본원인·정량화·목표</div>
+    <div class="sb-section">
+      <div class="sb-label">대표 이미지</div>
+      <div class="img-selector" onclick="openImgPicker()" style="min-height:80px">
+        <img id="sbImgPreview" style="display:none">
+        <span class="img-selector-icon" id="sbImgIcon">🖼</span>
+        <span id="sbImgHint" style="font-size:11px">클릭하여 선택</span>
       </div>
     </div>
 
-    <button class="btn-submit-main" id="submitBtn" onclick="submitForm()">제출하기</button>
+    <div class="sb-footer">
+      <button class="btn-submit" id="submitBtn2" onclick="submitForm()">과제 정의서 제출</button>
+    </div>
   </aside>
 
-  <!-- ── 에디터 ── -->
-  <main class="editor" id="editorMain">
+  <!-- ============================
+       에디터
+       ============================ -->
+  <main class="editor-area" id="editorArea">
+
+    <!-- 작성 문서 -->
     <div class="editor-inner" id="formArea">
+      <div class="doc-preview" id="docPreview">
 
-      <!-- 섹션 1: 제목 + 이미지 + 기본정보 -->
-      <div class="sec-card" data-sec="0">
-        <div class="sec-head">
-          <span class="sec-badge red">문제 드러내기</span>
-          <div style="flex:1">
-            <textarea id="mainTitle" rows="1" style="width:100%;border:none;font-size:18px;font-weight:700;font-family:inherit;color:var(--text);outline:none;resize:none;background:transparent;line-height:1.4" placeholder="과제 제목을 입력하세요" oninput="autoGrow(this)"></textarea>
+        <!-- Header -->
+        <div class="doc-header">
+          <span class="brand">우리팀 REINVENT 과제</span>
+          <span class="doc-type">과제 정의서</span>
+        </div>
+
+        <!-- Title row -->
+        <div class="doc-title-row">
+          <button class="doc-badge-input" id="badgeBtn" onclick="openBadgePicker()">문제 드러내기 ▾</button>
+          <div class="doc-main-title">
+            <input type="text" id="mainTitle" placeholder="과제 제목을 입력하세요 (예: Risk Open 문화로 DQA Quality 혁신)">
           </div>
         </div>
-        <div class="sec-body">
-          <div class="top-grid">
-            <div class="image-placeholder" id="imgDrop" onclick="openImgPicker()">
-              <img id="imgPreview" style="display:none">
-              <div class="img-icon" id="imgIcon">🖼</div>
-              <div class="img-hint" id="imgHint">클릭하여 이미지 선택</div>
-            </div>
-            <div class="info-table">
-              <div class="info-row"><span class="info-key">조직명</span><div class="info-val"><input type="text" id="r_org" placeholder="조직명 입력" oninput="sync('r_org','s_org')"></div></div>
-              <div class="info-row"><span class="info-key">작성자</span><div class="info-val"><input type="text" id="r_author" placeholder="이름 / 직책" oninput="sync('r_author','s_author')"></div></div>
-              <div class="info-row"><span class="info-key">과제 유형</span><div class="info-val"><input type="text" id="r_types" placeholder="자동 반영됩니다" readonly style="color:var(--muted)"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- 섹션 2: Why -->
-      <div class="sec-card" data-sec="1">
-        <div class="sec-head">
-          <span class="sec-badge pink">지금 우리 팀의 문제 / 배경</span>
-          <span style="font-size:13px;font-weight:600;color:var(--lg)">(Why)</span>
-        </div>
-        <div class="sec-body">
-          <div class="why-card">
-            <div class="why-title">문제 상황</div>
-            <div class="bullet-list" id="why_list">
-              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 내용을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 내용을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-            </div>
-            <button class="btn-add-bullet" onclick="addBullet('why_list')">＋ 항목 추가</button>
-          </div>
-        </div>
-      </div>
+        <!-- Body -->
+        <div class="doc-body">
 
-      <!-- 섹션 3: To-Be -->
-      <div class="sec-card" data-sec="2">
-        <div class="sec-head">
-          <span class="sec-badge pink">우리가 바꾸고 싶은 모습</span>
-          <span style="font-size:13px;font-weight:600;color:var(--lg)">(To-Be)</span>
-        </div>
-        <div class="sec-body">
-          <div class="why-card">
-            <div class="why-title">목표 상태</div>
-            <div class="bullet-list" id="tobe_list">
-              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="개선 후 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-              <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="개선 후 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-            </div>
-            <button class="btn-add-bullet" onclick="addBullet('tobe_list')">＋ 항목 추가</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 섹션 4: 한 줄 정의 -->
-      <div class="sec-card" data-sec="3">
-        <div class="sec-head">
-          <span class="sec-badge gray">과제의 범위 / 한 줄 정의</span>
-        </div>
-        <div class="sec-body">
-          <div class="oneliner-card">
-            <div class="oneliner-label">과제 한 줄 정의</div>
-            <textarea id="oneliner" class="oneliner-input" rows="2" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"' oninput="autoGrow(this)"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- 섹션 5: 3단 하단 -->
-      <div class="sec-card" data-sec="4">
-        <div class="sec-head">
-          <span class="sec-badge gray">근본원인 · 정량화 · 개선과제 목표</span>
-        </div>
-        <div class="sec-body">
-          <div class="bottom-grid">
-            <div class="bot-card">
-              <div class="bot-card-title">근본원인 분석</div>
-              <div class="bullet-list" id="cause_list">
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+          <!-- Left: poster -->
+          <div class="poster-card">
+            <div class="poster-visual" onclick="openImgPicker()">
+              <div class="poster-img-placeholder" id="posterPlaceholder">
+                <span>🖼</span>
+                <span style="font-size:12px;color:#bbb">클릭하여 이미지 선택</span>
               </div>
-              <button class="btn-add-bullet" onclick="addBullet('cause_list')">＋ 추가</button>
+              <img class="poster-img" id="posterImg" style="display:none">
             </div>
-            <div class="bot-card">
-              <div class="bot-card-title">정량화 (Gap)</div>
-              <div class="bullet-list" id="gap_list">
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표 수치..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표 수치..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+            <!-- Info block -->
+            <div class="info-block">
+              <div class="info-row">
+                <span class="info-label">조직명</span>
+                <input class="info-input" id="r_org" placeholder="조직명" oninput="syncField('r_org','s_org')">
               </div>
-              <button class="btn-add-bullet" onclick="addBullet('gap_list')">＋ 추가</button>
-            </div>
-            <div class="bot-card">
-              <div class="bot-card-title">개선과제 목표</div>
-              <div class="bullet-list" id="goal_list">
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
-                <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button></div>
+              <div class="info-row">
+                <span class="info-label">작성자</span>
+                <input class="info-input" id="r_author" placeholder="이름 / 직책" oninput="syncField('r_author','s_author')">
               </div>
-              <button class="btn-add-bullet" onclick="addBullet('goal_list')">＋ 추가</button>
+              <div class="info-row info-row-types">
+                <span class="info-label">과제 유형</span>
+                <div class="info-val-display" id="typeDisplay">
+                  <span class="check-item" onclick="toggleDocType('팀 업무 개선')"><span class="check-mark"></span>팀 업무 개선</span>
+                  <span class="check-item" onclick="toggleDocType('리더십')"><span class="check-mark"></span>리더십</span>
+                  <span class="check-item" onclick="toggleDocType('조직문화')"><span class="check-mark"></span>조직문화</span>
+                  <span class="check-item" onclick="toggleDocType('기타')"><span class="check-mark"></span>기타</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
+          <!-- Right: sections -->
+          <div class="right-col">
+
+            <!-- Why -->
+            <div class="section">
+              <div class="section-title">지금 우리 팀의 문제 / 배경 (Why)</div>
+              <div class="section-body">
+                <div class="bullet-list" id="why_list">
+                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                </div>
+                <button class="btn-add" onclick="addBullet('why_list')">＋ 항목 추가</button>
+              </div>
+            </div>
+
+            <!-- To-Be -->
+            <div class="section">
+              <div class="section-title">우리가 바꾸고 싶은 모습 (To-Be)</div>
+              <div class="section-body">
+                <div class="bullet-list" id="tobe_list">
+                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                </div>
+                <button class="btn-add" onclick="addBullet('tobe_list')">＋ 항목 추가</button>
+              </div>
+            </div>
+
+            <!-- Range / 한줄 정의 -->
+            <div class="range-section">
+              <div class="range-title">과제의 범위 / 한 줄 정의</div>
+              <input class="range-input" id="oneliner" type="text" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"'>
+            </div>
+
+            <!-- Triple grid -->
+            <div class="triple-grid">
+              <div class="section">
+                <div class="section-title">근본원인 분석</div>
+                <div class="section-body">
+                  <div class="bullet-list" id="cause_list">
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  </div>
+                  <button class="btn-add" onclick="addBullet('cause_list')">＋</button>
+                </div>
+              </div>
+              <div class="section">
+                <div class="section-title">정량화 (Gap)</div>
+                <div class="section-body">
+                  <div class="bullet-list" id="gap_list">
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  </div>
+                  <button class="btn-add" onclick="addBullet('gap_list')">＋</button>
+                </div>
+              </div>
+              <div class="section">
+                <div class="section-title">개선과제 목표</div>
+                <div class="section-body">
+                  <div class="bullet-list" id="goal_list">
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  </div>
+                  <button class="btn-add" onclick="addBullet('goal_list')">＋</button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /right-col -->
+        </div><!-- /doc-body -->
+
+        <!-- Footer -->
+        <div class="doc-footer">
+          <span class="powered">Powered by REINVENT 2.0</span>
+        </div>
+
+      </div><!-- /doc-preview -->
     </div><!-- /formArea -->
 
     <!-- 제출 완료 -->
-    <div class="submit-done" id="doneArea">
-      <div class="done-icon">✅</div>
-      <div class="done-title">과제 정의서가 제출되었습니다!</div>
-      <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
-      <div class="done-id" id="doneId">-</div>
+    <div id="doneArea" style="display:none">
+      <div class="done-card">
+        <div class="done-icon">✅</div>
+        <div class="done-title">과제 정의서가 제출되었습니다!</div>
+        <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
+        <div class="done-id" id="doneId">-</div>
+      </div>
     </div>
-  </main>
-</div><!-- /layout -->
 
-<!-- ── 이미지 선택 팝업 ── -->
-<div class="modal-bg" id="imgPickerBg" onclick="if(event.target===this)closeImgPicker()">
-  <div class="modal" style="max-width:680px">
-    <div class="modal-hd">
-      <span class="modal-title">🖼 이미지 선택</span>
-      <button class="btn-close" onclick="closeImgPicker()">×</button>
+  </main>
+</div><!-- /app-body -->
+
+<!-- ============================
+     뱃지 선택 모달
+     ============================ -->
+<div class="modal-bg" id="badgeBg" onclick="if(event.target===this)document.getElementById('badgeBg').classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">과제 유형 선택</div>
+    <div class="badge-options">
+      <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
+      <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
     </div>
-    <div id="imgPickerGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px"></div>
+    <button class="btn-modal-close" onclick="document.getElementById('badgeBg').classList.remove('open')">닫기</button>
   </div>
 </div>
 
+<!-- ============================
+     이미지 선택 팝업
+     ============================ -->
+<div class="modal-bg" id="imgPickerBg" onclick="if(event.target===this)closeImgPicker()">
+  <div class="modal" style="max-width:640px;width:100%">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span style="font-size:14px;font-weight:700">🖼 이미지 선택</span>
+      <button onclick="closeImgPicker()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
+    </div>
+    <div id="imgPickerGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"></div>
+  </div>
+</div>
 
-<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closePreview()">
-  <div class="modal">
-    <div class="modal-hd">
-      <span class="modal-title">과제 정의서 미리보기</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <button onclick="savePreviewAsImage()" style="background:var(--lg);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px">↓ 이미지 저장</button>
-        <button class="btn-close" onclick="closePreview()">×</button>
+<!-- 미리보기 모달 -->
+<div class="modal-bg" id="previewBg" onclick="if(event.target===this)closePreview()">
+  <div class="modal" style="max-width:900px;width:100%;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-size:15px;font-weight:700">과제 정의서 미리보기</span>
+      <div style="display:flex;gap:8px">
+        <button onclick="savePreviewImage()" style="background:var(--reinvent-red);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">↓ 이미지 저장</button>
+        <button onclick="closePreview()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
       </div>
     </div>
-    <div id="previewDoc"></div>
+    <div id="previewContent"></div>
   </div>
 </div>
 
@@ -389,362 +645,272 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgRr95d2zQKAWnyFshjxvPmheTU3fG1CmzEV-8Aj-bizzB-tfSouUXqBg/exec';
+
+// ── 이미지 ──
+const PRESET_IMGS = Array.from({length:10},(_,i)=>
+  `https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_%20(${i+1}).png`
+);
 let imgDataUrl = null;
+let currentSubmitId = null;
 
-async function savePreviewAsImage(){
-  const el = document.getElementById('previewDoc');
-  const btn = event.target.closest('button');
-  const orig = btn.textContent;
-  btn.textContent = '저장 중...'; btn.disabled = true;
-  try {
-    const canvas = await html2canvas(el, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#f2f0ed',
-      logging: false
-    });
-    const link = document.createElement('a');
-    const cohort = (document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
-    const cls = document.getElementById('s_class').value||'';
-    const team = document.getElementById('s_team').value||'';
-    const author = document.getElementById('r_author').value.trim()||'';
-    link.download = `과제정의서_${cohort}_${cls}_${team}_${author}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  } catch(e) {
-    showToast('저장 실패: ' + e.message, 'err');
-  } finally {
-    btn.textContent = orig; btn.disabled = false;
-  }
-}
-
+// ── 자동 높이 ──
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
-function sync(srcId,destId){
-  const v=document.getElementById(srcId).value;
-  const dest=document.getElementById(destId);
-  if(dest)dest.value=v;
+// ── 필드 동기화 ──
+function syncField(srcId, destId){
+  const v=document.getElementById(srcId)?.value||'';
+  const d=document.getElementById(destId);
+  if(d)d.value=v;
 }
 
+// ── 뱃지 ──
+function openBadgePicker(){document.getElementById('badgeBg').classList.add('open')}
+function setBadge(text){
+  document.getElementById('badgeBtn').textContent=text+' ▾';
+  document.getElementById('badgeBg').classList.remove('open');
+}
+
+// ── 과제 유형 (사이드바 → 문서 동기화) ──
 function selectType(el){
-  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.type-item').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
-  document.getElementById('r_types').value=el.textContent;
+  const text=el.textContent.replace(/✓/g,'').trim();
+  // 문서 내 체크 아이템 동기화
+  document.querySelectorAll('.check-item').forEach(ci=>{
+    const label=ci.textContent.replace(/✓/g,'').trim();
+    ci.classList.toggle('checked',label===text);
+    ci.querySelector('.check-mark').textContent=label===text?'✓':'';
+  });
+}
+function toggleDocType(text){
+  document.querySelectorAll('.check-item').forEach(ci=>{
+    const label=ci.textContent.replace(/✓/g,'').trim();
+    const match=label===text;
+    ci.classList.toggle('checked',match);
+    ci.querySelector('.check-mark').textContent=match?'✓':'';
+  });
+  // 사이드바 동기화
+  document.querySelectorAll('.type-item').forEach(ti=>{
+    const label=ti.textContent.replace(/✓/g,'').trim();
+    ti.classList.toggle('on',label===text);
+  });
+}
+function getSelectedType(){
+  const on=document.querySelector('.type-item.on');
+  return on?on.textContent.replace(/✓/g,'').trim():'';
 }
 
+// ── 불릿 ──
 function addBullet(listId){
   const list=document.getElementById(listId);
-  const row=document.createElement('div');
-  row.className='bullet-row';
-  row.innerHTML='<div class="bullet-dot"></div><textarea rows="1" placeholder="내용 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button>';
+  const ph=listId.includes('cause')||listId.includes('gap')||listId.includes('goal')?'입력...':'내용을 입력하세요...';
+  const row=document.createElement('div');row.className='bullet-row';
+  row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" placeholder="${ph}" oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
   list.appendChild(row);
 }
 function rmBullet(btn){
   const list=btn.closest('.bullet-list');
-  if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요해요','err');return;}
+  if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요합니다','err');return;}
   btn.closest('.bullet-row').remove();
 }
+function getBullets(listId){
+  return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
+}
 
-const PRESET_IMGS = Array.from({length:10}, (_,i) =>
-  `https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_%20(${i+1}).png`
-);
-
+// ── 이미지 팝업 ──
 function openImgPicker(){
-  const grid = document.getElementById('imgPickerGrid');
-  grid.innerHTML = PRESET_IMGS.map((url,i) => `
+  const grid=document.getElementById('imgPickerGrid');
+  grid.innerHTML=PRESET_IMGS.map((url,i)=>`
     <div class="img-pick-item ${imgDataUrl===url?'selected':''}" onclick="selectPresetImg(${i})">
       <img src="${url}" onerror="this.style.display='none';this.parentElement.style.background='#f2f0ed'">
       <div class="img-pick-label">이미지 ${i+1}</div>
     </div>`).join('');
   document.getElementById('imgPickerBg').classList.add('open');
 }
-function closeImgPicker(){ document.getElementById('imgPickerBg').classList.remove('open'); }
-
+function closeImgPicker(){document.getElementById('imgPickerBg').classList.remove('open')}
 function selectPresetImg(idx){
-  const url = PRESET_IMGS[idx];
-  imgDataUrl = url;
+  const url=PRESET_IMGS[idx];imgDataUrl=url;
   document.querySelectorAll('.img-pick-item').forEach((el,i)=>el.classList.toggle('selected',i===idx));
-  const img = document.getElementById('imgPreview');
-  img.src = url; img.style.display = 'block';
-  document.getElementById('imgIcon').style.display = 'none';
-  document.getElementById('imgHint').style.display = 'none';
+  // 사이드바
+  const sbi=document.getElementById('sbImgPreview');
+  sbi.src=url;sbi.style.display='block';
+  document.getElementById('sbImgIcon').style.display='none';
+  document.getElementById('sbImgHint').style.display='none';
+  // 문서
+  const pi=document.getElementById('posterImg');
+  pi.src=url;pi.style.display='block';
+  document.getElementById('posterPlaceholder').style.display='none';
   closeImgPicker();
 }
 
-// 스크롤 네비게이션
-function scrollTo_(idx){
-  const sec=document.querySelectorAll('[data-sec]')[idx];
-  if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
-}
-document.getElementById('editorMain').addEventListener('scroll',()=>{
-  const secs=document.querySelectorAll('[data-sec]');
-  const scrollTop=document.getElementById('editorMain').scrollTop;
-  let cur=0;
-  secs.forEach((s,i)=>{if(s.offsetTop-60<=scrollTop)cur=i});
-  document.querySelectorAll('.step-item').forEach((el,i)=>el.classList.toggle('active',i===cur));
-});
-
-// ── 기존 내용 불러오기 ──
-let currentSubmitId = null; // 수정 모드일 때 기존 제출번호 저장
-
-function loadDraft() {
-  const cohort = document.getElementById('s_cohort').value;
-  const cls    = document.getElementById('s_class').value;
-  const team   = document.getElementById('s_team').value;
-  const statusEl = document.getElementById('loadStatus');
-
-  if (!cohort || !cls || !team) {
-    statusEl.className='load-status err';
-    statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';
-    return;
-  }
-
-  const btn = document.getElementById('loadBtn');
-  btn.disabled = true; btn.textContent = '불러오는 중...';
-  statusEl.className='load-status info'; statusEl.textContent='조회 중...';
-
-  // 기존 콜백 제거
-  if (window._loadCallback) delete window._loadCallback;
-  const old = document.getElementById('loadScript');
-  if (old) old.remove();
-
-  window._loadCallback = function(result) {
-    btn.disabled = false; btn.textContent = '↓ 기존 작성 내용 불러오기';
-    if (result.status !== 'ok' || !result.data || result.data.length === 0) {
-      statusEl.className='load-status err';
-      statusEl.textContent='저장된 내용이 없습니다. 새로 작성해 주세요.';
-      return;
-    }
-    // 차수·반·팀 일치하는 가장 최근 데이터
-    const match = result.data.filter(d =>
-      d.cohort === cohort && d.classNum === cls && d.teamNum === team
-    ).pop();
-    if (!match) {
-      statusEl.className='load-status err';
-      statusEl.textContent='해당 팀의 저장된 내용이 없습니다.';
-      return;
-    }
-    fillForm(match);
-    statusEl.className='load-status ok';
-    statusEl.textContent='✓ 불러오기 완료 · ' + match.submittedAt;
-  };
-
-  const script = document.createElement('script');
-  script.id = 'loadScript';
-  script.src = APPS_SCRIPT_URL + '?callback=_loadCallback&t=' + Date.now();
-  script.onerror = () => {
-    btn.disabled = false; btn.textContent = '↓ 기존 작성 내용 불러오기';
-    statusEl.className='load-status err'; statusEl.textContent='불러오기 실패. 네트워크를 확인해 주세요.';
-  };
-  document.body.appendChild(script);
-}
-
-function fillForm(d) {
-  currentSubmitId = d.submitId; // 수정 모드
-
-  // 사이드바
-  if (d.org)    { document.getElementById('s_org').value = d.org; document.getElementById('r_org').value = d.org; }
-  if (d.author) { document.getElementById('s_author').value = d.author; document.getElementById('r_author').value = d.author; }
-  if (d.types)  {
-    document.querySelectorAll('.type-chip').forEach(c => {
-      c.classList.toggle('on', c.textContent.trim() === d.types);
-    });
-    document.getElementById('r_types').value = d.types;
-  }
-
-  // 제목
-  if (d.mainTitle) { const t=document.getElementById('mainTitle'); t.value=d.mainTitle; autoGrow(t); }
-
-  // 한 줄 정의
-  if (d.oneliner) { const t=document.getElementById('oneliner'); t.value=d.oneliner; autoGrow(t); }
-
-  // 불릿 리스트 채우기
-  function fillBullets(listId, text) {
-    if (!text) return;
-    const list = document.getElementById(listId);
-    const items = text.split('\n').filter(Boolean);
-    // 기존 행 초기화
-    list.innerHTML = '';
-    items.forEach(item => {
-      const row = document.createElement('div');
-      row.className = 'bullet-row';
-      row.innerHTML = `<div class="bullet-dot"></div><textarea rows="1" oninput="autoGrow(this)">${item}</textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button>`;
-      list.appendChild(row);
-      autoGrow(row.querySelector('textarea'));
-    });
-  }
-  fillBullets('why_list',   d.whys);
-  fillBullets('tobe_list',  d.tobes);
-  fillBullets('cause_list', d.causes);
-  fillBullets('gap_list',   d.gaps);
-  fillBullets('goal_list',  d.goals);
-
-  // 제출 버튼 텍스트 변경
-  document.getElementById('submitBtn').textContent = '수정 제출하기';
-}
-
-// 미리보기
-function getBullets(listId){
-  return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
-}
-function openPreview(){
-  const title=document.getElementById('mainTitle').value.trim()||'(제목 미입력)';
-  const org=document.getElementById('r_org').value.trim()||'-';
-  const author=document.getElementById('r_author').value.trim()||'-';
-  const types=document.getElementById('r_types').value||'-';
-  const oneliner=document.getElementById('oneliner').value.trim()||'(한 줄 정의 미입력)';
-  const whys=getBullets('why_list');
-  const tobes=getBullets('tobe_list');
-  const causes=getBullets('cause_list');
-  const gaps=getBullets('gap_list');
-  const goals=getBullets('goal_list');
+// ── 불러오기 ──
+function loadDraft(){
   const cohort=document.getElementById('s_cohort').value;
   const cls=document.getElementById('s_class').value;
   const team=document.getElementById('s_team').value;
-
-  const blist=(arr,cls='prev-bullet')=>arr.length
-    ?arr.map(t=>`<div class="${cls}">${t}</div>`).join('')
-    :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
-
-  const imgTag=imgDataUrl
-    ?`<img src="${imgDataUrl}" style="width:100%;height:auto;object-fit:contain;border-radius:6px;display:block">`
-    :`<div class="prev-img-ph">이미지 없음</div>`;
-
-  document.getElementById('previewDoc').innerHTML=`
-  <div class="prev-doc">
-    <div class="prev-header">
-      <span>우리팀 REINVENT 과제</span>
-      <span>${cohort} ${cls} ${team}</span>
-    </div>
-    <div class="prev-body">
-      <div class="prev-main-title">
-        <span class="prev-title-badge">문제 드러내기</span>
-        <strong style="font-size:14px">${title}</strong>
-      </div>
-      <div class="prev-2col">
-        <div class="prev-img">${imgTag}</div>
-        <div class="prev-right">
-          <div class="prev-section">
-            <div class="prev-section-title">지금 우리 팀의 문제 / 배경 (Why)</div>
-            ${blist(whys)}
-          </div>
-          <div class="prev-section">
-            <div class="prev-section-title">우리가 바꾸고 싶은 모습 (To-Be)</div>
-            ${blist(tobes)}
-          </div>
-        </div>
-      </div>
-      <div class="prev-oneliner">
-        <div class="prev-oneliner-label">과제의 범위 / 한 줄 정의</div>
-        <div class="prev-oneliner-text">"${oneliner}"</div>
-      </div>
-      <div class="prev-3col">
-        <div class="prev-bot"><div class="prev-bot-title">근본원인 분석</div>${blist(causes)}</div>
-        <div class="prev-bot"><div class="prev-bot-title">정량화 (Gap)</div>${blist(gaps)}</div>
-        <div class="prev-bot" style="border-right:none"><div class="prev-bot-title">개선과제 목표</div>${blist(goals)}</div>
-      </div>
-      <div class="prev-info-grid" style="border-top:1px solid var(--border)">
-        <div class="prev-info-cell"><div class="prev-info-label">조직명</div><div class="prev-info-val">${org}</div></div>
-        <div class="prev-info-cell"><div class="prev-info-label">작성자</div><div class="prev-info-val">${author}</div></div>
-        <div class="prev-info-cell" style="border-right:none"><div class="prev-info-label">과제 유형</div><div class="prev-info-val">${types}</div></div>
-      </div>
-    </div>
-    <div class="prev-foot">Powered by REINVENT 2.0</div>
-  </div>`;
-  document.getElementById('modalBg').classList.add('open');
+  const statusEl=document.getElementById('loadStatus');
+  if(!cohort||!cls||!team){
+    statusEl.className='load-status err';statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';return;
+  }
+  const btn=document.getElementById('loadBtn');
+  btn.disabled=true;btn.textContent='불러오는 중...';
+  statusEl.className='load-status info';statusEl.textContent='조회 중...';
+  if(window._loadCb)delete window._loadCb;
+  const old=document.getElementById('loadScript');if(old)old.remove();
+  window._loadCb=function(result){
+    btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';
+    if(!result.status==='ok'||!result.data||!result.data.length){
+      statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
+    }
+    const match=result.data.filter(d=>d.cohort===cohort&&d.classNum===cls&&d.teamNum===team).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 팀의 내용이 없습니다.';return;}
+    fillForm(match);
+    statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
+  };
+  const s=document.createElement('script');s.id='loadScript';
+  s.src=APPS_SCRIPT_URL+'?callback=_loadCb&t='+Date.now();
+  s.onerror=()=>{btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
+  document.body.appendChild(s);
 }
-function closePreview(){document.getElementById('modalBg').classList.remove('open')}
+function fillForm(d){
+  currentSubmitId=d.submitId;
+  if(d.org){document.getElementById('s_org').value=d.org;document.getElementById('r_org').value=d.org;}
+  if(d.author){document.getElementById('s_author').value=d.author;document.getElementById('r_author').value=d.author;}
+  if(d.types)toggleDocType(d.types);
+  if(d.mainTitle)document.getElementById('mainTitle').value=d.mainTitle;
+  if(d.oneliner)document.getElementById('oneliner').value=d.oneliner;
+  if(d.imgData){imgDataUrl=d.imgData;const pi=document.getElementById('posterImg');pi.src=d.imgData;pi.style.display='block';document.getElementById('posterPlaceholder').style.display='none';}
+  function fillBullets(listId,text){
+    if(!text)return;const list=document.getElementById(listId);
+    const items=text.split('\n').filter(Boolean);list.innerHTML='';
+    items.forEach(item=>{const row=document.createElement('div');row.className='bullet-row';
+      row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" oninput="autoGrow(this)">${item}</textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
+      list.appendChild(row);autoGrow(row.querySelector('textarea'));});
+  }
+  fillBullets('why_list',d.whys);fillBullets('tobe_list',d.tobes);
+  fillBullets('cause_list',d.causes);fillBullets('gap_list',d.gaps);fillBullets('goal_list',d.goals);
+  document.getElementById('submitBtn').textContent='수정 제출';
+  document.getElementById('submitBtn2').textContent='수정 제출';
+}
 
-// 제출
+// ── 미리보기 ──
+function openPreview(){
+  document.getElementById('previewContent').innerHTML=buildPreviewHTML({
+    badge:document.getElementById('badgeBtn').textContent.replace(' ▾',''),
+    mainTitle:document.getElementById('mainTitle').value||'(제목 없음)',
+    org:document.getElementById('r_org').value||'-',
+    author:document.getElementById('r_author').value||'-',
+    types:getSelectedType()||'-',
+    oneliner:document.getElementById('oneliner').value||'',
+    whys:getBullets('why_list').join('\n'),
+    tobes:getBullets('tobe_list').join('\n'),
+    causes:getBullets('cause_list').join('\n'),
+    gaps:getBullets('gap_list').join('\n'),
+    goals:getBullets('goal_list').join('\n'),
+    imgData:imgDataUrl||'',
+    cohort:document.getElementById('s_cohort').value,
+    classNum:document.getElementById('s_class').value,
+    teamNum:document.getElementById('s_team').value,
+  });
+  document.getElementById('previewBg').classList.add('open');
+}
+function closePreview(){document.getElementById('previewBg').classList.remove('open')}
+
+function buildPreviewHTML(d){
+  const blist=arr=>(arr||[]).split('\n').filter(Boolean).map(t=>
+    `<li style="font-size:13.2px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${t}</li>`
+  ).join('')||'<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>';
+  const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;height:160px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px">이미지 없음</div>`;
+  return `
+<div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
+<div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;max-width:900px;margin:0 auto">
+  <div style="background:#C8102E;color:#fff;height:48px;display:flex;align-items:center;padding:0 20px;font-size:13px;font-weight:500">
+    <span style="font-weight:900;font-size:17px;letter-spacing:1.5px;margin-right:24px">우리팀 REINVENT 과제</span>
+    <span style="margin-left:auto;font-size:13px;font-weight:700;letter-spacing:2px;padding:4px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px">과제 정의서</span>
+  </div>
+  <div style="padding:18px 24px 12px;display:flex;align-items:center;gap:14px">
+    <span style="background:#C8102E;color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border-radius:999px;white-space:nowrap">${d.badge}</span>
+    <div style="flex:1;font-size:22px;font-weight:800;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle}</div>
+  </div>
+  <div style="display:grid;grid-template-columns:240px 1fr;gap:14px;padding:4px 24px 16px">
+    <div style="border:1px solid #EAD0D5;border-radius:6px;overflow:hidden;display:flex;flex-direction:column">
+      <div>${imgTag}</div>
+      <div style="background:#FFF5F7;padding:12px 14px;font-size:12.5px;color:#444;border-top:1px solid #F0B4BE">
+        <div style="display:flex;gap:10px;padding:4px 0"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">조직명</span><span style="font-size:12.5px;color:#1F1F1F"><b>${d.org}</b></span></div>
+        <div style="display:flex;gap:10px;padding:4px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:4px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">작성자</span><span style="font-size:12.5px;color:#1F1F1F">${d.author}</span></div>
+        <div style="display:flex;gap:10px;padding:4px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:4px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">과제 유형</span><span style="font-size:12px;color:#C8102E;font-weight:700">${d.types}</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E">
+        <div style="background:#FCE4E8;padding:7px 14px;font-size:13.5px;font-weight:800;color:#C8102E">지금 우리 팀의 문제 / 배경 (Why)</div>
+        <ul style="list-style:none;padding:10px 16px 12px;margin:0">${blist(d.whys)}</ul>
+      </div>
+      <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E">
+        <div style="background:#FCE4E8;padding:7px 14px;font-size:13.5px;font-weight:800;color:#C8102E">우리가 바꾸고 싶은 모습 (To-Be)</div>
+        <ul style="list-style:none;padding:10px 16px 12px;margin:0">${blist(d.tobes)}</ul>
+      </div>
+      <div style="background:#C8102E;color:#fff;padding:12px 20px 15px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:7px">과제의 범위 / 한 줄 정의</div>
+        <div style="font-size:16px;font-weight:800;line-height:1.4">"${d.oneliner}"</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">근본원인 분석</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.causes)}</ul></div>
+        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">정량화 (Gap)</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.gaps)}</ul></div>
+        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">개선과제 목표</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.goals)}</ul></div>
+      </div>
+    </div>
+  </div>
+  <div style="background:#C8102E;color:#fff;padding:9px 20px;display:flex;align-items:center;justify-content:flex-end;font-size:11px;font-style:italic">Powered by REINVENT 2.0</div>
+</div></div>`;
+}
+
+// ── 이미지 저장 ──
+async function savePreviewImage(){
+  const el=document.getElementById('previewContent');
+  const btn=event.target;const orig=btn.textContent;
+  btn.textContent='저장 중...';btn.disabled=true;
+  try{
+    const canvas=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#E8E8E8',logging:false});
+    const link=document.createElement('a');
+    const cohort=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
+    const cls=document.getElementById('s_class').value||'';
+    const team=document.getElementById('s_team').value||'';
+    const author=document.getElementById('r_author').value.trim()||'';
+    link.download=`과제정의서_${cohort}_${cls}_${team}_${author}.png`;
+    link.href=canvas.toDataURL('image/png');link.click();
+  }catch(e){showToast('저장 실패: '+e.message,'err');}
+  finally{btn.textContent=orig;btn.disabled=false;}
+}
+
+// ── 제출 검증 ──
 function validate(){
-  if(!document.getElementById('s_cohort').value){showToast('기수를 선택해 주세요','err');return false;}
+  if(!document.getElementById('s_cohort').value){showToast('차수를 선택해 주세요','err');return false;}
   if(!document.getElementById('s_class').value){showToast('반을 선택해 주세요','err');return false;}
   if(!document.getElementById('s_team').value){showToast('팀을 선택해 주세요','err');return false;}
   if(!document.getElementById('mainTitle').value.trim()){showToast('과제 제목을 입력해 주세요','err');return false;}
-  if(!document.getElementById('oneliner').value.trim()){showToast('과제 한 줄 정의를 입력해 주세요','err');return false;}
+  if(!document.getElementById('oneliner').value.trim()){showToast('한 줄 정의를 입력해 주세요','err');return false;}
   return true;
 }
 
-function buildPreviewHTML(d){
-  const blist=arr=>arr.length
-    ?arr.map(t=>`<div style="display:flex;gap:6px;margin-bottom:4px;font-size:13px;line-height:1.6"><span style="color:#A50034;flex-shrink:0">•</span><span>${t}</span></div>`).join('')
-    :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
-  const imgTag=d.imgData
-    ?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;border-radius:6px;display:block">`
-    :`<div style="width:100%;height:140px;background:#f2f0ed;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">이미지 없음</div>`;
-  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${d.cohort} ${d.classNum} ${d.teamNum} ${d.author} - 과제정의서</title>
-<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f2f0ed;padding:20px}
-.doc{max-width:860px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.1)}
-.doc-hd{background:#A50034;color:white;padding:10px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700}
-.doc-body{border:1px solid #e2ddd8;border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
-.main-title{background:#fff;padding:12px 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e2ddd8}
-.title-badge{background:#A50034;color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
-.two-col{display:grid;grid-template-columns:200px 1fr;background:white}
-.img-area{border-right:1px solid #e2ddd8;padding:14px;background:#fafaf9}
-.right-area{}
-.section{border-bottom:1px solid #e2ddd8;padding:10px 14px}
-.section:last-child{border-bottom:none}
-.sec-label{font-size:10px;font-weight:700;color:#A50034;background:#fff0f3;display:inline-block;padding:2px 8px;border-radius:4px;margin-bottom:7px}
-.oneliner{background:#A50034;color:white;padding:14px 18px}
-.ol-label{font-size:9px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px;margin-bottom:5px}
-.ol-text{font-size:14px;font-weight:700;line-height:1.5}
-.three-col{display:grid;grid-template-columns:repeat(3,1fr);background:white}
-.bot{border-right:1px solid #e2ddd8;padding:12px 14px}
-.bot:last-child{border-right:none}
-.bot-title{font-size:10px;font-weight:700;color:#A50034;margin-bottom:7px}
-.info-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e2ddd8;background:white}
-.info-cell{padding:8px 12px;border-right:1px solid #e2ddd8}
-.info-cell:last-child{border-right:none}
-.info-label{font-size:9px;color:#888;font-weight:600;margin-bottom:2px}
-.info-val{font-size:12px;font-weight:600}
-.foot{background:#A50034;color:rgba(255,255,255,.6);padding:8px 16px;font-size:11px;text-align:right;font-style:italic}
-</style></head><body>
-<div class="doc">
-  <div class="doc-hd"><span>우리팀 REINVENT 과제</span><span>${d.cohort} ${d.classNum} ${d.teamNum}</span></div>
-  <div class="doc-body">
-    <div class="main-title"><span class="title-badge">문제 드러내기</span><strong>${d.mainTitle}</strong></div>
-    <div class="two-col">
-      <div class="img-area">${imgTag}</div>
-      <div class="right-area">
-        <div class="section"><div class="sec-label">지금 우리 팀의 문제 / 배경 (Why)</div>${blist(d.whys.split('\n').filter(Boolean))}</div>
-        <div class="section"><div class="sec-label">우리가 바꾸고 싶은 모습 (To-Be)</div>${blist(d.tobes.split('\n').filter(Boolean))}</div>
-      </div>
-    </div>
-    <div class="oneliner"><div class="ol-label">과제의 범위 / 한 줄 정의</div><div class="ol-text">"${d.oneliner}"</div></div>
-    <div class="three-col">
-      <div class="bot"><div class="bot-title">근본원인 분석</div>${blist(d.causes.split('\n').filter(Boolean))}</div>
-      <div class="bot"><div class="bot-title">정량화 (Gap)</div>${blist(d.gaps.split('\n').filter(Boolean))}</div>
-      <div class="bot"><div class="bot-title">개선과제 목표</div>${blist(d.goals.split('\n').filter(Boolean))}</div>
-    </div>
-    <div class="info-grid">
-      <div class="info-cell"><div class="info-label">조직명</div><div class="info-val">${d.org}</div></div>
-      <div class="info-cell"><div class="info-label">작성자</div><div class="info-val">${d.author}</div></div>
-      <div class="info-cell"><div class="info-label">과제 유형</div><div class="info-val">${d.types}</div></div>
-    </div>
-  </div>
-  <div class="foot">Powered by REINVENT 2.0</div>
-</div>
-</body></html>`;
-}
-
+// ── 제출 ──
 async function submitForm(){
   if(!validate())return;
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.textContent='제출 중...';
+  const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
+  btns.forEach(b=>{b.disabled=true;b.textContent='제출 중...';});
   try{
-    const isUpdate = !!currentSubmitId;
-    const submitId = currentSubmitId || ('JB'+Date.now().toString(36).toUpperCase());
+    const isUpdate=!!currentSubmitId;
+    const submitId=currentSubmitId||('JB'+Date.now().toString(36).toUpperCase());
     const cohort=document.getElementById('s_cohort').value;
     const classNum=document.getElementById('s_class').value;
     const teamNum=document.getElementById('s_team').value;
     const author=document.getElementById('r_author').value.trim();
+    const badge=document.getElementById('badgeBtn').textContent.replace(' ▾','');
     const d={
-      submitId, isUpdate, cohort, classNum, teamNum,
-      teamName:'',
+      submitId,isUpdate,cohort,classNum,teamNum,teamName:'',
       org:document.getElementById('r_org').value.trim(),
-      author, types:document.getElementById('r_types').value,
+      author,types:getSelectedType(),
+      badge,
       mainTitle:document.getElementById('mainTitle').value.trim(),
       whys:getBullets('why_list').join('\n'),
       tobes:getBullets('tobe_list').join('\n'),
@@ -760,24 +926,20 @@ async function submitForm(){
     d.previewHtml=buildPreviewHTML(d);
     await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)});
     document.getElementById('formArea').style.display='none';
-    document.getElementById('doneArea').classList.add('show');
+    document.getElementById('doneArea').style.display='block';
     document.getElementById('doneId').textContent=(isUpdate?'수정 완료 · ':'제출번호: ')+submitId;
-    document.querySelectorAll('.step-item').forEach(el=>{el.classList.remove('active');el.classList.add('done');el.querySelector('.step-num').textContent='✓';});
   }catch(err){
-    showToast('제출 중 오류가 발생했습니다. 다시 시도해 주세요.','err');
-    btn.disabled=false;btn.textContent=currentSubmitId?'수정 제출하기':'제출하기';
+    showToast('제출 오류가 발생했습니다. 다시 시도해 주세요.','err');
+    btns.forEach(b=>{b.disabled=false;b.textContent=currentSubmitId?'수정 제출':'제출하기';});
   }
 }
 
+// ── 토스트 ──
 function showToast(msg,type){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast '+(type||'')+' show';
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
-// 사이드바 ↔ 에디터 동기화
-document.getElementById('s_org').addEventListener('input',()=>document.getElementById('r_org').value=document.getElementById('s_org').value);
-document.getElementById('s_author').addEventListener('input',()=>document.getElementById('r_author').value=document.getElementById('s_author').value);
 </script>
 </body>
 </html>
