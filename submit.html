@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>과제 정의서 작성 | '26 피플 리더십</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -74,11 +75,10 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 .sec-body{padding:0 18px 18px}
 
 /* ── 2단 레이아웃 ── */
-.top-grid{display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start}
-.image-placeholder{border:1.5px dashed var(--border2);border-radius:var(--r8);height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--hint);font-size:12px;cursor:pointer;transition:all .15s;background:var(--gray-bg);position:relative;overflow:hidden}
+.top-grid{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}
+.image-placeholder{border:1.5px dashed var(--border2);border-radius:var(--r8);min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--hint);font-size:12px;cursor:pointer;transition:all .15s;background:var(--gray-bg);position:relative;overflow:hidden}
 .image-placeholder:hover{border-color:var(--lg);color:var(--lg);background:var(--lg-pale)}
-.image-placeholder input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.image-placeholder img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r8)}
+.image-placeholder img{width:100%;height:auto;display:block;object-fit:contain;border-radius:var(--r8)}
 .img-icon{font-size:24px;opacity:.4}
 .img-hint{font-size:11px}
 
@@ -133,8 +133,8 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 .img-pick-item{border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .15s;background:var(--gray-bg)}
 .img-pick-item:hover{border-color:var(--lg);transform:scale(1.03);box-shadow:0 2px 10px rgba(165,0,52,.15)}
 .img-pick-item.selected{border-color:var(--lg);box-shadow:0 0 0 3px var(--lg-light)}
-.img-pick-item img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
-.img-pick-label{font-size:10px;font-weight:600;color:var(--muted);text-align:center;padding:4px 0;background:white}
+.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
+.img-pick-label{display:none}
 
 
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;padding:20px}
@@ -376,7 +376,10 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
   <div class="modal">
     <div class="modal-hd">
       <span class="modal-title">과제 정의서 미리보기</span>
-      <button class="btn-close" onclick="closePreview()">×</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="savePreviewAsImage()" style="background:var(--lg);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px">↓ 이미지 저장</button>
+        <button class="btn-close" onclick="closePreview()">×</button>
+      </div>
     </div>
     <div id="previewDoc"></div>
   </div>
@@ -387,6 +390,33 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgRr95d2zQKAWnyFshjxvPmheTU3fG1CmzEV-8Aj-bizzB-tfSouUXqBg/exec';
 let imgDataUrl = null;
+
+async function savePreviewAsImage(){
+  const el = document.getElementById('previewDoc');
+  const btn = event.target.closest('button');
+  const orig = btn.textContent;
+  btn.textContent = '저장 중...'; btn.disabled = true;
+  try {
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#f2f0ed',
+      logging: false
+    });
+    const link = document.createElement('a');
+    const cohort = (document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
+    const cls = document.getElementById('s_class').value||'';
+    const team = document.getElementById('s_team').value||'';
+    const author = document.getElementById('r_author').value.trim()||'';
+    link.download = `과제정의서_${cohort}_${cls}_${team}_${author}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, 'err');
+  } finally {
+    btn.textContent = orig; btn.disabled = false;
+  }
+}
 
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
@@ -577,7 +607,7 @@ function openPreview(){
     :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
 
   const imgTag=imgDataUrl
-    ?`<img src="${imgDataUrl}" style="width:100%;border-radius:6px;object-fit:cover;max-height:150px">`
+    ?`<img src="${imgDataUrl}" style="width:100%;height:auto;object-fit:contain;border-radius:6px;display:block">`
     :`<div class="prev-img-ph">이미지 없음</div>`;
 
   document.getElementById('previewDoc').innerHTML=`
@@ -640,7 +670,7 @@ function buildPreviewHTML(d){
     ?arr.map(t=>`<div style="display:flex;gap:6px;margin-bottom:4px;font-size:13px;line-height:1.6"><span style="color:#A50034;flex-shrink:0">•</span><span>${t}</span></div>`).join('')
     :'<div style="font-size:12px;color:#aaa">(내용 없음)</div>';
   const imgTag=d.imgData
-    ?`<img src="${d.imgData}" style="width:100%;border-radius:6px;object-fit:cover;max-height:160px">`
+    ?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;border-radius:6px;display:block">`
     :`<div style="width:100%;height:140px;background:#f2f0ed;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">이미지 없음</div>`;
   return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
