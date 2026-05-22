@@ -129,7 +129,14 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 .toast.err{background:#c62828}
 .toast.ok{background:#0f7a4a}
 
-/* ── 미리보기 모달 ── */
+/* ── 이미지 선택 팝업 ── */
+.img-pick-item{border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .15s;background:var(--gray-bg)}
+.img-pick-item:hover{border-color:var(--lg);transform:scale(1.03);box-shadow:0 2px 10px rgba(165,0,52,.15)}
+.img-pick-item.selected{border-color:var(--lg);box-shadow:0 0 0 3px var(--lg-light)}
+.img-pick-item img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.img-pick-label{font-size:10px;font-weight:600;color:var(--muted);text-align:center;padding:4px 0;background:white}
+
+
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;padding:20px}
 .modal-bg.open{display:flex}
 .modal{background:white;border-radius:12px;width:100%;max-width:900px;max-height:90vh;overflow-y:auto;padding:28px 32px}
@@ -243,11 +250,10 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
         </div>
         <div class="sec-body">
           <div class="top-grid">
-            <div class="image-placeholder" id="imgDrop">
-              <input type="file" accept="image/*" onchange="loadImg(event)">
+            <div class="image-placeholder" id="imgDrop" onclick="openImgPicker()">
               <img id="imgPreview" style="display:none">
               <div class="img-icon" id="imgIcon">🖼</div>
-              <div class="img-hint" id="imgHint">이미지 클릭/드롭</div>
+              <div class="img-hint" id="imgHint">클릭하여 이미지 선택</div>
             </div>
             <div class="info-table">
               <div class="info-row"><span class="info-key">조직명</span><div class="info-val"><input type="text" id="r_org" placeholder="조직명 입력" oninput="sync('r_org','s_org')"></div></div>
@@ -354,7 +360,59 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
   </main>
 </div><!-- /layout -->
 
-<!-- ── 미리보기 모달 ── -->
+<!-- ── 이미지 선택 팝업 ── -->
+<div class="modal-bg" id="imgPickerBg" onclick="if(event.target===this)closeImgPicker()">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-hd">
+      <span class="modal-title">🖼 이미지 선택</span>
+      <button class="btn-close" onclick="closeImgPicker()">×</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+      <div class="img-pick-item" onclick="selectPresetImg(1)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(1).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 1</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(2)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(2).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 2</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(3)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(3).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 3</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(4)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(4).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 4</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(5)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(5).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 5</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(6)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(6).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 6</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(7)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(7).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 7</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(8)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(8).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 8</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(9)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(9).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 9</div>
+      </div>
+      <div class="img-pick-item" onclick="selectPresetImg(10)">
+        <img src="https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(10).png" onerror="this.parentElement.style.background='#f2f0ed'">
+        <div class="img-pick-label">이미지 10</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closePreview()">
   <div class="modal">
     <div class="modal-hd">
@@ -398,36 +456,21 @@ function rmBullet(btn){
   btn.closest('.bullet-row').remove();
 }
 
-function loadImg(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=r=>{
-    imgDataUrl=r.result;
-    const img=document.getElementById('imgPreview');
-    img.src=imgDataUrl;img.style.display='block';
-    document.getElementById('imgIcon').style.display='none';
-    document.getElementById('imgHint').style.display='none';
-  };reader.readAsDataURL(file);
-}
+function openImgPicker(){ document.getElementById('imgPickerBg').classList.add('open'); }
+function closeImgPicker(){ document.getElementById('imgPickerBg').classList.remove('open'); }
 
-// 이미지 드래그앤드롭
-const imgDrop=document.getElementById('imgDrop');
-imgDrop.addEventListener('dragover',e=>{e.preventDefault();imgDrop.style.borderColor='var(--lg)'});
-imgDrop.addEventListener('dragleave',()=>imgDrop.style.borderColor='');
-imgDrop.addEventListener('drop',e=>{
-  e.preventDefault();imgDrop.style.borderColor='';
-  const file=e.dataTransfer.files[0];
-  if(file&&file.type.startsWith('image/')){
-    const reader=new FileReader();
-    reader.onload=r=>{
-      imgDataUrl=r.result;
-      const img=document.getElementById('imgPreview');
-      img.src=imgDataUrl;img.style.display='block';
-      document.getElementById('imgIcon').style.display='none';
-      document.getElementById('imgHint').style.display='none';
-    };reader.readAsDataURL(file);
-  }
-});
+function selectPresetImg(n){
+  const url = `https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_(${n}).png`;
+  // 선택 표시
+  document.querySelectorAll('.img-pick-item').forEach((el,i)=>el.classList.toggle('selected', i===n-1));
+  // 미리보기 적용
+  imgDataUrl = url;
+  const img = document.getElementById('imgPreview');
+  img.src = url; img.style.display = 'block';
+  document.getElementById('imgIcon').style.display = 'none';
+  document.getElementById('imgHint').style.display = 'none';
+  closeImgPicker();
+}
 
 // 스크롤 네비게이션
 function scrollTo_(idx){
