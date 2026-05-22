@@ -546,14 +546,11 @@ async function submitForm(){
       imgData:imgDataUrl||'',
       submittedAt:new Date().toLocaleString('ko-KR')
     };
-    const res=await fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
-    const result=await res.json();
-    if(result.status==='ok'){
-      document.getElementById('formArea').style.display='none';
-      document.getElementById('doneArea').classList.add('show');
-      document.getElementById('doneId').textContent='제출번호: '+submitId;
-      document.querySelectorAll('.step-item').forEach(el=>{el.classList.remove('active');el.classList.add('done');el.querySelector('.step-num').textContent='✓';});
-    }else throw new Error(result.message);
+    const res=await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    document.getElementById('formArea').style.display='none';
+    document.getElementById('doneArea').classList.add('show');
+    document.getElementById('doneId').textContent='제출번호: '+submitId;
+    document.querySelectorAll('.step-item').forEach(el=>{el.classList.remove('active');el.classList.add('done');el.querySelector('.step-num').textContent='✓';});
   }catch(err){
     showToast('제출 중 오류가 발생했습니다. 다시 시도해 주세요.','err');
     btn.disabled=false;btn.textContent='제출하기';
