@@ -53,6 +53,8 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 .step-item.done .step-num{background:#0f7a4a;border-color:#0f7a4a;color:white}
 .step-item.done{color:#0f7a4a}
 
+.btn-load{width:100%;background:var(--gray-bg);border:1px solid var(--border2);border-radius:6px;padding:8px;font-size:12px;font-weight:600;color:var(--lg);cursor:pointer;font-family:inherit;transition:all .15s;margin-top:2px}
+.btn-load:hover{background:var(--lg-light);border-color:var(--lg)}
 .btn-submit-main{margin-top:auto;width:100%;height:44px;background:var(--lg);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;letter-spacing:-.2px}
 .btn-submit-main:hover{background:var(--lg2)}
 .btn-submit-main:disabled{opacity:.5;cursor:not-allowed}
@@ -195,6 +197,8 @@ body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(
 
       <div class="field"><label>조직명</label><input type="text" id="s_org" placeholder="조직명 입력"></div>
       <div class="field"><label>작성자 (팀장)</label><input type="text" id="s_author" placeholder="이름 / 직책"></div>
+      <button class="btn-load" id="loadBtn" onclick="loadDraft()">↓ 기존 작성 내용 불러오기</button>
+      <div id="loadStatus"></div>
     </div>
 
     <hr class="sb-divider">
@@ -438,6 +442,105 @@ document.getElementById('editorMain').addEventListener('scroll',()=>{
   document.querySelectorAll('.step-item').forEach((el,i)=>el.classList.toggle('active',i===cur));
 });
 
+// ── 기존 내용 불러오기 ──
+let currentSubmitId = null; // 수정 모드일 때 기존 제출번호 저장
+
+function loadDraft() {
+  const cohort = document.getElementById('s_cohort').value;
+  const cls    = document.getElementById('s_class').value;
+  const team   = document.getElementById('s_team').value;
+  const statusEl = document.getElementById('loadStatus');
+
+  if (!cohort || !cls || !team) {
+    statusEl.className='load-status err';
+    statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';
+    return;
+  }
+
+  const btn = document.getElementById('loadBtn');
+  btn.disabled = true; btn.textContent = '불러오는 중...';
+  statusEl.className='load-status info'; statusEl.textContent='조회 중...';
+
+  // 기존 콜백 제거
+  if (window._loadCallback) delete window._loadCallback;
+  const old = document.getElementById('loadScript');
+  if (old) old.remove();
+
+  window._loadCallback = function(result) {
+    btn.disabled = false; btn.textContent = '↓ 기존 작성 내용 불러오기';
+    if (result.status !== 'ok' || !result.data || result.data.length === 0) {
+      statusEl.className='load-status err';
+      statusEl.textContent='저장된 내용이 없습니다. 새로 작성해 주세요.';
+      return;
+    }
+    // 차수·반·팀 일치하는 가장 최근 데이터
+    const match = result.data.filter(d =>
+      d.cohort === cohort && d.classNum === cls && d.teamNum === team
+    ).pop();
+    if (!match) {
+      statusEl.className='load-status err';
+      statusEl.textContent='해당 팀의 저장된 내용이 없습니다.';
+      return;
+    }
+    fillForm(match);
+    statusEl.className='load-status ok';
+    statusEl.textContent='✓ 불러오기 완료 · ' + match.submittedAt;
+  };
+
+  const script = document.createElement('script');
+  script.id = 'loadScript';
+  script.src = APPS_SCRIPT_URL + '?callback=_loadCallback&t=' + Date.now();
+  script.onerror = () => {
+    btn.disabled = false; btn.textContent = '↓ 기존 작성 내용 불러오기';
+    statusEl.className='load-status err'; statusEl.textContent='불러오기 실패. 네트워크를 확인해 주세요.';
+  };
+  document.body.appendChild(script);
+}
+
+function fillForm(d) {
+  currentSubmitId = d.submitId; // 수정 모드
+
+  // 사이드바
+  if (d.org)    { document.getElementById('s_org').value = d.org; document.getElementById('r_org').value = d.org; }
+  if (d.author) { document.getElementById('s_author').value = d.author; document.getElementById('r_author').value = d.author; }
+  if (d.types)  {
+    document.querySelectorAll('.type-chip').forEach(c => {
+      c.classList.toggle('on', c.textContent.trim() === d.types);
+    });
+    document.getElementById('r_types').value = d.types;
+  }
+
+  // 제목
+  if (d.mainTitle) { const t=document.getElementById('mainTitle'); t.value=d.mainTitle; autoGrow(t); }
+
+  // 한 줄 정의
+  if (d.oneliner) { const t=document.getElementById('oneliner'); t.value=d.oneliner; autoGrow(t); }
+
+  // 불릿 리스트 채우기
+  function fillBullets(listId, text) {
+    if (!text) return;
+    const list = document.getElementById(listId);
+    const items = text.split('\n').filter(Boolean);
+    // 기존 행 초기화
+    list.innerHTML = '';
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'bullet-row';
+      row.innerHTML = `<div class="bullet-dot"></div><textarea rows="1" oninput="autoGrow(this)">${item}</textarea><button class="btn-rm-bullet" onclick="rmBullet(this)">×</button>`;
+      list.appendChild(row);
+      autoGrow(row.querySelector('textarea'));
+    });
+  }
+  fillBullets('why_list',   d.whys);
+  fillBullets('tobe_list',  d.tobes);
+  fillBullets('cause_list', d.causes);
+  fillBullets('gap_list',   d.gaps);
+  fillBullets('goal_list',  d.goals);
+
+  // 제출 버튼 텍스트 변경
+  document.getElementById('submitBtn').textContent = '수정 제출하기';
+}
+
 // 미리보기
 function getBullets(listId){
   return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
@@ -589,13 +692,14 @@ async function submitForm(){
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.textContent='제출 중...';
   try{
-    const submitId='JB'+Date.now().toString(36).toUpperCase();
+    const isUpdate = !!currentSubmitId;
+    const submitId = currentSubmitId || ('JB'+Date.now().toString(36).toUpperCase());
     const cohort=document.getElementById('s_cohort').value;
     const classNum=document.getElementById('s_class').value;
     const teamNum=document.getElementById('s_team').value;
     const author=document.getElementById('r_author').value.trim();
     const d={
-      submitId, cohort, classNum, teamNum,
+      submitId, isUpdate, cohort, classNum, teamNum,
       teamName:'',
       org:document.getElementById('r_org').value.trim(),
       author, types:document.getElementById('r_types').value,
@@ -609,18 +713,17 @@ async function submitForm(){
       imgData:imgDataUrl||'',
       submittedAt:new Date().toLocaleString('ko-KR')
     };
-    // 파일명: 차수-반-팀-작성자
     const cohortShort=cohort.replace(/ — .+/,'');
     d.previewFileName=`${cohortShort}-${classNum}-${teamNum}-${author||'미입력'}.html`;
     d.previewHtml=buildPreviewHTML(d);
     await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)});
     document.getElementById('formArea').style.display='none';
     document.getElementById('doneArea').classList.add('show');
-    document.getElementById('doneId').textContent='제출번호: '+submitId;
+    document.getElementById('doneId').textContent=(isUpdate?'수정 완료 · ':'제출번호: ')+submitId;
     document.querySelectorAll('.step-item').forEach(el=>{el.classList.remove('active');el.classList.add('done');el.querySelector('.step-num').textContent='✓';});
   }catch(err){
     showToast('제출 중 오류가 발생했습니다. 다시 시도해 주세요.','err');
-    btn.disabled=false;btn.textContent='제출하기';
+    btn.disabled=false;btn.textContent=currentSubmitId?'수정 제출하기':'제출하기';
   }
 }
 
