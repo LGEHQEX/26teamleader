@@ -231,7 +231,7 @@ function checkRefreshBtn() {
   btn.textContent = ready ? '↻ 데이터 새로고침' : '↻ 차수·반 선택 후 불러오기';
 }
 
-function loadData() {
+async function loadData() {
   const cohort = document.getElementById('filterCohort').value;
   const cls    = document.getElementById('filterClass').value;
   if (!cohort || !cls) {
@@ -242,45 +242,23 @@ function loadData() {
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
   document.getElementById('listLoading').style.display = 'block';
 
-  // 기존 스크립트 정리
-  const old = document.getElementById('jsonpScript');
-  if (old) old.remove();
-
-  // 타임아웃 (12초)
-  const timer = setTimeout(() => {
-    btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
-    document.getElementById('listLoading').style.display = 'none';
-    showToast('응답 없음 — 잠시 후 다시 시도해 주세요.', '');
-  }, 12000);
-
-  window.adminDataCallback = function(result) {
-    clearTimeout(timer);
-    try {
-      if (result.status === 'ok') {
-        allData = result.data || [];
-        updateStats(); applyFilter();
-        showToast(allData.length + '건 불러왔습니다.', 'ok');
-      } else {
-        showToast('오류: ' + result.message, '');
-      }
-    } catch(e) {
-      showToast('파싱 오류: ' + e.message, '');
-    } finally {
-      btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
-      document.getElementById('listLoading').style.display = 'none';
+  try {
+    const url = APPS_SCRIPT_URL + '?t=' + Date.now();
+    const res = await fetch(url);
+    const result = await res.json();
+    if (result.status === 'ok') {
+      allData = result.data || [];
+      updateStats(); applyFilter();
+      showToast(allData.length + '건 불러왔습니다.', 'ok');
+    } else {
+      showToast('오류: ' + result.message, '');
     }
-  };
-
-  const script = document.createElement('script');
-  script.id = 'jsonpScript';
-  script.src = APPS_SCRIPT_URL + '?callback=adminDataCallback&t=' + Date.now();
-  script.onerror = () => {
-    clearTimeout(timer);
-    showToast('스크립트 로드 실패 — URL을 확인해 주세요.', '');
+  } catch(e) {
+    showToast('로딩 실패: ' + e.message, '');
+  } finally {
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
     document.getElementById('listLoading').style.display = 'none';
-  };
-  document.body.appendChild(script);
+  }
 }
 
 function updateStats() {
