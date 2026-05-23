@@ -595,6 +595,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
         <div class="done-title">과제 정의서가 제출되었습니다!</div>
         <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
         <div class="done-id" id="doneId">-</div>
+        <button onclick="goBack()" style="margin-top:20px;background:none;border:1px solid #ddd;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:600;color:#666;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--reinvent-red)';this.style.color='var(--reinvent-red)'" onmouseout="this.style.borderColor='#ddd';this.style.color='#666'">← 수정하러 돌아가기</button>
       </div>
     </div>
 
@@ -958,6 +959,14 @@ async function submitForm(){
 // ── 독립 HTML 생성 (저장용) ──
 function buildStandaloneHTML(d){
   return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${d.mainTitle} - 과제정의서</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px;-webkit-font-smoothing:antialiased}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
+}
+
+function goBack(){
+  document.getElementById('doneArea').style.display='none';
+  document.getElementById('formArea').style.display='block';
+  currentSubmitId=document.getElementById('doneId').textContent.replace('제출번호: ','').replace('수정 완료 · ','');
+  const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
+  btns.forEach(b=>{b.textContent='수정 제출';});
 }
 
 // ── 토스트 ──
