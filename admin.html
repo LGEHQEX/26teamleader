@@ -80,7 +80,7 @@
   .badge-class { background: #e8e4df; color: #555; }
   .badge-done { background: var(--success-bg); color: var(--success); }
   .badge-pending { background: var(--warning-bg); color: var(--warning); }
-  .item-task { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+  .item-task { font-size: 12px; color: #C8102E; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
   .item-meta { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #aaa; }
   .item-dot { width: 3px; height: 3px; border-radius: 50%; background: #ccc; }
   .detail-panel { flex: 1; overflow-y: auto; padding: 20px 24px; background: var(--bg); }
@@ -203,6 +203,17 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- 전체화면 모달 -->
+<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#E8E8E8;z-index:1000;overflow-y:auto;padding:20px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-size:14px;font-weight:700;color:#1a1a1a">과제 정의서 전체화면</span>
+      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
+    </div>
+    <div id="fullscreenContent"></div>
+  </div>
+</div>
+
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgRr95d2zQKAWnyFshjxvPmheTU3fG1CmzEV-8Aj-bizzB-tfSouUXqBg/exec';
 let allData = [], filtered = [], selected = null;
@@ -311,7 +322,10 @@ function renderDetail() {
     </div>
 
     <div class="detail-card">
-      <div class="detail-card-title">📋 과제 정의서 미리보기</div>
+      <div class="detail-card-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>📋 과제 정의서 미리보기</span>
+        <button onclick="openFullscreen('${d.submitId}')" style="background:var(--lg);color:white;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">⛶ 전체화면</button>
+      </div>
       <div id="previewFrame" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#f2f0ed">
         ${buildPreviewHTML(d)}
       </div>
@@ -451,6 +465,18 @@ function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + (type==='ok'?'ok':'') + ' show';
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function openFullscreen(submitId) {
+  const d = allData.find(item => item.submitId === submitId);
+  if (!d) return;
+  document.getElementById('fullscreenContent').innerHTML = buildPreviewHTML(d);
+  document.getElementById('fullscreenModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeFullscreen() {
+  document.getElementById('fullscreenModal').style.display = 'none';
+  document.body.style.overflow = '';
 }
 
 loadData();
