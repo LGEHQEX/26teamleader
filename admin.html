@@ -251,7 +251,11 @@ function loadData() {
       if (result.status === 'ok') {
         allData = result.data || [];
         updateStats(); applyFilter();
-        showToast(`${allData.length}건 불러왔습니다.`, 'ok');
+        const sample = allData[0];
+        const msg = allData.length > 0
+          ? `${allData.length}건 로드 | 첫행 차수:"${sample.cohort}" 반:"${sample.classNum}"`
+          : '데이터 없음 (0건)';
+        showToast(msg, allData.length > 0 ? 'ok' : '');
       } else throw new Error(result.message);
     } catch(e) {
       showToast('데이터 로딩 실패: ' + e.message, '');
@@ -281,13 +285,13 @@ function updateStats() {
 }
 
 function applyFilter() {
-  const cohort = document.getElementById('filterCohort').value;
-  const cls    = document.getElementById('filterClass').value;
+  const cohort = document.getElementById('filterCohort').value.trim();
+  const cls    = document.getElementById('filterClass').value.trim();
   const status = document.getElementById('filterStatus').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
   filtered = allData.filter(d => {
-    if (cohort && d.cohort !== cohort) return false;
-    if (cls && d.classNum !== cls) return false;
+    if (cohort && d.cohort.trim() !== cohort) return false;
+    if (cls && d.classNum.trim() !== cls) return false;
     if (status === 'done' && !d.checked) return false;
     if (status === 'pending' && d.checked) return false;
     if (search && ![d.teamName, d.mainTitle, d.org, d.author, d.classNum, d.cohort].join(' ').toLowerCase().includes(search)) return false;
@@ -482,7 +486,7 @@ async function saveComment(id) {
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + (type==='ok'?'ok':'') + ' show';
-  setTimeout(() => t.classList.remove('show'), 2800);
+  setTimeout(() => t.classList.remove('show'), 5000);
 }
 
 function openFullscreen(submitId) {
