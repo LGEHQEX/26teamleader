@@ -251,13 +251,7 @@ function loadData() {
       if (result.status === 'ok') {
         allData = result.data || [];
         updateStats(); applyFilter();
-        // 디버깅용 - 나중에 제거
-        if (result.debug) {
-          console.log('DEBUG:', result.debug);
-          showToast(`불러옴 ${allData.length}건 | 시트차수:"${result.debug.cohortSample}" 시트반:"${result.debug.classSample}" 필터차수:"${result.debug.filterCohort}" 필터반:"${result.debug.filterClass}"`, 'ok');
-        } else {
-          showToast(`${allData.length}건 불러왔습니다.`, 'ok');
-        }
+        showToast(`${allData.length}건 불러왔습니다.`, 'ok');
       } else throw new Error(result.message);
     } catch(e) {
       showToast('데이터 로딩 실패: ' + e.message, '');
@@ -270,11 +264,7 @@ function loadData() {
 
   const script = document.createElement('script');
   script.id = 'jsonpScript';
-  script.src = APPS_SCRIPT_URL
-    + '?callback=_jsonpCallback'
-    + '&cohort=' + encodeURIComponent(cohort)
-    + '&classNum=' + encodeURIComponent(cls)
-    + '&t=' + Date.now();
+  script.src = APPS_SCRIPT_URL + '?callback=_jsonpCallback&t=' + Date.now();
   script.onerror = () => {
     showToast('스크립트 로드 실패. URL을 확인해 주세요.', '');
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
