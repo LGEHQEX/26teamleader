@@ -325,6 +325,33 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 .img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
 
 /* ============================
+   정량화 Gap 팝업
+   ============================ */
+.gap-display{display:flex;flex-direction:column;gap:3px}
+.gap-display-row{display:flex;align-items:center;gap:6px;font-size:13px;line-height:1.6;color:var(--text-dark);padding-left:14px;position:relative;margin-bottom:2px}
+.gap-display-row::before{content:'•';position:absolute;left:0;font-weight:700}
+.gap-arrow-red{color:var(--reinvent-red);font-weight:900;padding:0 2px}
+.btn-gap-edit{
+  display:flex;align-items:center;gap:5px;font-size:11px;color:var(--reinvent-red);
+  font-weight:600;background:#fff5f7;border:1px solid var(--pink-border);
+  border-radius:6px;padding:5px 12px;cursor:pointer;font-family:inherit;
+  transition:background .15s;margin-top:6px
+}
+.btn-gap-edit:hover{background:#ffe0e6}
+.gap-modal{background:#fff;border-radius:12px;padding:24px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.gap-modal-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.gap-modal-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;border:1px solid #eee;border-radius:8px;padding:8px 12px;background:#fafaf9}
+.gap-modal-row input{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text-dark);outline:none;padding:3px 4px;min-width:0}
+.gap-modal-row input:focus{background:rgba(200,16,46,.04);border-radius:4px}
+.gap-modal-arrow{color:var(--reinvent-red);font-weight:900;font-size:15px;flex-shrink:0}
+.gap-modal-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0}
+.gap-modal-rm:hover{color:var(--reinvent-red)}
+.gap-col-hd{display:flex;gap:8px;margin-bottom:4px;padding:0 12px 0 12px}
+.gap-col-hd span{flex:1;font-size:10px;font-weight:600;color:#aaa;text-align:center}
+.gap-col-hd .gap-col-arr{width:24px;flex-shrink:0}
+.gap-col-hd .gap-col-rm{width:24px;flex-shrink:0}
+
+/* ============================
    완료 화면
    ============================ */
 .done-card{
@@ -558,11 +585,10 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
               <div class="section">
                 <div class="section-title">정량화 (Gap)</div>
                 <div class="section-body">
-                  <div class="bullet-list" id="gap_list">
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="현재 → 목표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                  <div class="gap-display" id="gap_display">
+                    <div class="gap-display-row"><span class="gap-empty" style="color:#ccc;font-size:12px">현재 → 목표를 입력해 주세요</span></div>
                   </div>
-                  <button class="btn-add" onclick="addBullet('gap_list')">＋</button>
+                  <button class="btn-gap-edit" onclick="openGapModal()">✎ 현재 → 목표 편집</button>
                 </div>
               </div>
               <div class="section">
@@ -589,22 +615,44 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
     </div><!-- /formArea -->
 
     <!-- 제출 완료 -->
-    <div id="doneArea" style="display:none">
+    <div id="doneArea" style="display:none;padding:40px 24px">
       <div class="done-card">
         <div class="done-icon">✅</div>
         <div class="done-title">과제 정의서가 제출되었습니다!</div>
         <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
         <div class="done-id" id="doneId">-</div>
-        <button onclick="goBack()" style="margin-top:20px;background:none;border:1px solid #ddd;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:600;color:#666;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='var(--reinvent-red)';this.style.color='var(--reinvent-red)'" onmouseout="this.style.borderColor='#ddd';this.style.color='#666'">← 수정하러 돌아가기</button>
+        <div style="margin-top:20px">
+          <button onclick="goBack()" style="display:inline-block;background:none;border:2px solid var(--reinvent-red);border-radius:8px;padding:10px 28px;font-size:14px;font-weight:700;color:var(--reinvent-red);cursor:pointer;font-family:inherit;transition:all .15s">← 수정하러 돌아가기</button>
+        </div>
       </div>
     </div>
 
   </main>
 </div><!-- /app-body -->
 
-<!-- ============================
-     뱃지 선택 모달
-     ============================ -->
+<!-- Gap 편집 모달 -->
+<div class="modal-bg" id="gapModalBg" onclick="if(event.target===this)closeGapModal()">
+  <div class="gap-modal">
+    <div class="gap-modal-title">
+      <span>📊 정량화 (Gap) 편집</span>
+      <button onclick="closeGapModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
+    </div>
+    <div class="gap-col-hd">
+      <span style="flex:1;text-align:center">현재</span>
+      <span class="gap-col-arr"></span>
+      <span style="flex:1;text-align:center">목표</span>
+      <span class="gap-col-rm"></span>
+    </div>
+    <div id="gapModalList"></div>
+    <button class="btn-add" onclick="addGapRow()" style="margin-top:4px">＋ 항목 추가</button>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button onclick="closeGapModal()" style="flex:1;padding:9px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="applyGap()" style="flex:2;padding:9px;background:var(--reinvent-red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">적용</button>
+    </div>
+  </div>
+</div>
+
+<!-- 뱃지 선택 모달 -->
 <div class="modal-bg" id="badgeBg" onclick="if(event.target===this)document.getElementById('badgeBg').classList.remove('open')">
   <div class="modal">
     <div class="modal-title">과제 유형 선택</div>
@@ -702,6 +750,64 @@ function getSelectedType(){
   return on?on.textContent.replace(/✓/g,'').trim():'';
 }
 
+// ── Gap 팝업 ──
+let gapData = []; // [{from:'', to:''}]
+
+function openGapModal(){
+  const list=document.getElementById('gapModalList');
+  list.innerHTML='';
+  gapData.forEach((_,i)=>renderGapRow(i));
+  if(!gapData.length){gapData=[{from:'',to:''}];renderGapRow(0);}
+  document.getElementById('gapModalBg').classList.add('open');
+}
+function closeGapModal(){document.getElementById('gapModalBg').classList.remove('open')}
+
+function renderGapRow(i){
+  const list=document.getElementById('gapModalList');
+  const row=document.createElement('div');row.className='gap-modal-row';row.dataset.idx=i;
+  row.innerHTML=`<input placeholder="현재 (예: 61%)" value="${gapData[i]?.from||''}" oninput="gapData[${i}].from=this.value"><span class="gap-modal-arrow">→</span><input placeholder="목표 (예: 90%↑)" value="${gapData[i]?.to||''}" oninput="gapData[${i}].to=this.value"><button class="gap-modal-rm" onclick="removeGapRow(${i})">×</button>`;
+  list.appendChild(row);
+}
+function addGapRow(){
+  gapData.push({from:'',to:''});
+  renderGapRow(gapData.length-1);
+}
+function removeGapRow(i){
+  if(gapData.length<=1){showToast('최소 1개는 필요합니다','err');return;}
+  gapData.splice(i,1);
+  document.getElementById('gapModalList').innerHTML='';
+  gapData.forEach((_,idx)=>renderGapRow(idx));
+}
+function applyGap(){
+  // 입력값 최신화
+  document.querySelectorAll('#gapModalList .gap-modal-row').forEach((row,i)=>{
+    const inputs=row.querySelectorAll('input');
+    if(gapData[i]){gapData[i].from=inputs[0].value.trim();gapData[i].to=inputs[1].value.trim();}
+  });
+  // 화면 표시 업데이트
+  const display=document.getElementById('gap_display');
+  const valid=gapData.filter(g=>g.from||g.to);
+  if(!valid.length){
+    display.innerHTML=`<div class="gap-display-row"><span style="color:#ccc;font-size:12px">현재 → 목표를 입력해 주세요</span></div>`;
+  } else {
+    display.innerHTML=valid.map(g=>
+      `<div class="gap-display-row">${g.from}<span class="gap-arrow-red">→</span>${g.to}</div>`
+    ).join('');
+  }
+  closeGapModal();
+}
+function getGapText(){
+  return gapData.filter(g=>g.from||g.to).map(g=>`${g.from} → ${g.to}`).join('\n');
+}
+function fillGapData(text){
+  if(!text){gapData=[{from:'',to:''}];return;}
+  gapData=text.split('\n').filter(Boolean).map(line=>{
+    const parts=line.split('→');
+    return{from:(parts[0]||'').trim(),to:(parts[1]||'').trim()};
+  });
+  applyGap();
+}
+
 // ── 불릿 ──
 function addBullet(listId){
   const list=document.getElementById(listId);
@@ -794,7 +900,7 @@ function fillForm(d){
       list.appendChild(row);autoGrow(row.querySelector('textarea'));});
   }
   fillBullets('why_list',d.whys);fillBullets('tobe_list',d.tobes);
-  fillBullets('cause_list',d.causes);fillBullets('gap_list',d.gaps);fillBullets('goal_list',d.goals);
+  fillBullets('cause_list',d.causes);fillGapData(d.gaps);fillBullets('goal_list',d.goals);
   document.getElementById('submitBtn').textContent='수정 제출';
   document.getElementById('submitBtn2').textContent='수정 제출';
 }
@@ -811,7 +917,7 @@ function openPreview(){
     whys:getBullets('why_list').join('\n'),
     tobes:getBullets('tobe_list').join('\n'),
     causes:getBullets('cause_list').join('\n'),
-    gaps:getBullets('gap_list').join('\n'),
+    gaps:getGapText(),
     goals:getBullets('goal_list').join('\n'),
     imgData:imgDataUrl||'',
     cohort:document.getElementById('s_cohort').value,
@@ -823,9 +929,11 @@ function openPreview(){
 function closePreview(){document.getElementById('previewBg').classList.remove('open')}
 
 function buildPreviewHTML(d){
-  const blist=arr=>(arr||[]).split('\n').filter(Boolean).map(t=>
-    `<li style="font-size:13.2px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${t}</li>`
-  ).join('')||'<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>';
+  const blist=arr=>(arr||[]).split('\n').filter(Boolean).map(t=>{
+    // → 화살표를 붉은색으로 강조
+    const highlighted=t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
+    return `<li style="font-size:13.2px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${highlighted}</li>`;
+  }).join('')||'<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>';
   const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;height:160px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px">이미지 없음</div>`;
   return `
 <div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
@@ -887,7 +995,7 @@ function savePreviewImage(){
     whys:getBullets('why_list').join('\n'),
     tobes:getBullets('tobe_list').join('\n'),
     causes:getBullets('cause_list').join('\n'),
-    gaps:getBullets('gap_list').join('\n'),
+    gaps:getGapText(),
     goals:getBullets('goal_list').join('\n'),
     imgData:imgDataUrl||'',
     cohort:document.getElementById('s_cohort').value,
@@ -936,7 +1044,7 @@ async function submitForm(){
       tobes:getBullets('tobe_list').join('\n'),
       oneliner:document.getElementById('oneliner').value.trim(),
       causes:getBullets('cause_list').join('\n'),
-      gaps:getBullets('gap_list').join('\n'),
+      gaps:getGapText(),
       goals:getBullets('goal_list').join('\n'),
       imgData:imgDataUrl||'',
       submittedAt:new Date().toLocaleString('ko-KR')
