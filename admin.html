@@ -146,15 +146,15 @@
   <div class="sidebar-section">필터</div>
   <div class="filter-group">
     <div class="filter-label">기수 / 차수</div>
-    <select class="sidebar-select" id="filterCohort" onchange="applyFilter()">
-      <option value="">전체</option>
+    <select class="sidebar-select" id="filterCohort" onchange="applyFilter();checkRefreshBtn()">
+      <option value="">선택하세요</option>
       <option>1차수 — 6/16(화)~6/17(수)</option><option>2차수 — 6/18(목)~6/19(금)</option><option>3차수 — 6/23(화)~6/24(수)</option><option>4차수 — 6/25(목)~6/26(금)</option><option>5차수 — 7/2(목)~7/3(금)</option><option>6차수 — 7/7(화)~7/8(수)</option><option>7차수 — 7/9(목)~7/10(금)</option><option>8차수 — 7/14(화)~7/15(수)</option><option>9차수 — 7/21(화)~7/22(수)</option><option>10차수 — 7/23(목)~7/24(금)</option>
     </select>
   </div>
   <div class="filter-group">
     <div class="filter-label">반</div>
-    <select class="sidebar-select" id="filterClass" onchange="applyFilter()">
-      <option value="">전체</option>
+    <select class="sidebar-select" id="filterClass" onchange="applyFilter();checkRefreshBtn()">
+      <option value="">선택하세요</option>
       <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
     </select>
   </div>
@@ -171,7 +171,7 @@
     <div class="stat-row"><span>확인 완료</span><span class="stat-val done" id="statDone">-</span></div>
     <div class="stat-row"><span>미확인</span><span class="stat-val pending" id="statPending">-</span></div>
   </div>
-  <button class="btn-refresh" id="refreshBtn" onclick="loadData()">↻ 데이터 새로고침</button>
+  <button class="btn-refresh" id="refreshBtn" onclick="loadData()" disabled style="opacity:0.4;pointer-events:none;cursor:not-allowed">↻ 차수·반 선택 후 불러오기</button>
 </div>
 
 <div class="main-area">
@@ -219,12 +219,29 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgR
 let allData = [], filtered = [], selected = null;
 
 // ── 데이터 로드 (JSONP 방식 - CORS 우회) ──
+function checkRefreshBtn() {
+  const cohort = document.getElementById('filterCohort').value;
+  const cls    = document.getElementById('filterClass').value;
+  const btn    = document.getElementById('refreshBtn');
+  const ready  = cohort && cls;
+  btn.disabled = !ready;
+  btn.style.opacity = ready ? '1' : '0.4';
+  btn.style.pointerEvents = ready ? 'auto' : 'none';
+  btn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  btn.textContent = ready ? '↻ 데이터 새로고침' : '↻ 차수·반 선택 후 불러오기';
+}
+
 function loadData() {
+  const cohort = document.getElementById('filterCohort').value;
+  const cls    = document.getElementById('filterClass').value;
+  if (!cohort || !cls) {
+    showToast('차수와 반을 먼저 선택해 주세요.', '');
+    return;
+  }
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
   document.getElementById('listLoading').style.display = 'block';
 
-  // 기존 콜백 제거
   if (window._jsonpCallback) delete window._jsonpCallback;
   const old = document.getElementById('jsonpScript');
   if (old) old.remove();
@@ -234,19 +251,24 @@ function loadData() {
       if (result.status === 'ok') {
         allData = result.data || [];
         updateStats(); applyFilter();
-        showToast('데이터를 불러왔습니다.', 'ok');
+        showToast(`${allData.length}건 불러왔습니다.`, 'ok');
       } else throw new Error(result.message);
     } catch(e) {
       showToast('데이터 로딩 실패: ' + e.message, '');
     } finally {
-      btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
+      btn.classList.remove('loading');
+      btn.textContent = '↻ 데이터 새로고침';
       document.getElementById('listLoading').style.display = 'none';
     }
   };
 
   const script = document.createElement('script');
   script.id = 'jsonpScript';
-  script.src = APPS_SCRIPT_URL + '?callback=_jsonpCallback&t=' + Date.now();
+  script.src = APPS_SCRIPT_URL
+    + '?callback=_jsonpCallback'
+    + '&cohort=' + encodeURIComponent(cohort)
+    + '&classNum=' + encodeURIComponent(cls)
+    + '&t=' + Date.now();
   script.onerror = () => {
     showToast('스크립트 로드 실패. URL을 확인해 주세요.', '');
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
@@ -479,7 +501,7 @@ function closeFullscreen() {
   document.body.style.overflow = '';
 }
 
-loadData();
+checkRefreshBtn();
 </script>
 </body>
 </html>
