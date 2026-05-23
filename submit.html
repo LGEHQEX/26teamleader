@@ -877,20 +877,21 @@ function loadDraft(){
   const old=document.getElementById('loadScript');if(old)old.remove();
   window._loadCb=function(result){
     btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';
-    if(!result.status==='ok'||!result.data||!result.data.length){
+    if(result.status!=='ok'||!result.data||!result.data.length){
       statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
     }
-    const match=result.data.filter(d=>d.cohort===cohort&&d.classNum===cls&&d.teamNum===team&&d.author===author).pop();
-    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 팀의 내용이 없습니다.';return;}
+    const match=result.data.filter(d=>
+      String(d.cohort).trim()===cohort.trim()&&
+      String(d.classNum).trim()===cls.trim()&&
+      String(d.teamNum).trim()===team.trim()&&
+      String(d.author).trim()===author.trim()
+    ).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 내용이 없습니다.';return;}
     fillForm(match);
     statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
   };
   const s=document.createElement('script');s.id='loadScript';
-  s.src=APPS_SCRIPT_URL
-    +'?callback=_loadCb'
-    +'&cohort='+encodeURIComponent(cohort)
-    +'&classNum='+encodeURIComponent(cls)
-    +'&t='+Date.now();
+  s.src=APPS_SCRIPT_URL+'?callback=_loadCb&t='+Date.now();
   s.onerror=()=>{btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
   document.body.appendChild(s);
 }
