@@ -239,8 +239,9 @@ async function loadData() {
     return;
   }
   const btn = document.getElementById('refreshBtn');
+  const loading = document.getElementById('listLoading');
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
-  document.getElementById('listLoading').style.display = 'block';
+  if (loading) loading.style.display = 'block';
 
   try {
     const url = APPS_SCRIPT_URL + '?t=' + Date.now();
@@ -257,7 +258,7 @@ async function loadData() {
     showToast('로딩 실패: ' + e.message, '');
   } finally {
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
-    document.getElementById('listLoading').style.display = 'none';
+    if (loading) loading.style.display = 'none';
   }
 }
 
