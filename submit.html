@@ -886,7 +886,11 @@ function loadDraft(){
     statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
   };
   const s=document.createElement('script');s.id='loadScript';
-  s.src=APPS_SCRIPT_URL+'?callback=_loadCb&t='+Date.now();
+  s.src=APPS_SCRIPT_URL
+    +'?callback=_loadCb'
+    +'&cohort='+encodeURIComponent(cohort)
+    +'&classNum='+encodeURIComponent(cls)
+    +'&t='+Date.now();
   s.onerror=()=>{btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
   document.body.appendChild(s);
 }
