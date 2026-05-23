@@ -126,15 +126,16 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
    에디터 영역
    ============================ */
 .editor-area{flex:1;overflow-y:auto;padding:24px 28px}
-.editor-inner{max-width:1000px;margin:0 auto}
+.editor-inner{max-width:1280px;margin:0 auto}
 
 /* ============================
-   문서 미리보기 (예시와 동일 레이아웃)
+   문서 미리보기 (1280×720 16:9 기준)
    ============================ */
 .doc-preview{
   background:#fff;
   box-shadow:0 8px 32px rgba(0,0,0,.12);
   overflow:hidden;
+  width:1280px;max-width:100%;
 }
 
 /* Header */
@@ -176,7 +177,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 .accent{color:var(--reinvent-red)}
 
 /* Body grid */
-.doc-body{display:grid;grid-template-columns:260px 1fr;gap:14px;padding:4px 24px 16px}
+.doc-body{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:4px 28px 20px}
 
 /* Left: poster card */
 .poster-card{
@@ -471,7 +472,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
         <div class="doc-title-row">
           <button class="doc-badge-input" id="badgeBtn" onclick="openBadgePicker()">문제 드러내기 ▾</button>
           <div class="doc-main-title">
-            <input type="text" id="mainTitle" placeholder="과제 제목을 입력하세요 (예: Risk Open 문화로 DQA Quality 혁신)">
+            <input type="text" id="mainTitle" placeholder="과제 제목을 입력하세요">
           </div>
         </div>
 
@@ -539,7 +540,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
             <!-- Range / 한줄 정의 -->
             <div class="range-section">
               <div class="range-title">과제의 범위 / 한 줄 정의</div>
-              <input class="range-input" id="oneliner" type="text" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"'>
+              <input class="range-input" id="oneliner" type="text" placeholder="한 줄로 정의해 주세요">
             </div>
 
             <!-- Triple grid -->
@@ -633,7 +634,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <span style="font-size:15px;font-weight:700">과제 정의서 미리보기</span>
       <div style="display:flex;gap:8px">
-        <button onclick="savePreviewImage()" style="background:var(--reinvent-red);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">↓ 이미지 저장</button>
+        <button onclick="savePreviewImage()" style="background:var(--reinvent-red);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">↓ HTML 저장</button>
         <button onclick="closePreview()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
       </div>
     </div>
@@ -748,9 +749,13 @@ function loadDraft(){
   const cohort=document.getElementById('s_cohort').value;
   const cls=document.getElementById('s_class').value;
   const team=document.getElementById('s_team').value;
+  const author=document.getElementById('s_author').value.trim();
   const statusEl=document.getElementById('loadStatus');
   if(!cohort||!cls||!team){
     statusEl.className='load-status err';statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';return;
+  }
+  if(!author){
+    statusEl.className='load-status err';statusEl.textContent='작성자 이름을 먼저 입력해 주세요.';return;
   }
   const btn=document.getElementById('loadBtn');
   btn.disabled=true;btn.textContent='불러오는 중...';
@@ -762,7 +767,7 @@ function loadDraft(){
     if(!result.status==='ok'||!result.data||!result.data.length){
       statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
     }
-    const match=result.data.filter(d=>d.cohort===cohort&&d.classNum===cls&&d.teamNum===team).pop();
+    const match=result.data.filter(d=>d.cohort===cohort&&d.classNum===cls&&d.teamNum===team&&d.author===author).pop();
     if(!match){statusEl.className='load-status err';statusEl.textContent='해당 팀의 내용이 없습니다.';return;}
     fillForm(match);
     statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
@@ -865,22 +870,36 @@ function buildPreviewHTML(d){
 </div></div>`;
 }
 
-// ── 이미지 저장 ──
-async function savePreviewImage(){
-  const el=document.getElementById('previewContent');
-  const btn=event.target;const orig=btn.textContent;
-  btn.textContent='저장 중...';btn.disabled=true;
-  try{
-    const canvas=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#E8E8E8',logging:false});
-    const link=document.createElement('a');
-    const cohort=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
-    const cls=document.getElementById('s_class').value||'';
-    const team=document.getElementById('s_team').value||'';
-    const author=document.getElementById('r_author').value.trim()||'';
-    link.download=`과제정의서_${cohort}_${cls}_${team}_${author}.png`;
-    link.href=canvas.toDataURL('image/png');link.click();
-  }catch(e){showToast('저장 실패: '+e.message,'err');}
-  finally{btn.textContent=orig;btn.disabled=false;}
+// ── HTML 저장 ──
+function savePreviewImage(){
+  const cohort=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
+  const cls=document.getElementById('s_class').value||'';
+  const team=document.getElementById('s_team').value||'';
+  const author=document.getElementById('r_author').value.trim()||'';
+  const d={
+    badge:document.getElementById('badgeBtn').textContent.replace(' ▾',''),
+    mainTitle:document.getElementById('mainTitle').value||'(제목 없음)',
+    org:document.getElementById('r_org').value||'-',
+    author:document.getElementById('r_author').value||'-',
+    types:getSelectedType()||'-',
+    oneliner:document.getElementById('oneliner').value||'',
+    whys:getBullets('why_list').join('\n'),
+    tobes:getBullets('tobe_list').join('\n'),
+    causes:getBullets('cause_list').join('\n'),
+    gaps:getBullets('gap_list').join('\n'),
+    goals:getBullets('goal_list').join('\n'),
+    imgData:imgDataUrl||'',
+    cohort:document.getElementById('s_cohort').value,
+    classNum:document.getElementById('s_class').value,
+    teamNum:document.getElementById('s_team').value,
+  };
+  const html=buildStandaloneHTML(d);
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const link=document.createElement('a');
+  link.download=`과제정의서_${cohort}_${cls}_${team}_${author}.html`;
+  link.href=URL.createObjectURL(blob);link.click();
+  URL.revokeObjectURL(link.href);
+  showToast('HTML 파일이 저장됐습니다','ok');
 }
 
 // ── 제출 검증 ──
@@ -924,14 +943,21 @@ async function submitForm(){
     const cohortShort=cohort.replace(/ — .+/,'');
     d.previewFileName=`${cohortShort}-${classNum}-${teamNum}-${author||'미입력'}.html`;
     d.previewHtml=buildPreviewHTML(d);
-    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)});
+    // no-cors 모드: await 없이 fire-and-forget, 완료 화면 즉시 표시
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
     document.getElementById('formArea').style.display='none';
     document.getElementById('doneArea').style.display='block';
     document.getElementById('doneId').textContent=(isUpdate?'수정 완료 · ':'제출번호: ')+submitId;
+    btns.forEach(b=>{b.disabled=false;b.textContent=isUpdate?'수정 제출':'제출하기';});
   }catch(err){
     showToast('제출 오류가 발생했습니다. 다시 시도해 주세요.','err');
     btns.forEach(b=>{b.disabled=false;b.textContent=currentSubmitId?'수정 제출':'제출하기';});
   }
+}
+
+// ── 독립 HTML 생성 (저장용) ──
+function buildStandaloneHTML(d){
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${d.mainTitle} - 과제정의서</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px;-webkit-font-smoothing:antialiased}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
 }
 
 // ── 토스트 ──
