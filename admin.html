@@ -242,33 +242,24 @@ function loadData() {
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
   document.getElementById('listLoading').style.display = 'block';
 
-  // 기존 스크립트·콜백 정리
+  // 기존 스크립트 정리
   const old = document.getElementById('jsonpScript');
   if (old) old.remove();
-  const cbName = 'adminCb_' + Date.now();
 
-  // 타임아웃 (10초)
+  // 타임아웃 (12초)
   const timer = setTimeout(() => {
-    if (window[cbName]) {
-      delete window[cbName];
-      btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
-      document.getElementById('listLoading').style.display = 'none';
-      showToast('응답 없음 — Apps Script 재배포를 확인해 주세요.', '');
-    }
-  }, 10000);
+    btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
+    document.getElementById('listLoading').style.display = 'none';
+    showToast('응답 없음 — 잠시 후 다시 시도해 주세요.', '');
+  }, 12000);
 
-  window[cbName] = function(result) {
+  window.adminDataCallback = function(result) {
     clearTimeout(timer);
-    delete window[cbName];
     try {
       if (result.status === 'ok') {
         allData = result.data || [];
         updateStats(); applyFilter();
-        const sample = allData[0];
-        const msg = allData.length > 0
-          ? `${allData.length}건 로드 | 차수:"${sample.cohort}" 반:"${sample.classNum}"`
-          : '데이터 없음 (0건)';
-        showToast(msg, allData.length > 0 ? 'ok' : '');
+        showToast(allData.length + '건 불러왔습니다.', 'ok');
       } else {
         showToast('오류: ' + result.message, '');
       }
@@ -282,10 +273,9 @@ function loadData() {
 
   const script = document.createElement('script');
   script.id = 'jsonpScript';
-  script.src = APPS_SCRIPT_URL + '?callback=' + cbName + '&t=' + Date.now();
+  script.src = APPS_SCRIPT_URL + '?callback=adminDataCallback&t=' + Date.now();
   script.onerror = () => {
     clearTimeout(timer);
-    delete window[cbName];
     showToast('스크립트 로드 실패 — URL을 확인해 주세요.', '');
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
     document.getElementById('listLoading').style.display = 'none';
