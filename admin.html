@@ -355,9 +355,10 @@ function closeDetail() {
 }
 
 function buildPreviewHTML(d) {
-  const blist = str => (str||'').split('\n').filter(Boolean).map(t =>
-    `<li style="font-size:13px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${t}</li>`
-  ).join('') || `<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>`;
+  const blist = str => (str||'').split('\n').filter(Boolean).map(t => {
+    const highlighted = t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
+    return `<li style="font-size:13px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${highlighted}</li>`;
+  }).join('') || `<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>`;
 
   const imgTag = d.imgData
     ? `<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`
@@ -377,7 +378,7 @@ function buildPreviewHTML(d) {
 
   <div style="padding:16px 24px 10px;display:flex;align-items:center;gap:14px">
     <span style="background:#C8102E;color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border-radius:999px;white-space:nowrap">${badge}</span>
-    <div style="flex:1;font-size:22px;font-weight:800;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle||'(제목 없음)'}</div>
+    <div style="flex:1;font-size:22px;font-weight:900;color:#C8102E;letter-spacing:-.5px;line-height:1.25">${d.mainTitle||'(제목 없음)'}</div>
   </div>
 
   <div style="display:grid;grid-template-columns:240px 1fr;gap:14px;padding:4px 24px 16px">
