@@ -56,7 +56,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 /* ============================
    메인 레이아웃
    ============================ */
-.app-body{display:flex;flex:1;overflow:hidden}
+.app-body{display:flex;flex:1;overflow:clip}
 
 /* ============================
    사이드바
@@ -299,7 +299,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 /* ============================
    뱃지 선택 모달
    ============================ */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:10px;padding:22px 24px;width:340px}
 .modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
@@ -653,14 +653,14 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 </div>
 
 <!-- 뱃지 선택 모달 -->
-<div class="modal-bg" id="badgeBg" onclick="if(event.target===this)document.getElementById('badgeBg').classList.remove('open')">
+<div class="modal-bg" id="badgeBg" onclick="if(event.target===this){this.style.display='none';this.classList.remove('open')}">
   <div class="modal">
     <div class="modal-title">과제 유형 선택</div>
     <div class="badge-options">
       <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
       <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
     </div>
-    <button class="btn-modal-close" onclick="document.getElementById('badgeBg').classList.remove('open')">닫기</button>
+    <button class="btn-modal-close" onclick="const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')">닫기</button>
   </div>
 </div>
 
@@ -714,10 +714,12 @@ function syncField(srcId, destId){
 }
 
 // ── 뱃지 ──
-function openBadgePicker(){document.getElementById('badgeBg').classList.add('open')}
+function openBadgePicker(){
+  const m=document.getElementById('badgeBg');m.style.display='flex';m.classList.add('open');
+}
 function setBadge(text){
   document.getElementById('badgeBtn').textContent=text+' ▾';
-  document.getElementById('badgeBg').classList.remove('open');
+  const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open');
 }
 
 // ── 과제 유형 (사이드바 → 문서 동기화) ──
@@ -758,9 +760,11 @@ function openGapModal(){
   list.innerHTML='';
   gapData.forEach((_,i)=>renderGapRow(i));
   if(!gapData.length){gapData=[{from:'',to:''}];renderGapRow(0);}
-  document.getElementById('gapModalBg').classList.add('open');
+  const m=document.getElementById('gapModalBg');m.style.display='flex';m.classList.add('open');
 }
-function closeGapModal(){document.getElementById('gapModalBg').classList.remove('open')}
+function closeGapModal(){
+  const m=document.getElementById('gapModalBg');m.style.display='none';m.classList.remove('open');
+}
 
 function renderGapRow(i){
   const list=document.getElementById('gapModalList');
@@ -833,9 +837,11 @@ function openImgPicker(){
       <img src="${url}" onerror="this.style.display='none';this.parentElement.style.background='#f2f0ed'">
       <div class="img-pick-label">이미지 ${i+1}</div>
     </div>`).join('');
-  document.getElementById('imgPickerBg').classList.add('open');
+  const m=document.getElementById('imgPickerBg');m.style.display='flex';m.classList.add('open');
 }
-function closeImgPicker(){document.getElementById('imgPickerBg').classList.remove('open')}
+function closeImgPicker(){
+  const m=document.getElementById('imgPickerBg');m.style.display='none';m.classList.remove('open');
+}
 function selectPresetImg(idx){
   const url=PRESET_IMGS[idx];imgDataUrl=url;
   document.querySelectorAll('.img-pick-item').forEach((el,i)=>el.classList.toggle('selected',i===idx));
@@ -924,9 +930,15 @@ function openPreview(){
     classNum:document.getElementById('s_class').value,
     teamNum:document.getElementById('s_team').value,
   });
-  document.getElementById('previewBg').classList.add('open');
+  const modal=document.getElementById('previewBg');
+  modal.style.display='flex';
+  modal.classList.add('open');
 }
-function closePreview(){document.getElementById('previewBg').classList.remove('open')}
+function closePreview(){
+  const modal=document.getElementById('previewBg');
+  modal.style.display='none';
+  modal.classList.remove('open');
+}
 
 function buildPreviewHTML(d){
   const blist=arr=>(arr||[]).split('\n').filter(Boolean).map(t=>{
