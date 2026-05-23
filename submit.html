@@ -873,9 +873,9 @@ function loadDraft(){
   const btn=document.getElementById('loadBtn');
   btn.disabled=true;btn.textContent='불러오는 중...';
   statusEl.className='load-status info';statusEl.textContent='조회 중...';
-  if(window._loadCb)delete window._loadCb;
+  if(window.loadCb)delete window.loadCb;
   const old=document.getElementById('loadScript');if(old)old.remove();
-  window._loadCb=function(result){
+  window.loadCb=function(result){
     btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';
     if(result.status!=='ok'||!result.data||!result.data.length){
       statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
@@ -891,7 +891,7 @@ function loadDraft(){
     statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
   };
   const s=document.createElement('script');s.id='loadScript';
-  s.src=APPS_SCRIPT_URL+'?callback=_loadCb&t='+Date.now();
+  s.src=APPS_SCRIPT_URL+'?callback=loadCb&t='+Date.now();
   s.onerror=()=>{btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
   document.body.appendChild(s);
 }
