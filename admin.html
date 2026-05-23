@@ -215,7 +215,7 @@
 </div>
 
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hZwMMyRkKvgRr95d2zQKAWnyFshjxvPmheTU3fG1CmzEV-8Aj-bizzB-tfSouUXqBg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuCmrU7yzmGZ0RtHx51R0nLGgYBdv7Q_fMoIHaqk0AUI8xwUlRz8WEOR70ikz07BIBtg/exec';
 let allData = [], filtered = [], selected = null;
 
 // ── 데이터 로드 (JSONP 방식 - CORS 우회) ──
@@ -242,35 +242,51 @@ function loadData() {
   btn.classList.add('loading'); btn.textContent = '불러오는 중...';
   document.getElementById('listLoading').style.display = 'block';
 
-  if (window._jsonpCallback) delete window._jsonpCallback;
+  // 기존 스크립트·콜백 정리
   const old = document.getElementById('jsonpScript');
   if (old) old.remove();
+  const cbName = 'adminCb_' + Date.now();
 
-  window._jsonpCallback = function(result) {
+  // 타임아웃 (10초)
+  const timer = setTimeout(() => {
+    if (window[cbName]) {
+      delete window[cbName];
+      btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
+      document.getElementById('listLoading').style.display = 'none';
+      showToast('응답 없음 — Apps Script 재배포를 확인해 주세요.', '');
+    }
+  }, 10000);
+
+  window[cbName] = function(result) {
+    clearTimeout(timer);
+    delete window[cbName];
     try {
       if (result.status === 'ok') {
         allData = result.data || [];
         updateStats(); applyFilter();
         const sample = allData[0];
         const msg = allData.length > 0
-          ? `${allData.length}건 로드 | 첫행 차수:"${sample.cohort}" 반:"${sample.classNum}"`
+          ? `${allData.length}건 로드 | 차수:"${sample.cohort}" 반:"${sample.classNum}"`
           : '데이터 없음 (0건)';
         showToast(msg, allData.length > 0 ? 'ok' : '');
-      } else throw new Error(result.message);
+      } else {
+        showToast('오류: ' + result.message, '');
+      }
     } catch(e) {
-      showToast('데이터 로딩 실패: ' + e.message, '');
+      showToast('파싱 오류: ' + e.message, '');
     } finally {
-      btn.classList.remove('loading');
-      btn.textContent = '↻ 데이터 새로고침';
+      btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
       document.getElementById('listLoading').style.display = 'none';
     }
   };
 
   const script = document.createElement('script');
   script.id = 'jsonpScript';
-  script.src = APPS_SCRIPT_URL + '?callback=_jsonpCallback&t=' + Date.now();
+  script.src = APPS_SCRIPT_URL + '?callback=' + cbName + '&t=' + Date.now();
   script.onerror = () => {
-    showToast('스크립트 로드 실패. URL을 확인해 주세요.', '');
+    clearTimeout(timer);
+    delete window[cbName];
+    showToast('스크립트 로드 실패 — URL을 확인해 주세요.', '');
     btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
     document.getElementById('listLoading').style.display = 'none';
   };
