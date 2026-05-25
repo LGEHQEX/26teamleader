@@ -448,6 +448,9 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
       <div class="field"><label>작성자</label>
         <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author')">
       </div>
+      <div class="field"><label>사번</label>
+        <input type="text" id="s_empid" placeholder="사번 입력" oninput="syncField('s_empid','r_empid')">
+      </div>
       <button class="btn-load" id="loadBtn" onclick="loadDraft()">↓ 기존 내용 불러오기</button>
       <div id="loadStatus"></div>
     </div>
@@ -524,6 +527,10 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
               <div class="info-row">
                 <span class="info-label">작성자</span>
                 <input class="info-input" id="r_author" placeholder="이름 / 직책" oninput="syncField('r_author','s_author')">
+              </div>
+              <div class="info-row">
+                <span class="info-label">사번</span>
+                <input class="info-input" id="r_empid" placeholder="사번" oninput="syncField('r_empid','s_empid')">
               </div>
               <div class="info-row info-row-types">
                 <span class="info-label">과제 유형</span>
@@ -679,7 +686,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 
 <!-- 미리보기 모달 -->
 <div class="modal-bg" id="previewBg" onclick="if(event.target===this)closePreview()">
-  <div class="modal" style="max-width:900px;width:100%;max-height:90vh;overflow-y:auto">
+  <div class="modal" style="max-width:1300px;width:100%;max-height:92vh;overflow-y:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <span style="font-size:15px;font-weight:700">과제 정의서 미리보기</span>
       <div style="display:flex;gap:8px">
@@ -863,12 +870,13 @@ function loadDraft(){
   const cls=document.getElementById('s_class').value;
   const team=document.getElementById('s_team').value;
   const author=document.getElementById('s_author').value.trim();
+  const empId=document.getElementById('s_empid').value.trim();
   const statusEl=document.getElementById('loadStatus');
   if(!cohort||!cls||!team){
     statusEl.className='load-status err';statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';return;
   }
-  if(!author){
-    statusEl.className='load-status err';statusEl.textContent='작성자 이름을 먼저 입력해 주세요.';return;
+  if(!author&&!empId){
+    statusEl.className='load-status err';statusEl.textContent='작성자 이름 또는 사번을 입력해 주세요.';return;
   }
   const btn=document.getElementById('loadBtn');
   btn.disabled=true;btn.textContent='불러오는 중...';
@@ -884,7 +892,7 @@ function loadDraft(){
       String(d.cohort).trim()===cohort.trim()&&
       String(d.classNum).trim()===cls.trim()&&
       String(d.teamNum).trim()===team.trim()&&
-      String(d.author).trim()===author.trim()
+      (empId ? String(d.empId).trim()===empId : String(d.author).trim()===author)
     ).pop();
     if(!match){statusEl.className='load-status err';statusEl.textContent='해당 내용이 없습니다.';return;}
     fillForm(match);
@@ -899,6 +907,7 @@ function fillForm(d){
   currentSubmitId=d.submitId;
   if(d.org){document.getElementById('s_org').value=d.org;document.getElementById('r_org').value=d.org;}
   if(d.author){document.getElementById('s_author').value=d.author;document.getElementById('r_author').value=d.author;}
+  if(d.empId){document.getElementById('s_empid').value=d.empId;document.getElementById('r_empid').value=d.empId;}
   if(d.types)toggleDocType(d.types);
   if(d.mainTitle)document.getElementById('mainTitle').value=d.mainTitle;
   if(d.oneliner)document.getElementById('oneliner').value=d.oneliner;
@@ -954,7 +963,7 @@ function buildPreviewHTML(d){
   const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;height:160px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px">이미지 없음</div>`;
   return `
 <div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
-<div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;max-width:900px;margin:0 auto">
+<div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;width:1280px;max-width:100%;margin:0 auto">
   <div style="background:#C8102E;color:#fff;height:48px;display:flex;align-items:center;padding:0 20px;font-size:13px;font-weight:500">
     <span style="font-weight:900;font-size:17px;letter-spacing:1.5px;margin-right:24px">우리팀 REINVENT 과제</span>
     <span style="margin-left:auto;font-size:13px;font-weight:700;letter-spacing:2px;padding:4px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px">과제 정의서</span>
@@ -963,7 +972,7 @@ function buildPreviewHTML(d){
     <span style="background:#C8102E;color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border-radius:999px;white-space:nowrap">${d.badge}</span>
     <div style="flex:1;font-size:22px;font-weight:800;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle}</div>
   </div>
-  <div style="display:grid;grid-template-columns:240px 1fr;gap:14px;padding:4px 24px 16px">
+  <div style="display:grid;grid-template-columns:300px 1fr;gap:16px;padding:4px 28px 20px">
     <div style="border:1px solid #EAD0D5;border-radius:6px;overflow:hidden;display:flex;flex-direction:column">
       <div>${imgTag}</div>
       <div style="background:#FFF5F7;padding:12px 14px;font-size:12.5px;color:#444;border-top:1px solid #F0B4BE">
@@ -1054,7 +1063,9 @@ async function submitForm(){
     const d={
       submitId,isUpdate,cohort,classNum,teamNum,teamName:'',
       org:document.getElementById('r_org').value.trim(),
-      author,types:getSelectedType(),
+      author,
+      empId:document.getElementById('s_empid').value.trim(),
+      types:getSelectedType(),
       badge,
       mainTitle:document.getElementById('mainTitle').value.trim(),
       whys:getBullets('why_list').join('\n'),
