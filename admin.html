@@ -204,16 +204,20 @@
 <div class="toast" id="toast"></div>
 
 <!-- 전체화면 모달 -->
-<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#E8E8E8;z-index:1000;overflow-y:auto;">
-  <div style="position:sticky;top:0;z-index:10;background:#E8E8E8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ddd">
-    <span style="font-size:13px;font-weight:700;color:#1a1a1a">과제 정의서 전체화면</span>
+<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#1a1a1a;z-index:1000;overflow:hidden;">
+  <!-- 상단 바 -->
+  <div style="position:absolute;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.7);padding:8px 16px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.8)" id="fsTitle">과제 정의서</span>
     <div style="display:flex;gap:8px">
-      <button onclick="toggleBrowserFullscreen()" id="fsToggleBtn" style="background:#444;color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">⛶ 브라우저 전체화면</button>
-      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:8px;padding:6px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
+      <button onclick="toggleBrowserFullscreen()" id="fsToggleBtn" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">⛶ 브라우저 전체화면</button>
+      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
     </div>
   </div>
-  <div style="padding:16px 20px">
-    <div id="fullscreenContent"></div>
+  <!-- 문서 스케일 컨테이너 -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:44px 0 0 0" id="fsWrapper">
+    <div id="fsScaleBox" style="transform-origin:top center;width:1280px;">
+      <div id="fullscreenContent"></div>
+    </div>
   </div>
 </div>
 
@@ -477,13 +481,27 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 5000);
 }
 
+function calcFsScale() {
+  const wrapper = document.getElementById('fsWrapper');
+  const box = document.getElementById('fsScaleBox');
+  if (!wrapper || !box) return;
+  const availW = wrapper.clientWidth;
+  const availH = wrapper.clientHeight;
+  const docW = 1280;
+  const scale = Math.min(availW / docW, availH / 720, 1);
+  box.style.transform = 'scale(' + scale + ')';
+  box.style.marginTop = '0';
+}
+
 function openFullscreen(submitId) {
   const d = allData.find(item => item.submitId === submitId);
   if (!d) return;
   document.getElementById('fullscreenContent').innerHTML = buildPreviewHTML(d);
+  document.getElementById('fsTitle').textContent = d.mainTitle || '과제 정의서';
   const modal = document.getElementById('fullscreenModal');
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  setTimeout(calcFsScale, 50);
   // 브라우저 전체화면 자동 진입
   if (modal.requestFullscreen) modal.requestFullscreen();
   else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
@@ -518,12 +536,15 @@ document.addEventListener('fullscreenchange', () => {
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
     document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
   }
+  setTimeout(calcFsScale, 100);
 });
 document.addEventListener('webkitfullscreenchange', () => {
   if (!document.webkitFullscreenElement) {
     document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
   }
+  setTimeout(calcFsScale, 100);
 });
+window.addEventListener('resize', calcFsScale);
 
 checkRefreshBtn();
 </script>
