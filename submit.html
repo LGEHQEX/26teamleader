@@ -451,7 +451,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
       <div class="field"><label>사번</label>
         <input type="text" id="s_empid" placeholder="사번 입력" oninput="syncField('s_empid','r_empid')">
       </div>
-      <button class="btn-load" id="loadBtn" onclick="loadDraft()">↓ 기존 내용 불러오기</button>
+      <button class="btn-load" id="loadBtn" onclick="openEmpIdPopup()">↓ 사번으로 불러오기</button>
       <div id="loadStatus"></div>
     </div>
 
@@ -636,6 +636,24 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 
   </main>
 </div><!-- /app-body -->
+
+<!-- 사번 불러오기 팝업 -->
+<div class="modal-bg" id="empIdPopupBg" onclick="if(event.target===this)closeEmpIdPopup()">
+  <div class="modal" style="width:360px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 내용을 불러옵니다.</div>
+    <div class="field">
+      <label>사번</label>
+      <input type="text" id="popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px"
+        onkeydown="if(event.key==='Enter')doEmpIdLoad()">
+    </div>
+    <div id="popupLoadStatus" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="doEmpIdLoad()" id="popupLoadBtn" style="flex:2;padding:10px;background:var(--reinvent-red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
+    </div>
+  </div>
+</div>
 
 <!-- Gap 편집 모달 -->
 <div class="modal-bg" id="gapModalBg" onclick="if(event.target===this)closeGapModal()">
@@ -864,45 +882,54 @@ function selectPresetImg(idx){
   closeImgPicker();
 }
 
-// ── 불러오기 ──
-function loadDraft(){
-  const cohort=document.getElementById('s_cohort').value;
-  const cls=document.getElementById('s_class').value;
-  const team=document.getElementById('s_team').value;
-  const author=document.getElementById('s_author').value.trim();
-  const empId=document.getElementById('s_empid').value.trim();
-  const statusEl=document.getElementById('loadStatus');
-  if(!cohort||!cls||!team){
-    statusEl.className='load-status err';statusEl.textContent='차수, 반, 팀을 먼저 선택해 주세요.';return;
-  }
-  if(!author&&!empId){
-    statusEl.className='load-status err';statusEl.textContent='작성자 이름 또는 사번을 입력해 주세요.';return;
-  }
-  const btn=document.getElementById('loadBtn');
+// ── 사번 팝업 ──
+function openEmpIdPopup(){
+  document.getElementById('popup_empid').value='';
+  document.getElementById('popupLoadStatus').innerHTML='';
+  const m=document.getElementById('empIdPopupBg');
+  m.style.display='flex';m.classList.add('open');
+  setTimeout(()=>document.getElementById('popup_empid').focus(),100);
+}
+function closeEmpIdPopup(){
+  const m=document.getElementById('empIdPopupBg');
+  m.style.display='none';m.classList.remove('open');
+}
+function doEmpIdLoad(){
+  const empId=document.getElementById('popup_empid').value.trim();
+  const statusEl=document.getElementById('popupLoadStatus');
+  if(!empId){statusEl.className='load-status err';statusEl.textContent='사번을 입력해 주세요.';return;}
+  const btn=document.getElementById('popupLoadBtn');
   btn.disabled=true;btn.textContent='불러오는 중...';
   statusEl.className='load-status info';statusEl.textContent='조회 중...';
   if(window.loadCb)delete window.loadCb;
   const old=document.getElementById('loadScript');if(old)old.remove();
   window.loadCb=function(result){
-    btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';
+    btn.disabled=false;btn.textContent='불러오기';
     if(result.status!=='ok'||!result.data||!result.data.length){
       statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
     }
-    const match=result.data.filter(d=>
-      String(d.cohort).trim()===cohort.trim()&&
-      String(d.classNum).trim()===cls.trim()&&
-      String(d.teamNum).trim()===team.trim()&&
-      (empId ? String(d.empId).trim()===empId : String(d.author).trim()===author)
-    ).pop();
-    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 내용이 없습니다.';return;}
+    const match=result.data.filter(d=>String(d.empId).trim()===empId).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 사번의 내용이 없습니다.';return;}
     fillForm(match);
-    statusEl.className='load-status ok';statusEl.textContent='✓ 불러오기 완료 · '+match.submittedAt;
+    // 사이드바 차수/반/팀 자동 설정
+    ['s_cohort','s_class','s_team'].forEach(id=>{
+      const key={s_cohort:'cohort',s_class:'classNum',s_team:'teamNum'}[id];
+      const val=match[key]||'';
+      const sel=document.getElementById(id);
+      for(let i=0;i<sel.options.length;i++){
+        if(sel.options[i].value===val||sel.options[i].text===val){sel.selectedIndex=i;break;}
+      }
+    });
+    closeEmpIdPopup();
+    document.getElementById('loadStatus').className='load-status ok';
+    document.getElementById('loadStatus').textContent='✓ 불러오기 완료 · '+match.submittedAt;
   };
   const s=document.createElement('script');s.id='loadScript';
   s.src=APPS_SCRIPT_URL+'?callback=loadCb&t='+Date.now();
-  s.onerror=()=>{btn.disabled=false;btn.textContent='↓ 기존 내용 불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
+  s.onerror=()=>{btn.disabled=false;btn.textContent='불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
   document.body.appendChild(s);
 }
+function loadDraft(){openEmpIdPopup();}
 function fillForm(d){
   currentSubmitId=d.submitId;
   if(d.org){document.getElementById('s_org').value=d.org;document.getElementById('r_org').value=d.org;}
