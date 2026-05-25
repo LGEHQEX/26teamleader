@@ -214,8 +214,8 @@
     </div>
   </div>
   <!-- 문서 스케일 컨테이너 -->
-  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:44px 0 0 0" id="fsWrapper">
-    <div id="fsScaleBox" style="transform-origin:top center;width:1280px;">
+  <div style="position:absolute;inset:0;overflow-y:auto;padding:44px 0 20px 0" id="fsWrapper">
+    <div id="fsScaleBox" style="transform-origin:top center;width:1280px;margin:0 auto">
       <div id="fullscreenContent"></div>
     </div>
   </div>
@@ -486,11 +486,11 @@ function calcFsScale() {
   const box = document.getElementById('fsScaleBox');
   if (!wrapper || !box) return;
   const availW = wrapper.clientWidth;
-  const availH = wrapper.clientHeight;
   const docW = 1280;
-  const scale = Math.min(availW / docW, availH / 720, 1);
+  // 화면 너비 기준 스케일에 1.25 배율 적용
+  const scale = Math.min((availW / docW) * 1.25, 1.5);
   box.style.transform = 'scale(' + scale + ')';
-  box.style.marginTop = '0';
+  box.style.transformOrigin = 'top center';
 }
 
 function openFullscreen(submitId) {
