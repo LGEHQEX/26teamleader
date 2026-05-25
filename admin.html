@@ -204,12 +204,15 @@
 <div class="toast" id="toast"></div>
 
 <!-- 전체화면 모달 -->
-<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#E8E8E8;z-index:1000;overflow-y:auto;padding:20px">
-  <div style="max-width:1280px;margin:0 auto">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <span style="font-size:14px;font-weight:700;color:#1a1a1a">과제 정의서 전체화면</span>
-      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
+<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#E8E8E8;z-index:1000;overflow-y:auto;">
+  <div style="position:sticky;top:0;z-index:10;background:#E8E8E8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ddd">
+    <span style="font-size:13px;font-weight:700;color:#1a1a1a">과제 정의서 전체화면</span>
+    <div style="display:flex;gap:8px">
+      <button onclick="toggleBrowserFullscreen()" id="fsToggleBtn" style="background:#444;color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">⛶ 브라우저 전체화면</button>
+      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:8px;padding:6px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
     </div>
+  </div>
+  <div style="padding:16px 20px">
     <div id="fullscreenContent"></div>
   </div>
 </div>
@@ -478,13 +481,49 @@ function openFullscreen(submitId) {
   const d = allData.find(item => item.submitId === submitId);
   if (!d) return;
   document.getElementById('fullscreenContent').innerHTML = buildPreviewHTML(d);
-  document.getElementById('fullscreenModal').style.display = 'block';
+  const modal = document.getElementById('fullscreenModal');
+  modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  // 브라우저 전체화면 자동 진입
+  if (modal.requestFullscreen) modal.requestFullscreen();
+  else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
 }
+
 function closeFullscreen() {
+  // 브라우저 전체화면 해제
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
   document.getElementById('fullscreenModal').style.display = 'none';
   document.body.style.overflow = '';
 }
+
+function toggleBrowserFullscreen() {
+  const modal = document.getElementById('fullscreenModal');
+  const btn = document.getElementById('fsToggleBtn');
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (modal.requestFullscreen) modal.requestFullscreen();
+    else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
+    btn.textContent = '⛶ 전체화면 해제';
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    btn.textContent = '⛶ 브라우저 전체화면';
+  }
+}
+
+// ESC로 fullscreen 해제 시 모달도 같이 닫기
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
+  }
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  if (!document.webkitFullscreenElement) {
+    document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
+  }
+});
 
 checkRefreshBtn();
 </script>
