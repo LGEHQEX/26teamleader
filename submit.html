@@ -125,8 +125,20 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 /* ============================
    에디터 영역
    ============================ */
-.editor-area{flex:1;overflow-y:auto;padding:24px 28px}
-.editor-inner{max-width:1280px;margin:0 auto}
+.editor-area{flex:1;overflow-y:auto;padding:16px 16px}
+.editor-inner{max-width:100%;margin:0 auto}
+
+/* 문서 스케일 래퍼 */
+.doc-scale-wrap{
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+.doc-scale-inner{
+  width:1280px;
+  transform-origin:top left;
+  flex-shrink:0;
+}
 
 /* ============================
    문서 미리보기 (1280×720 16:9 기준)
@@ -490,7 +502,9 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 
     <!-- 작성 문서 -->
     <div class="editor-inner" id="formArea">
-      <div class="doc-preview" id="docPreview">
+      <div class="doc-scale-wrap" id="docScaleWrap">
+        <div class="doc-scale-inner" id="docScaleInner">
+          <div class="doc-preview" id="docPreview">
 
         <!-- Header -->
         <div class="doc-header">
@@ -619,6 +633,8 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
         </div>
 
       </div><!-- /doc-preview -->
+        </div><!-- /doc-scale-inner -->
+      </div><!-- /doc-scale-wrap -->
     </div><!-- /formArea -->
 
     <!-- 제출 완료 -->
@@ -824,6 +840,7 @@ function applyGap(){
     ).join('');
   }
   closeGapModal();
+  setTimeout(calcDocScale,50);
 }
 function getGapText(){
   return gapData.filter(g=>g.from||g.to).map(g=>`${g.from} → ${g.to}`).join('\n');
@@ -844,11 +861,13 @@ function addBullet(listId){
   const row=document.createElement('div');row.className='bullet-row';
   row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" placeholder="${ph}" oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
   list.appendChild(row);
+  setTimeout(calcDocScale,50);
 }
 function rmBullet(btn){
   const list=btn.closest('.bullet-list');
   if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요합니다','err');return;}
   btn.closest('.bullet-row').remove();
+  setTimeout(calcDocScale,50);
 }
 function getBullets(listId){
   return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
@@ -1131,6 +1150,23 @@ function goBack(){
   const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
   btns.forEach(b=>{b.textContent='수정 제출';});
 }
+
+// ── 문서 스케일 ──
+function calcDocScale(){
+  const wrap=document.getElementById('docScaleWrap');
+  const inner=document.getElementById('docScaleInner');
+  if(!wrap||!inner)return;
+  const availW=wrap.clientWidth;
+  const scale=Math.min(availW/1280,1);
+  inner.style.transform='scale('+scale+')';
+  inner.style.width='1280px';
+  // 실제 점유 높이 보정
+  const docH=inner.scrollHeight;
+  wrap.style.height=(docH*scale)+'px';
+}
+window.addEventListener('resize',calcDocScale);
+window.addEventListener('load',calcDocScale);
+setTimeout(calcDocScale,200);
 
 // ── 토스트 ──
 function showToast(msg,type){
