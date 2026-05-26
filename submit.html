@@ -123,8 +123,118 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 .btn-submit:disabled{opacity:.5;cursor:not-allowed}
 
 /* ============================
-   에디터 영역
+   탭 네비게이션
    ============================ */
+.tab-nav{display:flex;gap:0;margin-bottom:12px;border-bottom:2px solid var(--reinvent-red)}
+.tab-btn{
+  padding:9px 22px;font-size:13px;font-weight:700;font-family:inherit;
+  background:none;border:none;border-bottom:3px solid transparent;
+  color:#aaa;cursor:pointer;transition:all .15s;margin-bottom:-2px;
+}
+.tab-btn.active{color:var(--reinvent-red);border-bottom:3px solid var(--reinvent-red)}
+.tab-btn:hover:not(.active){color:#666;background:rgba(200,16,46,.04)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ============================
+   현업 전파 계획서 스타일
+   ============================ */
+.sp-doc{
+  background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);
+  overflow:hidden;width:1280px;max-width:100%;
+  font-family:'Pretendard',-apple-system,sans-serif;
+}
+/* 전파 계획서 헤더 */
+.sp-header{
+  padding:20px 32px 12px;border-bottom:2px solid #1a1a1a;
+}
+.sp-header-top{font-size:11px;font-weight:700;color:var(--reinvent-red);letter-spacing:1px;margin-bottom:4px}
+.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
+.sp-title .hl{color:var(--reinvent-red)}
+.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
+.sp-meta{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.sp-meta-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.sp-meta-item label{color:#888;font-weight:600;white-space:nowrap}
+.sp-meta-input{
+  border:none;border-bottom:1px solid #ccc;background:transparent;
+  font-size:12px;font-family:inherit;color:#1a1a1a;outline:none;
+  padding:2px 4px;min-width:80px;
+}
+.sp-meta-input:focus{border-bottom-color:var(--reinvent-red)}
+/* 전파 계획서 바디 */
+.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.sp-col:last-child{border-right:none}
+/* 섹션 헤더 */
+.sp-sec-hd{
+  background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;
+  display:flex;align-items:flex-end;gap:12px
+}
+.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:var(--reinvent-red)}
+.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
+.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
+/* 안내문 */
+.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
+.sp-guide b{color:#1a1a1a}
+/* 소항목 라벨 */
+.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px;line-height:1.4}
+.sp-sub-label .em{color:var(--reinvent-red);font-style:normal}
+.sp-sub-desc{font-size:11px;color:#888;margin-bottom:6px}
+/* 입력 박스 */
+.sp-input-box{
+  border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;
+  min-height:40px;background:#fafaf9;
+}
+.sp-input-box textarea{
+  width:100%;border:none;background:transparent;font-size:13px;
+  font-family:inherit;color:#1a1a1a;outline:none;resize:none;
+  line-height:1.7;min-height:28px;
+}
+.sp-input-box textarea::placeholder{color:#ccc}
+/* 선언문 박스 */
+.sp-declare-box{
+  border:2px solid var(--reinvent-red);border-radius:4px;padding:16px 18px;
+  margin-bottom:14px;
+}
+.sp-declare-title{
+  text-align:center;font-size:13px;font-weight:800;color:var(--reinvent-red);
+  margin-bottom:12px;letter-spacing:.5px
+}
+.sp-declare-item{
+  font-size:13px;line-height:1.8;color:#1a1a1a;padding:3px 0;
+}
+.sp-declare-item textarea{
+  width:100%;border:none;background:transparent;font-size:13px;
+  font-family:inherit;color:#1a1a1a;outline:none;resize:none;
+  line-height:1.8;min-height:26px;
+}
+.sp-declare-item textarea::placeholder{color:#ccc}
+/* 서명 영역 */
+.sp-sign{
+  display:flex;align-items:center;justify-content:flex-end;
+  gap:8px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;
+  border-top:1px solid #eee
+}
+.sp-sign input{
+  border:none;border-bottom:1px solid #999;background:transparent;
+  font-size:12px;font-family:inherit;outline:none;text-align:center;
+  width:36px;padding:2px 4px;
+}
+.sp-sign input:focus{border-bottom-color:var(--reinvent-red)}
+.sp-sign-name{
+  border:none;border-bottom:1px solid #999;background:transparent;
+  font-size:13px;font-weight:700;font-family:inherit;outline:none;
+  width:60px;padding:2px 4px;text-align:center;
+}
+.sp-sign-name:focus{border-bottom-color:var(--reinvent-red)}
+/* 전파 계획서 푸터 */
+.sp-footer{
+  background:#1a1a1a;color:rgba(255,255,255,.5);
+  padding:8px 24px;display:flex;align-items:center;justify-content:space-between;
+  font-size:10px
+}
+.sp-footer .left{color:var(--reinvent-red);font-weight:700;font-size:11px}
+
 .editor-area{flex:1;overflow-y:auto;padding:16px 16px}
 .editor-inner{max-width:100%;margin:0 auto}
 
@@ -407,10 +517,10 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 <header class="app-header">
   <div class="app-header-left">
     <span class="app-logo">REINVENT</span>
-    <span class="app-title-text">'26 피플 리더십 과제 정의서</span>
+    <span class="app-title-text" id="headerTitle">'26 피플 리더십 과제 정의서</span>
   </div>
   <div class="app-header-right">
-    <button class="btn-hd" onclick="openPreview()">미리보기</button>
+    <button class="btn-hd" id="previewBtn" onclick="openPreview()">미리보기</button>
     <button class="btn-hd primary" id="submitBtn" onclick="submitForm()">제출하기</button>
   </div>
 </header>
@@ -500,7 +610,14 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
        ============================ -->
   <main class="editor-area" id="editorArea">
 
-    <!-- 작성 문서 -->
+    <!-- 탭 네비 -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('task')">📋 과제 정의서</button>
+      <button class="tab-btn" onclick="switchTab('spread')">📣 현업 전파 계획서</button>
+    </div>
+
+    <!-- 탭1: 과제 정의서 -->
+    <div class="tab-panel active" id="tab-task">
     <div class="editor-inner" id="formArea">
       <div class="doc-scale-wrap" id="docScaleWrap">
         <div class="doc-scale-inner" id="docScaleInner">
@@ -650,6 +767,117 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
       </div>
     </div>
 
+    </div><!-- /tab-panel task -->
+
+    <!-- 탭2: 현업 전파 계획서 -->
+    <div class="tab-panel" id="tab-spread">
+      <div class="editor-inner">
+        <div class="doc-scale-wrap" id="spScaleWrap">
+          <div class="doc-scale-inner" id="spScaleInner">
+            <div class="sp-doc">
+
+              <!-- 전파 계획서 헤더 -->
+              <div class="sp-header">
+                <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+                <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
+                <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+                <div class="sp-meta">
+                  <div class="sp-meta-item"><label>소속</label><input class="sp-meta-input" id="sp_org" placeholder="조직명" style="width:100px"></div>
+                  <div class="sp-meta-item"><label>성명</label><input class="sp-meta-input" id="sp_name" placeholder="홍길동 팀장" style="width:90px"></div>
+                  <div class="sp-meta-item"><label>작성일</label><input class="sp-meta-input" id="sp_date" placeholder="2026.05.20" style="width:90px"></div>
+                  <div class="sp-meta-item"><label>공유예정</label><input class="sp-meta-input" id="sp_share_date" placeholder="2026.05.27" style="width:90px"></div>
+                </div>
+              </div>
+
+              <!-- 전파 계획서 바디 -->
+              <div class="sp-body">
+
+                <!-- 왼쪽: 01 우리 조직의 언어로 재정리 -->
+                <div class="sp-col">
+                  <div class="sp-sec-hd">
+                    <span class="sp-sec-num">01</span>
+                    <div>
+                      <div class="sp-sec-title">우리 조직의 언어로 재정리</div>
+                      <div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div>
+                    </div>
+                  </div>
+                  <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
+
+                  <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
+                  <div class="sp-input-box">
+                    <textarea id="sp_keywords" rows="1" placeholder="예) 문제 드러내기 · 이기는 실행하기 · 리더 주도의 변화" oninput="autoGrow(this)"></textarea>
+                  </div>
+
+                  <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em class="em">「문제 드러내기」</em> — 가장 자주 마주치는 관성·침묵·회피의 사례와 함께</div>
+                  <div class="sp-input-box" style="min-height:100px">
+                    <textarea id="sp_reveal" rows="4" placeholder="예) 우리 팀의 관성: VOE 데이터를 '좋게 다듬어' 보고하는 패턴." oninput="autoGrow(this)"></textarea>
+                  </div>
+
+                  <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em class="em">「이기는 실행하기」</em> — 경쟁의 대상과 '이긴다'의 구체적 기준</div>
+                  <div class="sp-input-box" style="min-height:100px">
+                    <textarea id="sp_win" rows="4" placeholder="예) 경쟁 대상: 글로벌 Top-tier 기업의 EX 조직." oninput="autoGrow(this)"></textarea>
+                  </div>
+                </div>
+
+                <!-- 오른쪽: 02 팀장 선언문 -->
+                <div class="sp-col">
+                  <div class="sp-sec-hd">
+                    <span class="sp-sec-num">02</span>
+                    <div>
+                      <div class="sp-sec-title">팀장 선언문</div>
+                      <div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div>
+                    </div>
+                  </div>
+                  <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
+
+                  <div class="sp-declare-box">
+                    <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
+                    <div class="sp-declare-item">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+                    <div class="sp-declare-item">
+                      <textarea id="sp_pledge1" rows="1" placeholder="① 약속 1을 입력하세요" oninput="autoGrow(this)"></textarea>
+                    </div>
+                    <div class="sp-declare-item">
+                      <textarea id="sp_pledge2" rows="1" placeholder="② 약속 2를 입력하세요" oninput="autoGrow(this)"></textarea>
+                    </div>
+                    <div class="sp-declare-item">
+                      <textarea id="sp_pledge3" rows="1" placeholder="③ 약속 3을 입력하세요" oninput="autoGrow(this)"></textarea>
+                    </div>
+                    <div class="sp-declare-item">
+                      <textarea id="sp_pledge4" rows="1" placeholder="④ 약속 4를 입력하세요 (선택)" oninput="autoGrow(this)"></textarea>
+                    </div>
+                    <div class="sp-declare-item" style="margin-top:6px">
+                      <textarea id="sp_closing" rows="1" placeholder="함께 점검해 주십시오. — ○○○ 드림" oninput="autoGrow(this)"></textarea>
+                    </div>
+                    <div class="sp-sign">
+                      <input id="sp_sign_y" placeholder="2026" maxlength="4"> 년
+                      <input id="sp_sign_m" placeholder="05" maxlength="2"> 월
+                      <input id="sp_sign_d" placeholder="27" maxlength="2"> 일
+                      &nbsp;팀장 <input class="sp-sign-name" id="sp_sign_name" placeholder="홍 길 동">
+                      &nbsp;<span style="color:#888">(서명)</span>
+                    </div>
+                  </div>
+
+                  <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
+                  <div class="sp-input-box" style="min-height:60px">
+                    <textarea id="sp_share_plan" rows="2" placeholder="예) 5/28(목) 주간회의 10분 — 낭독 + 자리 비치 + 월 회고 점검." oninput="autoGrow(this)"></textarea>
+                  </div>
+                </div>
+
+              </div><!-- /sp-body -->
+
+              <!-- 전파 계획서 푸터 -->
+              <div class="sp-footer">
+                <span class="left">REINVENT 2.0</span>
+                <span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
+                <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+              </div>
+
+            </div><!-- /sp-doc -->
+          </div><!-- /spScaleInner -->
+        </div><!-- /spScaleWrap -->
+      </div><!-- /editor-inner -->
+    </div><!-- /tab-panel spread -->
+
   </main>
 </div><!-- /app-body -->
 
@@ -735,7 +963,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNDrzkHod78RomInnJWq9fud3AGRwepapx2Y3Xq41xJ8mu3jnM7xTCAFeH8z8l6Aq0BA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2a07Lt8Nchk4owuYeNJMAKxficoggGbNBN9HuPagw_QBS8cgGsAmTHvG3PFwtg9Mt9A/exec';
 
 // ── 이미지 ──
 const PRESET_IMGS = Array.from({length:10},(_,i)=>
@@ -743,6 +971,7 @@ const PRESET_IMGS = Array.from({length:10},(_,i)=>
 );
 let imgDataUrl = null;
 let currentSubmitId = null;
+let currentSpreadId = null;
 
 // ── 자동 높이 ──
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
@@ -1095,6 +1324,7 @@ function validate(){
 
 // ── 제출 ──
 async function submitForm(){
+  if(currentTab==='spread'){saveSpreadHTML();return;}
   if(!validate())return;
   const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
   btns.forEach(b=>{b.disabled=true;b.textContent='제출 중...';});
@@ -1151,18 +1381,187 @@ function goBack(){
   btns.forEach(b=>{b.textContent='수정 제출';});
 }
 
-// ── 문서 스케일 ──
+// ── 탭 전환 ──
+let currentTab = 'task';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', (i===0&&tab==='task')||(i===1&&tab==='spread')));
+  document.getElementById('tab-task').classList.toggle('active', tab==='task');
+  document.getElementById('tab-spread').classList.toggle('active', tab==='spread');
+  document.getElementById('headerTitle').textContent = tab==='task' ? "'26 피플 리더십 과제 정의서" : "'26 피플 리더십 현업 전파 계획서";
+  document.getElementById('previewBtn').style.display = tab==='task' ? '' : 'none';
+  document.getElementById('submitBtn').textContent = tab==='task' ? '제출하기' : '전파 계획서 저장';
+  document.getElementById('submitBtn2').textContent = tab==='task' ? '과제 정의서 제출' : '전파 계획서 저장';
+  if(tab==='spread'){
+    // 사이드바 값 자동 채우기
+    const org=document.getElementById('s_org').value.trim();
+    const author=document.getElementById('s_author').value.trim();
+    if(org && !document.getElementById('sp_org').value) document.getElementById('sp_org').value=org;
+    if(author && !document.getElementById('sp_name').value) document.getElementById('sp_name').value=author;
+    // 서명 이름도 자동 채우기
+    if(author && !document.getElementById('sp_sign_name').value) document.getElementById('sp_sign_name').value=author;
+    // 오늘 날짜 자동 채우기
+    if(!document.getElementById('sp_date').value){
+      const today=new Date();
+      const y=today.getFullYear();
+      const m=String(today.getMonth()+1).padStart(2,'0');
+      const d=String(today.getDate()).padStart(2,'0');
+      document.getElementById('sp_date').value=`${y}.${m}.${d}`;
+      document.getElementById('sp_sign_y').value=String(y);
+      document.getElementById('sp_sign_m').value=m;
+      document.getElementById('sp_sign_d').value=d;
+    }
+    setTimeout(calcSpScale, 100);
+  }
+}
+
+// ── 전파 계획서 스케일 ──
+function calcSpScale(){
+  const wrap=document.getElementById('spScaleWrap');
+  const inner=document.getElementById('spScaleInner');
+  if(!wrap||!inner)return;
+  const availW=wrap.clientWidth;
+  // 1.25배 확대 적용
+  const scale=Math.min((availW/1280)*1.25, 1.25);
+  inner.style.transform='scale('+scale+')';
+  inner.style.transformOrigin='top left';
+  inner.style.width='1280px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';
+  wrap.style.width=(1280*scale)+'px';
+}
+window.addEventListener('resize',()=>{calcDocScale();calcSpScale();});
+
+// ── 전파 계획서 HTML 저장 ──
+function saveSpreadHTML(){
+  const org=document.getElementById('sp_org').value||'';
+  const name=document.getElementById('sp_name').value||'';
+  const d={
+    docType:'spread',
+    submitId:currentSpreadId||('SP'+Date.now().toString(36).toUpperCase()),
+    isUpdate:!!currentSpreadId,
+    submittedAt:new Date().toLocaleString('ko-KR'),
+    org, name,
+    empId:document.getElementById('s_empid').value.trim()||'',
+    date:document.getElementById('sp_date').value||'',
+    shareDate:document.getElementById('sp_share_date').value||'',
+    keywords:document.getElementById('sp_keywords').value||'',
+    reveal:document.getElementById('sp_reveal').value||'',
+    win:document.getElementById('sp_win').value||'',
+    pledge1:document.getElementById('sp_pledge1').value||'',
+    pledge2:document.getElementById('sp_pledge2').value||'',
+    pledge3:document.getElementById('sp_pledge3').value||'',
+    pledge4:document.getElementById('sp_pledge4').value||'',
+    closing:document.getElementById('sp_closing').value||'',
+    signY:document.getElementById('sp_sign_y').value||'',
+    signM:document.getElementById('sp_sign_m').value||'',
+    signD:document.getElementById('sp_sign_d').value||'',
+    signName:document.getElementById('sp_sign_name').value||'',
+    sharePlan:document.getElementById('sp_share_plan').value||'',
+  };
+  if(!d.submitId)currentSpreadId=d.submitId;
+
+  // 시트 저장 (fire-and-forget)
+  fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
+  currentSpreadId=d.submitId;
+
+  // HTML 파일 저장
+  const html=buildSpreadHTML(d);
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const link=document.createElement('a');
+  link.download=`현업전파계획서_${org}_${name}.html`;
+  link.href=URL.createObjectURL(blob);link.click();
+  URL.revokeObjectURL(link.href);
+  showToast('전파 계획서가 저장됐습니다 (시트 + HTML)','ok');
+}
+
+function buildSpreadHTML(d){
+  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.name} 현업 전파 계획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px;-webkit-font-smoothing:antialiased}
+.sp-doc{background:#fff;max-width:1280px;margin:0 auto;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.sp-header{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
+.sp-header-top{font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px}
+.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
+.sp-title .hl{color:#C8102E}
+.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
+.sp-meta{display:flex;gap:24px;flex-wrap:wrap;font-size:12px}
+.sp-meta span{color:#888;font-weight:600} .sp-meta b{color:#1a1a1a}
+.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.sp-col:last-child{border-right:none}
+.sp-sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
+.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:#C8102E}
+.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
+.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
+.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
+.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px}
+.em{color:#C8102E}
+.sp-input-box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7}
+.sp-declare-box{border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px}
+.sp-declare-title{text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px}
+.sp-declare-item{font-size:13px;line-height:1.8;color:#1a1a1a;padding:2px 0}
+.sp-sign{display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
+.sp-footer{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+.sp-footer .left{color:#C8102E;font-weight:700;font-size:11px}
+</style></head><body>
+<div class="sp-doc">
+  <div class="sp-header">
+    <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+    <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
+    <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+    <div class="sp-meta">
+      <span>소속</span> <b>${d.org}</b> &nbsp;
+      <span>성명</span> <b>${d.name}</b> &nbsp;
+      <span>작성일</span> <b>${d.date}</b> &nbsp;
+      <span>공유예정</span> <b>${d.shareDate}</b>
+    </div>
+  </div>
+  <div class="sp-body">
+    <div class="sp-col">
+      <div class="sp-sec-hd"><span class="sp-sec-num">01</span><div><div class="sp-sec-title">우리 조직의 언어로 재정리</div><div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div></div></div>
+      <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
+      <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
+      <div class="sp-input-box">${nl2br(d.keywords)||'—'}</div>
+      <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em class="em">「문제 드러내기」</em></div>
+      <div class="sp-input-box" style="min-height:100px">${nl2br(d.reveal)||'—'}</div>
+      <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em class="em">「이기는 실행하기」</em></div>
+      <div class="sp-input-box" style="min-height:100px">${nl2br(d.win)||'—'}</div>
+    </div>
+    <div class="sp-col">
+      <div class="sp-sec-hd"><span class="sp-sec-num">02</span><div><div class="sp-sec-title">팀장 선언문</div><div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div></div></div>
+      <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
+      <div class="sp-declare-box">
+        <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
+        <div class="sp-declare-item">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+        ${d.pledge1?`<div class="sp-declare-item">${nl2br(d.pledge1)}</div>`:''}
+        ${d.pledge2?`<div class="sp-declare-item">${nl2br(d.pledge2)}</div>`:''}
+        ${d.pledge3?`<div class="sp-declare-item">${nl2br(d.pledge3)}</div>`:''}
+        ${d.pledge4?`<div class="sp-declare-item">${nl2br(d.pledge4)}</div>`:''}
+        ${d.closing?`<div class="sp-declare-item" style="margin-top:6px">${nl2br(d.closing)}</div>`:''}
+        <div class="sp-sign">${d.signY} 년 ${d.signM} 월 ${d.signD} 일 &nbsp; 팀장 <b style="font-size:14px">${d.signName}</b> &nbsp; (서명)</div>
+      </div>
+      <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
+      <div class="sp-input-box" style="min-height:60px">${nl2br(d.sharePlan)||'—'}</div>
+    </div>
+  </div>
+  <div class="sp-footer"><span class="left">REINVENT 2.0</span><span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span><span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span></div>
+</div></body></html>`;
+}
+
+// ── 탭에 따른 submitForm 분기 ──
 function calcDocScale(){
   const wrap=document.getElementById('docScaleWrap');
   const inner=document.getElementById('docScaleInner');
   if(!wrap||!inner)return;
   const availW=wrap.clientWidth;
-  const scale=Math.min(availW/1280,1);
+  // 1.25배 확대 적용
+  const scale=Math.min((availW/1280)*1.25, 1.25);
   inner.style.transform='scale('+scale+')';
+  inner.style.transformOrigin='top left';
   inner.style.width='1280px';
-  // 실제 점유 높이 보정
-  const docH=inner.scrollHeight;
-  wrap.style.height=(docH*scale)+'px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';
+  wrap.style.width=(1280*scale)+'px';
 }
 window.addEventListener('resize',calcDocScale);
 window.addEventListener('load',calcDocScale);
