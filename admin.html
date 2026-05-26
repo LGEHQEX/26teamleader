@@ -62,7 +62,14 @@
   .btn-refresh.loading { opacity: 0.5; pointer-events: none; }
   .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   .topbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .topbar-title { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+  .admin-tab-btn {
+    padding: 0 20px; height: 52px; background: none; border: none;
+    border-bottom: 3px solid transparent; font-size: 13px; font-weight: 700;
+    color: var(--muted); cursor: pointer; font-family: inherit; transition: all .15s;
+    white-space: nowrap;
+  }
+  .admin-tab-btn.active { color: var(--lg); border-bottom-color: var(--lg); }
+  .admin-tab-btn:hover:not(.active) { color: var(--text); background: var(--bg); }
   .topbar-count { font-size: 12px; color: var(--muted); }
   .search-box { height: 32px; border: 1px solid var(--border); border-radius: 7px; padding: 0 12px; font-size: 13px; width: 200px; font-family: inherit; color: var(--text); outline: none; background: var(--bg); transition: border-color 0.15s; }
   .search-box:focus { border-color: var(--lg); background: white; }
@@ -176,13 +183,16 @@
 
 <div class="main-area">
   <div class="topbar">
-    <div>
-      <span class="topbar-title">과제 제출 현황</span>
-      <span class="topbar-count" id="topbarCount"></span>
+    <div style="display:flex;align-items:center;gap:0">
+      <button class="admin-tab-btn active" id="tabBtnTask" onclick="switchAdminTab('task')">📋 과제 정의서</button>
+      <button class="admin-tab-btn" id="tabBtnSpread" onclick="switchAdminTab('spread')">📣 현업 전파 계획서</button>
+      <span class="topbar-count" id="topbarCount" style="margin-left:12px"></span>
     </div>
-    <input class="search-box" type="text" placeholder="팀명, 주제, 팀원 검색..." id="searchBox" oninput="applyFilter()">
+    <input class="search-box" type="text" placeholder="검색..." id="searchBox" oninput="applyFilter()">
   </div>
-  <div class="content-area">
+
+  <!-- 과제 정의서 탭 -->
+  <div class="content-area" id="adminTabTask">
     <div class="list-panel" id="listPanel">
       <div class="list-loading" id="listLoading"><span class="spin-sm"></span> 데이터 불러오는 중...</div>
     </div>
@@ -196,6 +206,26 @@
           <button onclick="closeDetail()" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='#aaa';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← 목록으로</button>
         </div>
         <div id="detailContentInner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 전파 계획서 탭 -->
+  <div class="content-area" id="adminTabSpread" style="display:none">
+    <div class="list-panel" id="spreadListPanel">
+      <div id="spreadListLoading" style="display:none;padding:16px;font-size:12px;color:#aaa"><span class="spin-sm"></span> 불러오는 중...</div>
+      <div id="spreadListInner"></div>
+    </div>
+    <div class="detail-panel" id="spreadDetailPanel">
+      <div class="empty-state" id="spreadEmptyState">
+        <div class="empty-icon">📣</div>
+        <div class="empty-text">왼쪽 목록에서 선택하세요</div>
+      </div>
+      <div id="spreadDetailContent" style="display:none">
+        <div style="margin-bottom:12px">
+          <button onclick="closeSpreadDetail()" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit">← 목록으로</button>
+        </div>
+        <div id="spreadDetailInner"></div>
       </div>
     </div>
   </div>
@@ -222,7 +252,7 @@
 </div>
 
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNDrzkHod78RomInnJWq9fud3AGRwepapx2Y3Xq41xJ8mu3jnM7xTCAFeH8z8l6Aq0BA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxaiLUy-2K3GPs8m_f862XIMmGAAxarwBMEbeUvAHoYlGOT999LRjUgsrgZXaUoLpSyJA/exec';
 let allData = [], filtered = [], selected = null;
 
 // ── 데이터 로드 (JSONP 방식 - CORS 우회) ──
@@ -545,6 +575,103 @@ document.addEventListener('webkitfullscreenchange', () => {
   setTimeout(calcFsScale, 100);
 });
 window.addEventListener('resize', calcFsScale);
+
+// ── 어드민 탭 전환 ──
+let adminTab = 'task';
+let spreadData = [];
+
+function switchAdminTab(tab) {
+  adminTab = tab;
+  document.getElementById('tabBtnTask').classList.toggle('active', tab==='task');
+  document.getElementById('tabBtnSpread').classList.toggle('active', tab==='spread');
+  document.getElementById('adminTabTask').style.display = tab==='task' ? '' : 'none';
+  document.getElementById('adminTabSpread').style.display = tab==='spread' ? '' : 'none';
+  if (tab==='spread' && spreadData.length===0) loadSpreadData();
+}
+
+// ── 전파 계획서 데이터 로드 ──
+async function loadSpreadData() {
+  document.getElementById('spreadListLoading').style.display = 'block';
+  try {
+    const res = await fetch(APPS_SCRIPT_URL + '?sheet=spread&t=' + Date.now());
+    const result = await res.json();
+    if (result.status === 'ok') {
+      spreadData = result.data || [];
+      renderSpreadList();
+    } else {
+      showToast('전파 계획서 로딩 실패: ' + result.message, '');
+    }
+  } catch(e) {
+    showToast('전파 계획서 로딩 실패: ' + e.message, '');
+  } finally {
+    document.getElementById('spreadListLoading').style.display = 'none';
+  }
+}
+
+// ── 전파 계획서 목록 렌더 ──
+function renderSpreadList() {
+  const panel = document.getElementById('spreadListInner');
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  const list = spreadData.filter(d =>
+    !search || [d.org, d.name, d.empId].join(' ').toLowerCase().includes(search)
+  );
+  document.getElementById('topbarCount').textContent = '· ' + list.length + '건';
+  if (!list.length) {
+    panel.innerHTML = '<div style="padding:24px;text-align:center;color:#aaa;font-size:13px">데이터가 없습니다</div>';
+    return;
+  }
+  panel.innerHTML = list.map((d,i) => `
+    <div class="sub-item" onclick="selectSpread(${i})" style="cursor:pointer">
+      <div class="item-header">
+        <span class="item-team">${d.org||'-'} · ${d.name||'-'}</span>
+      </div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">${d.submittedAt||''}</div>
+    </div>`).join('');
+}
+
+// ── 전파 계획서 상세 ──
+function selectSpread(idx) {
+  const d = spreadData[idx];
+  if (!d) return;
+  document.getElementById('spreadEmptyState').style.display = 'none';
+  document.getElementById('spreadDetailContent').style.display = 'block';
+  document.getElementById('spreadDetailInner').innerHTML = buildSpreadDetailHTML(d);
+}
+function closeSpreadDetail() {
+  document.getElementById('spreadEmptyState').style.display = 'flex';
+  document.getElementById('spreadDetailContent').style.display = 'none';
+}
+
+function buildSpreadDetailHTML(d) {
+  const row = (label, val) => val
+    ? `<div style="margin-bottom:8px"><div style="font-size:11px;color:#888;margin-bottom:3px">${label}</div><div style="font-size:13px;line-height:1.7;white-space:pre-wrap">${val}</div></div>`
+    : '';
+  return `
+  <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:14px">📣 현업 전파 계획서</div>
+    <div style="font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:6px">${d.name||'-'}</div>
+    <div style="display:flex;gap:16px;font-size:12px;color:#888;margin-bottom:16px;flex-wrap:wrap">
+      <span>${d.org||''}</span><span>·</span><span>작성일 ${d.date||''}</span><span>·</span><span>공유예정 ${d.shareDate||''}</span>
+    </div>
+    <hr style="border:none;border-top:1px solid #eee;margin-bottom:16px">
+    ${row('핵심 키워드', d.keywords)}
+    ${row('문제 드러내기', d.reveal)}
+    ${row('이기는 실행하기', d.win)}
+    <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+    <div style="border:2px solid #C8102E;border-radius:6px;padding:14px 16px;margin-bottom:12px">
+      <div style="text-align:center;font-size:12px;font-weight:800;color:#C8102E;margin-bottom:10px">— 팀장 선언문 —</div>
+      ${d.pledge1?`<div style="font-size:13px;line-height:1.8">${d.pledge1}</div>`:''}
+      ${d.pledge2?`<div style="font-size:13px;line-height:1.8">${d.pledge2}</div>`:''}
+      ${d.pledge3?`<div style="font-size:13px;line-height:1.8">${d.pledge3}</div>`:''}
+      ${d.pledge4?`<div style="font-size:13px;line-height:1.8">${d.pledge4}</div>`:''}
+      ${d.closing?`<div style="font-size:13px;line-height:1.8;margin-top:6px">${d.closing}</div>`:''}
+      <div style="text-align:right;font-size:12px;color:#888;margin-top:10px;padding-top:8px;border-top:1px solid #eee">
+        ${d.signY}년 ${d.signM}월 ${d.signD}일 &nbsp; 팀장 <b style="color:#1a1a1a">${d.signName||''}</b>
+      </div>
+    </div>
+    ${row('공유 계획', d.sharePlan)}
+  </div>`;
+}
 
 checkRefreshBtn();
 </script>
