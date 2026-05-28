@@ -3,459 +3,822 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>과제 확인 | 강사용</title>
+<title>과제 정의서 작성 | '26 피플 리더십</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
-  :root {
-    --lg: #A50034;
-    --lg-light: #f9eaee;
-    --bg: #f4f2ef;
-    --card: #ffffff;
-    --sidebar: #1e1e1e;
-    --border: #e8e4df;
-    --text: #1a1a1a;
-    --muted: #6b6b6b;
-    --success: #0f7a4a;
-    --success-bg: #e6f5ee;
-    --warning: #b45309;
-    --warning-bg: #fffbeb;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-  .sidebar {
-    width: 220px;
-    background: var(--sidebar);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    overflow-y: auto;
-  }
-  .sidebar-logo {
-    padding: 20px 18px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .sidebar-logo-mark { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .logo-sq { width: 26px; height: 26px; background: var(--lg); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; }
-  .sidebar-title { font-size: 13px; font-weight: 700; color: white; }
-  .sidebar-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-  .sidebar-section { padding: 14px 12px 6px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.25); }
-  .filter-group { padding: 0 12px 8px; }
-  .filter-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; padding-left: 2px; }
-  select.sidebar-select { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: rgba(255,255,255,0.85); padding: 7px 10px; font-size: 12px; font-family: inherit; outline: none; appearance: none; cursor: pointer; }
-  select.sidebar-select option { background: #2e2e2e; color: #fff; }
-  select.sidebar-select:focus { border-color: var(--lg); }
-  .sidebar-stats { margin: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; }
-  .stat-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
-  .stat-row:last-child { margin-bottom: 0; }
-  .stat-val { font-weight: 700; color: white; }
-  .stat-val.done { color: #4ade80; }
-  .stat-val.pending { color: #fbbf24; }
-  .btn-refresh { margin: 0 12px 12px; background: rgba(165,0,52,0.2); border: 1px solid rgba(165,0,52,0.4); border-radius: 7px; color: #fca5a5; font-size: 12px; font-weight: 600; padding: 8px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
-  .btn-refresh:hover { background: rgba(165,0,52,0.35); }
-  .btn-refresh.loading { opacity: 0.5; pointer-events: none; }
-  .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .topbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .admin-tab-btn {
-    padding: 0 20px; height: 52px; background: none; border: none;
-    border-bottom: 3px solid transparent; font-size: 13px; font-weight: 700;
-    color: var(--muted); cursor: pointer; font-family: inherit; transition: all .15s;
-    white-space: nowrap;
-  }
-  .admin-tab-btn.active { color: var(--lg); border-bottom-color: var(--lg); }
-  .admin-tab-btn:hover:not(.active) { color: var(--text); background: var(--bg); }
-  .topbar-count { font-size: 12px; color: var(--muted); }
-  .search-box { height: 32px; border: 1px solid var(--border); border-radius: 7px; padding: 0 12px; font-size: 13px; width: 200px; font-family: inherit; color: var(--text); outline: none; background: var(--bg); transition: border-color 0.15s; }
-  .search-box:focus { border-color: var(--lg); background: white; }
-  .content-area { flex: 1; display: flex; overflow: hidden; }
-  .list-panel { width: 340px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid var(--border); background: var(--bg); padding: 12px; }
-  .sub-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
-  .sub-item:hover { border-color: #c0bbb5; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .sub-item.selected { border-color: var(--lg); background: var(--lg-light); }
-  .sub-item.done { border-left: 3px solid var(--success); }
-  .sub-item.done.selected { background: #f0faf5; border-color: var(--success); }
-  .item-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
-  .item-team { font-size: 13px; font-weight: 700; }
-  .item-badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
-  .badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
-  .badge-class { background: #e8e4df; color: #555; }
-  .badge-done { background: var(--success-bg); color: var(--success); }
-  .badge-pending { background: var(--warning-bg); color: var(--warning); }
-  .item-task { font-size: 12px; color: #C8102E; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-  .item-meta { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #aaa; }
-  .item-dot { width: 3px; height: 3px; border-radius: 50%; background: #ccc; }
-  .detail-panel { flex: 1; overflow-y: auto; padding: 20px 24px; background: var(--bg); }
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted); gap: 8px; }
-  .empty-icon { font-size: 36px; opacity: 0.4; }
-  .empty-text { font-size: 13px; }
-  .detail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; }
-  .detail-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 14px; }
-  .detail-title-main { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
-  .detail-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
-  .detail-meta-dot { color: #ccc; }
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .info-key { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
-  .info-val { font-size: 13px; font-weight: 600; }
-  .members-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .member-chip { font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-weight: 500; }
-  .task-section { margin-bottom: 10px; }
-  .task-section:last-child { margin-bottom: 0; }
-  .task-section-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-  .task-section-content { font-size: 13px; line-height: 1.7; color: var(--text); background: var(--bg); border-radius: 7px; padding: 10px 13px; border: 1px solid var(--border); }
-  .file-btn { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; width: 100%; text-align: left; font-family: inherit; color: var(--text); }
-  .file-btn:hover { border-color: var(--lg); background: var(--lg-light); }
-  .file-btn-icon { font-size: 22px; }
-  .file-btn-info { flex: 1; }
-  .file-btn-name { font-size: 13px; font-weight: 600; display: block; margin-bottom: 2px; }
-  .file-btn-hint { font-size: 11px; color: var(--muted); display: block; }
-  .file-btn-arrow { font-size: 16px; color: var(--muted); }
-  .check-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .check-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-  .toggle-switch { position: relative; width: 44px; height: 24px; }
-  .toggle-switch input { opacity: 0; width: 0; height: 0; }
-  .toggle-track { position: absolute; inset: 0; background: #ddd; border-radius: 12px; transition: 0.2s; }
-  .toggle-switch input:checked + .toggle-track { background: var(--success); }
-  .toggle-thumb { position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-  .toggle-switch input:checked ~ .toggle-thumb { left: 23px; }
-  .toggle-label { font-size: 14px; font-weight: 600; }
-  .check-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
-  .check-status.done { background: var(--success-bg); color: var(--success); }
-  .check-status.pending { background: var(--warning-bg); color: var(--warning); }
-  .comment-area { margin-top: 14px; }
-  .comment-area textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px; line-height: 1.6; color: var(--text); outline: none; transition: border-color 0.15s; background: var(--bg); }
-  .comment-area textarea:focus { border-color: var(--lg); background: white; }
-  .btn-save { margin-top: 8px; background: var(--lg); color: white; border: none; border-radius: 7px; padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-  .btn-save:hover { background: #8a002b; }
-  .list-loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
-  .spin-sm { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(165,0,52,0.2); border-top-color: var(--lg); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .toast { position: fixed; bottom: 20px; right: 20px; background: #1a1a1a; color: white; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; transform: translateY(60px); transition: transform 0.25s; z-index: 999; }
-  .toast.show { transform: translateY(0); }
-  .toast.ok { background: var(--success); }
+:root {
+  --red: #C8102E;
+  --red-dark: #A50C25;
+  --pink-light: #FCE4E8;
+  --pink-bg: #FFF5F7;
+  --pink-border: #F0B4BE;
+  --cream: #FFFAFB;
+  --dark: #1F1F1F;
+  --mid: #444;
+  --soft: #6B6B6B;
+  --sidebar-w: 280px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--dark);-webkit-font-smoothing:antialiased;height:100%}
+body{display:flex;flex-direction:column;background:#E8E8E8}
+
+/* 앱 헤더 */
+.app-header{background:var(--red);height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;z-index:200}
+.app-logo{font-weight:900;font-size:16px;letter-spacing:1.5px;color:#fff}
+.app-title{color:rgba(255,255,255,.85);font-size:13px;font-weight:500}
+.btn-hd{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:5px;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-hd:hover{background:rgba(255,255,255,.25)}
+.btn-hd.primary{background:#fff;color:var(--red);border-color:#fff}
+.btn-hd.primary:hover{background:#ffe8ec}
+
+/* 레이아웃 */
+.app-body{display:flex;flex:1;overflow:clip}
+
+/* 사이드바 */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:#fff;border-right:1px solid #e0dbd6;display:flex;flex-direction:column;overflow-y:auto}
+.sb-section{padding:16px 16px 0}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:4px}
+.field input,.field select{width:100%;border:1px solid #ddd;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:var(--dark);background:#fafaf9;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--red);background:#fff}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sb-divider{border:none;border-top:1px solid #eee;margin:4px 0 14px}
+
+/* 과제 유형 */
+.type-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #ddd;transition:all .15s;font-size:12px;font-weight:600;color:#777;margin-bottom:6px}
+.type-item:hover{border-color:var(--red);color:var(--red)}
+.type-item.on{background:#fff5f7;border-color:var(--red);color:var(--red)}
+.type-item .cb{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;background:#fff;flex-shrink:0}
+.type-item.on .cb{background:var(--red);border-color:var(--red);color:#fff}
+
+/* 불러오기 */
+.btn-load{width:100%;background:#f7f5f2;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:12px;font-weight:600;color:var(--red);cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px}
+.btn-load:hover{background:#fff5f7;border-color:var(--red)}
+.load-status{font-size:11px;margin-top:6px;padding:6px 8px;border-radius:6px;line-height:1.4}
+.load-status.ok{background:#e6f5ee;color:#0f7a4a}
+.load-status.err{background:#fef2f2;color:#c62828}
+.load-status.info{background:#fff8e1;color:#7a5c00}
+
+/* 이미지 선택 */
+.img-selector{border:1.5px dashed #ddd;border-radius:8px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#aaa;font-size:12px;cursor:pointer;transition:all .15s;background:#fafaf9;position:relative;overflow:hidden}
+.img-selector:hover{border-color:var(--red);color:var(--red);background:#fff5f7}
+.img-selector img{width:100%;height:auto;display:block;object-fit:contain;border-radius:6px}
+
+/* 사이드바 하단 */
+.sb-footer{padding:16px;margin-top:auto;border-top:1px solid #eee}
+.btn-submit{width:100%;height:44px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-submit:hover{background:var(--red-dark)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* 에디터 */
+.editor-area{flex:1;overflow-y:auto;padding:16px}
+.doc-scale-wrap{width:100%;display:flex;justify-content:flex-start}
+.doc-scale-inner{width:1280px;transform-origin:top left;flex-shrink:0}
+
+/* 탭 */
+.tab-nav{display:flex;gap:0;margin-bottom:12px;border-bottom:2px solid var(--red)}
+.tab-btn{padding:9px 22px;font-size:13px;font-weight:700;font-family:inherit;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;cursor:pointer;transition:all .15s;margin-bottom:-2px}
+.tab-btn.active{color:var(--red);border-bottom:3px solid var(--red)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ============================
+   문서 스타일 (새 양식)
+   ============================ */
+.doc{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;width:1280px;max-width:100%}
+
+/* 문서 헤더 */
+.doc-hd{background:var(--red);color:#fff;height:52px;display:flex;align-items:center;padding:0 24px;justify-content:space-between}
+.doc-hd-title{font-weight:900;font-size:18px;letter-spacing:1px}
+.doc-hd-badge{font-size:13px;font-weight:700;letter-spacing:2px;padding:5px 14px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px}
+
+/* 제목행 */
+.doc-title-row{padding:20px 28px 14px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #eee}
+.badge-btn{background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:999px;flex-shrink:0;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}
+.doc-title-input{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;font-size:26px;font-weight:900;font-family:inherit;color:var(--dark);letter-spacing:-.5px;line-height:1.25;outline:none;transition:border-color .15s}
+.doc-title-input:focus{border-bottom-color:var(--red);background:rgba(200,16,46,.02)}
+.doc-title-input::placeholder{color:#ccc}
+
+/* 바디 2컬럼 */
+.doc-body{display:grid;grid-template-columns:320px 1fr;gap:0}
+
+/* 왼쪽 */
+.doc-left{border-right:1px solid #EAD0D5;display:flex;flex-direction:column}
+.doc-img-area{background:#f7f5f2;cursor:pointer;position:relative;overflow:hidden;min-height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#bbb;font-size:13px}
+.doc-img-area:hover::after{content:'이미지 변경';position:absolute;inset:0;background:rgba(200,16,46,.7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;display:flex;justify-content:center;align-items:center}
+.doc-img-area img{width:100%;height:auto;display:block;object-fit:contain}
+.doc-info{background:var(--pink-bg);padding:14px 18px;font-size:13px;color:var(--mid);border-top:1px solid var(--pink-border)}
+.info-row{display:flex;align-items:baseline;gap:10px;padding:5px 0}
+.info-row+.info-row{border-top:1px dashed rgba(200,16,46,.15);padding-top:8px;margin-top:2px}
+.info-lbl{color:var(--soft);font-size:11px;font-weight:600;flex-shrink:0;width:54px;letter-spacing:.3px}
+.info-input{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--dark);outline:none;border-bottom:1px dashed transparent;transition:border-color .15s;padding:0 2px}
+.info-input:focus{border-bottom-color:var(--red);background:rgba(200,16,46,.03)}
+.check-item{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--soft);font-weight:500;white-space:nowrap;cursor:pointer;user-select:none}
+.check-item .ck{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid #C8B0B5;border-radius:3px;font-size:10px;color:transparent;background:#fff;line-height:1;font-weight:900;flex-shrink:0}
+.check-item.on{color:var(--red);font-weight:700}
+.check-item.on .ck{background:var(--red);border-color:var(--red);color:#fff}
+
+/* 오른쪽 섹션들 */
+.doc-right{display:flex;flex-direction:column}
+
+/* 지향점 (빨간 박스) */
+.sec-goal{background:var(--red);padding:18px 24px}
+.sec-goal-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:8px}
+.sec-goal-input{background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.4);width:100%;font-size:17px;font-weight:800;color:#fff;font-family:inherit;outline:none;padding:4px 0;line-height:1.5}
+.sec-goal-input::placeholder{color:rgba(255,255,255,.4)}
+.sec-goal-input:focus{border-bottom-color:rgba(255,255,255,.9)}
+
+/* 일반 섹션 */
+.sec{border-bottom:1px solid var(--pink-border);background:var(--cream)}
+.sec-title{background:var(--pink-light);padding:9px 18px;font-size:14px;font-weight:800;color:var(--red);border-left:4px solid var(--red);letter-spacing:-.2px}
+.sec-body{padding:12px 18px 14px}
+
+/* 불릿 */
+.bullet-list{display:flex;flex-direction:column;gap:4px}
+.bullet-row{display:flex;align-items:flex-start;gap:8px}
+.bullet-dot{width:5px;height:5px;background:var(--dark);border-radius:50%;flex-shrink:0;margin-top:9px}
+.bullet-row textarea{flex:1;border:none;background:transparent;font-size:14px;font-family:inherit;color:var(--dark);outline:none;resize:none;line-height:1.6;min-height:24px;padding:2px 4px;border-radius:4px}
+.bullet-row textarea:focus{background:rgba(200,16,46,.04)}
+.bullet-row textarea::placeholder{color:#ccc}
+.btn-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:4px}
+.btn-rm:hover{color:var(--red)}
+.btn-add{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--red);font-weight:600;background:none;border:1px dashed var(--pink-border);border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:6px;font-family:inherit;transition:background .15s}
+.btn-add:hover{background:rgba(200,16,46,.06)}
+
+/* 다짐 푸터 */
+.doc-pledge{background:#fff;border-top:2px solid var(--red);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.pledge-badge{background:var(--red);color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:3px;white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
+.pledge-text{font-size:14px;color:var(--dark);line-height:1.6;flex:1}
+.pledge-sign{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--soft);white-space:nowrap;flex-shrink:0}
+.sign-input{border:none;border-bottom:1px solid #999;background:transparent;font-size:12px;font-family:inherit;outline:none;text-align:center;padding:2px 4px}
+.sign-input:focus{border-bottom-color:var(--red)}
+.sign-name{border:none;border-bottom:1px solid #999;background:transparent;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:80px;text-align:center;padding:2px 4px}
+.sign-name:focus{border-bottom-color:var(--red)}
+
+/* 문서 하단 */
+.doc-footer{background:var(--red);color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.doc-footer .powered{font-style:italic;opacity:.9;font-size:11px}
+.btn-print{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:5px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
+.btn-print:hover{background:rgba(255,255,255,.3)}
+
+/* 완료 화면 */
+.done-card{background:#fff;border-radius:12px;padding:48px 24px;text-align:center;max-width:480px;margin:40px auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.done-icon{font-size:44px;margin-bottom:14px}
+.done-title{font-size:20px;font-weight:800;color:#0f7a4a;margin-bottom:8px}
+.done-msg{font-size:13px;color:#666;line-height:1.7}
+.done-id{margin-top:16px;display:inline-block;font-size:13px;background:#e6f5ee;color:#0f7a4a;padding:6px 16px;border-radius:20px;font-weight:700;font-family:monospace}
+
+/* 모달 */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:10px;padding:22px 24px;width:340px}
+.modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
+.badge-opt{background:var(--red);color:#fff;font-weight:700;font-size:13px;padding:10px 18px;border-radius:999px;cursor:pointer;border:none;font-family:inherit;text-align:center;transition:background .15s;width:100%;margin-bottom:8px}
+.badge-opt:hover{background:var(--red-dark)}
+.btn-modal-close{width:100%;margin-top:4px;background:none;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-family:inherit}
+.img-pick-item{border:2px solid #e0dbd6;border-radius:7px;overflow:hidden;cursor:pointer;transition:all .15s;background:#f7f5f2}
+.img-pick-item:hover{border-color:var(--red);transform:scale(1.03)}
+.img-pick-item.selected{border-color:var(--red);box-shadow:0 0 0 3px #fff5f7}
+.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
+
+/* 토스트 */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(60px);transition:transform .25s;z-index:9999}
+.toast.show{transform:translateY(0)}
+.toast.ok{background:#0f7a4a}
+.toast.err{background:#c62828}
+
+/* 현업 전파 계획서 (기존 유지) */
+.sp-doc{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;width:1280px;max-width:100%;font-family:'Pretendard',-apple-system,sans-serif}
+.sp-header{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
+.sp-header-top{font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:4px}
+.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
+.sp-title .hl{color:var(--red)}
+.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
+.sp-meta{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.sp-meta-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.sp-meta-item label{color:#888;font-weight:600;white-space:nowrap}
+.sp-meta-input{border:none;border-bottom:1px solid #ccc;background:transparent;font-size:12px;font-family:inherit;color:#1a1a1a;outline:none;padding:2px 4px;min-width:80px}
+.sp-meta-input:focus{border-bottom-color:var(--red)}
+.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.sp-col:last-child{border-right:none}
+.sp-sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
+.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:var(--red)}
+.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
+.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
+.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
+.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px;line-height:1.4}
+.sp-input-box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9}
+.sp-input-box textarea{width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.7;min-height:28px}
+.sp-input-box textarea::placeholder{color:#ccc}
+.sp-declare-box{border:2px solid var(--red);border-radius:4px;padding:16px 18px;margin-bottom:14px}
+.sp-declare-title{text-align:center;font-size:13px;font-weight:800;color:var(--red);margin-bottom:12px;letter-spacing:.5px}
+.sp-declare-item textarea{width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px}
+.sp-declare-item textarea::placeholder{color:#ccc}
+.sp-sign{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
+.sp-sign input{border:none;border-bottom:1px solid #999;background:transparent;font-size:12px;font-family:inherit;outline:none;text-align:center;width:36px;padding:2px 4px}
+.sp-sign input:focus{border-bottom-color:var(--red)}
+.sp-sign-name{border:none;border-bottom:1px solid #999;background:transparent;font-size:13px;font-weight:700;font-family:inherit;outline:none;width:60px;text-align:center;padding:2px 4px}
+.sp-footer{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+.sp-footer .left{color:var(--red);font-weight:700;font-size:11px}
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="sidebar-logo-mark">
-      <div class="logo-sq">LG</div>
-      <span class="sidebar-title">과제 관리</span>
+<!-- 앱 헤더 -->
+<header class="app-header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="app-logo">REINVENT</span>
+    <span class="app-title" id="headerTitle">'26 피플 리더십 과제 정의서</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="btn-hd" id="previewBtn" onclick="openPreview()">미리보기</button>
+    <button class="btn-hd" id="spreadPreviewBtn" onclick="openSpreadPreview()" style="display:none">미리보기</button>
+    <button class="btn-hd primary" id="submitBtn" onclick="submitForm()">📥 다운로드</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">기본 정보</div>
+      <div class="field"><label>차수</label>
+        <select id="s_cohort">
+          <option value="">선택</option>
+          <option>1차수 — 6/16(화)~6/17(수)</option>
+          <option>2차수 — 6/18(목)~6/19(금)</option>
+          <option>3차수 — 6/23(화)~6/24(수)</option>
+          <option>4차수 — 6/25(목)~6/26(금)</option>
+          <option>5차수 — 7/2(목)~7/3(금)</option>
+          <option>6차수 — 7/7(화)~7/8(수)</option>
+          <option>7차수 — 7/9(목)~7/10(금)</option>
+          <option>8차수 — 7/14(화)~7/15(수)</option>
+          <option>9차수 — 7/21(화)~7/22(수)</option>
+          <option>10차수 — 7/23(목)~7/24(금)</option>
+        </select>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>반</label>
+          <select id="s_class">
+            <option value="">반</option>
+            <option>1반</option><option>2반</option><option>3반</option>
+            <option>4반</option><option>5반</option>
+          </select>
+        </div>
+        <div class="field"><label>팀</label>
+          <select id="s_team">
+            <option value="">팀</option>
+            <option>A팀</option><option>B팀</option><option>C팀</option>
+            <option>D팀</option><option>E팀</option><option>F팀</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>조직명</label>
+        <input type="text" id="s_org" placeholder="조직명 입력" oninput="syncField('s_org','r_org')">
+      </div>
+      <div class="field"><label>작성자</label>
+        <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author')">
+      </div>
+      <div class="field"><label>사번</label>
+        <input type="text" id="s_empid" placeholder="사번 입력">
+      </div>
+      <button class="btn-load" onclick="currentTab==='spread'?openSpEmpIdPopup():openEmpIdPopup()">🔍 사번으로 불러오기</button>
+      <div id="loadStatus"></div>
     </div>
-    <div class="sidebar-sub">강사용 · '26 피플 리더십</div>
-  </div>
-  <div class="sidebar-section">필터</div>
-  <div class="filter-group">
-    <div class="filter-label">기수 / 차수</div>
-    <select class="sidebar-select" id="filterCohort" onchange="applyFilter();checkRefreshBtn()">
-      <option value="">선택하세요</option>
-      <option>1차수 — 6/16(화)~6/17(수)</option><option>2차수 — 6/18(목)~6/19(금)</option><option>3차수 — 6/23(화)~6/24(수)</option><option>4차수 — 6/25(목)~6/26(금)</option><option>5차수 — 7/2(목)~7/3(금)</option><option>6차수 — 7/7(화)~7/8(수)</option><option>7차수 — 7/9(목)~7/10(금)</option><option>8차수 — 7/14(화)~7/15(수)</option><option>9차수 — 7/21(화)~7/22(수)</option><option>10차수 — 7/23(목)~7/24(금)</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <div class="filter-label">반</div>
-    <select class="sidebar-select" id="filterClass" onchange="applyFilter();checkRefreshBtn()">
-      <option value="">선택하세요</option>
-      <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <div class="filter-label">제출 상태</div>
-    <select class="sidebar-select" id="filterStatus" onchange="applyFilter()">
-      <option value="">전체</option>
-      <option value="done">확인 완료</option>
-      <option value="pending">미확인</option>
-    </select>
-  </div>
-  <div class="sidebar-stats">
-    <div class="stat-row"><span>전체 제출</span><span class="stat-val" id="statTotal">-</span></div>
-    <div class="stat-row"><span>확인 완료</span><span class="stat-val done" id="statDone">-</span></div>
-    <div class="stat-row"><span>미확인</span><span class="stat-val pending" id="statPending">-</span></div>
-  </div>
-  <button class="btn-refresh" id="refreshBtn" onclick="loadData()" disabled style="opacity:0.4;pointer-events:none;cursor:not-allowed">↻ 차수·반 선택 후 불러오기</button>
+
+    <hr class="sb-divider">
+
+    <div class="sb-section">
+      <div class="sb-label">과제 유형 (1개 선택)</div>
+      <div id="typeGrid">
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>팀 업무 개선</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>리더십</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>조직문화</div>
+        <div class="type-item" onclick="selectType(this)"><span class="cb"></span>기타</div>
+      </div>
+    </div>
+
+    <hr class="sb-divider">
+
+    <div class="sb-section">
+      <div class="sb-label">대표 이미지</div>
+      <div class="img-selector" onclick="openImgPicker()" style="min-height:80px">
+        <img id="sbImgPreview" style="display:none">
+        <span id="sbImgIcon" style="font-size:22px;opacity:.4">🖼</span>
+        <span id="sbImgHint" style="font-size:11px">클릭하여 선택</span>
+      </div>
+    </div>
+
+    <div class="sb-footer">
+      <button class="btn-submit" id="submitBtn2" onclick="submitForm()">📥 과제 정의서 다운로드</button>
+    </div>
+  </aside>
+
+  <!-- 에디터 -->
+  <main class="editor-area" id="editorArea">
+
+    <!-- 탭 -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('task')">📋 과제 정의서</button>
+      <button class="tab-btn" onclick="switchTab('spread')">📣 현업 전파 계획서</button>
+    </div>
+
+    <!-- 탭1: 과제 정의서 -->
+    <div class="tab-panel active" id="tab-task">
+      <div id="formArea">
+        <div class="doc-scale-wrap" id="docScaleWrap">
+          <div class="doc-scale-inner" id="docScaleInner">
+            <div class="doc" id="docPreview">
+
+              <!-- 문서 헤더 -->
+              <div class="doc-hd">
+                <span class="doc-hd-title">우리팀 REINVENT 과제</span>
+                <span class="doc-hd-badge">과제 정의서</span>
+              </div>
+
+              <!-- 제목행 -->
+              <div class="doc-title-row">
+                <button class="badge-btn" id="badgeBtn" onclick="openBadgePicker()">문제 드러내기 ▾</button>
+                <input class="doc-title-input" id="mainTitle" type="text" placeholder="과제 제목을 입력하세요">
+              </div>
+
+              <!-- 바디 -->
+              <div class="doc-body">
+
+                <!-- 왼쪽 -->
+                <div class="doc-left">
+                  <div class="doc-img-area" onclick="openImgPicker()">
+                    <div id="posterPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                      <span style="font-size:32px;opacity:.3">🖼</span>
+                      <span style="font-size:12px">클릭하여 이미지 선택</span>
+                    </div>
+                    <img id="posterImg" style="display:none">
+                  </div>
+                  <div class="doc-info">
+                    <div class="info-row">
+                      <span class="info-lbl">조직명</span>
+                      <input class="info-input" id="r_org" placeholder="조직명" oninput="syncField('r_org','s_org')">
+                    </div>
+                    <div class="info-row">
+                      <span class="info-lbl">작성자</span>
+                      <input class="info-input" id="r_author" placeholder="이름 / 직책" oninput="syncField('r_author','s_author')">
+                    </div>
+                    <div class="info-row">
+                      <span class="info-lbl">과제 유형</span>
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px" id="typeDisplay">
+                        <span class="check-item" onclick="toggleDocType('팀 업무 개선')"><span class="ck"></span>팀 업무 개선</span>
+                        <span class="check-item" onclick="toggleDocType('리더십')"><span class="ck"></span>리더십</span>
+                        <span class="check-item" onclick="toggleDocType('조직문화')"><span class="ck"></span>조직문화</span>
+                        <span class="check-item" onclick="toggleDocType('기타')"><span class="ck"></span>기타</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 오른쪽 -->
+                <div class="doc-right">
+
+                  <!-- 지향점 -->
+                  <div class="sec-goal">
+                    <div class="sec-goal-label">REINVENT 과제 지향점</div>
+                    <input class="sec-goal-input" id="oneliner" type="text" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"'>
+                  </div>
+
+                  <!-- Why -->
+                  <div class="sec">
+                    <div class="sec-title">우리 팀의 문제 드러내기 (Why)</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="why_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('why_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                  <!-- How -->
+                  <div class="sec">
+                    <div class="sec-title">우리 팀의 이기는 실행하기 (How)</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="how_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="실행 방향을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="실행 방향을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('how_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                  <!-- 과제 목표 -->
+                  <div class="sec">
+                    <div class="sec-title">REINVENT 과제 목표</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="goal_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표를 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표를 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('goal_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                </div><!-- /doc-right -->
+              </div><!-- /doc-body -->
+
+              <!-- 다짐 -->
+              <div class="doc-pledge">
+                <span class="pledge-badge">REINVENT 다짐</span>
+                <span class="pledge-text">위 REINVENT 과제를 <b>우리 팀의 일하는 방식으로 정착시키고, 끝까지 책임지고 실행할 것을</b> 다짐합니다.</span>
+                <div class="pledge-sign">
+                  작성일
+                  <input class="sign-input" id="sign_y" placeholder="년" style="width:44px">-
+                  <input class="sign-input" id="sign_m" placeholder="월" style="width:32px">-
+                  <input class="sign-input" id="sign_d" placeholder="일" style="width:32px">
+                  &nbsp;팀장 서명
+                  <input class="sign-name" id="sign_name" placeholder="이름 입력">
+                  (인)
+                </div>
+              </div>
+
+              <!-- 문서 푸터 -->
+              <div class="doc-footer">
+                <span class="powered">Powered by REINVENT 2.0</span>
+              </div>
+
+            </div><!-- /doc -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 제출 완료 -->
+      <div id="doneArea" style="display:none;padding:40px 24px">
+        <div class="done-card">
+          <div class="done-icon">✅</div>
+          <div class="done-title">과제 정의서가 제출되었습니다!</div>
+          <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.</div>
+          <div class="done-id" id="doneId">-</div>
+          <div style="margin-top:20px">
+            <button onclick="goBack()" style="display:inline-block;background:none;border:2px solid var(--red);border-radius:8px;padding:10px 28px;font-size:14px;font-weight:700;color:var(--red);cursor:pointer;font-family:inherit">← 수정하러 돌아가기</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-task -->
+
+    <!-- 탭2: 현업 전파 계획서 -->
+    <div class="tab-panel" id="tab-spread">
+      <div class="doc-scale-wrap" id="spScaleWrap">
+        <div class="doc-scale-inner" id="spScaleInner">
+          <div class="sp-doc">
+            <div class="sp-header">
+              <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+              <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
+              <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+              <div class="sp-meta">
+                <div class="sp-meta-item"><label>소속</label><input class="sp-meta-input" id="sp_org" placeholder="조직명" style="width:100px"></div>
+                <div class="sp-meta-item"><label>성명</label><input class="sp-meta-input" id="sp_name" placeholder="홍길동 팀장" style="width:90px"></div>
+                <div class="sp-meta-item"><label>작성일</label><input class="sp-meta-input" id="sp_date" placeholder="2026.05.20" style="width:90px"></div>
+                <div class="sp-meta-item"><label>공유예정</label><input class="sp-meta-input" id="sp_share_date" placeholder="2026.05.27" style="width:90px"></div>
+              </div>
+            </div>
+            <div class="sp-body">
+              <div class="sp-col">
+                <div class="sp-sec-hd">
+                  <span class="sp-sec-num">01</span>
+                  <div><div class="sp-sec-title">우리 조직의 언어로 재정리</div><div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div></div>
+                </div>
+                <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
+                <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
+                <div class="sp-input-box"><textarea id="sp_keywords" rows="1" placeholder="예) 문제 드러내기 · 이기는 실행하기 · 리더 주도의 변화" oninput="autoGrow(this)"></textarea></div>
+                <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em style="color:var(--red);font-style:normal">「문제 드러내기」</em></div>
+                <div class="sp-input-box" style="min-height:100px"><textarea id="sp_reveal" rows="4" placeholder="예) 우리 팀의 관성: VOE 데이터를 '좋게 다듬어' 보고하는 패턴." oninput="autoGrow(this)"></textarea></div>
+                <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em style="color:var(--red);font-style:normal">「이기는 실행하기」</em></div>
+                <div class="sp-input-box" style="min-height:100px"><textarea id="sp_win" rows="4" placeholder="예) 경쟁 대상: 글로벌 Top-tier 기업의 EX 조직." oninput="autoGrow(this)"></textarea></div>
+              </div>
+              <div class="sp-col">
+                <div class="sp-sec-hd">
+                  <span class="sp-sec-num">02</span>
+                  <div><div class="sp-sec-title">팀장 선언문</div><div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div></div>
+                </div>
+                <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
+                <div class="sp-declare-box">
+                  <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
+                  <div style="font-size:13px;line-height:1.8;color:#1a1a1a;padding:3px 0">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge1" rows="1" placeholder="① 약속 1을 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge2" rows="1" placeholder="② 약속 2를 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge3" rows="1" placeholder="③ 약속 3을 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge4" rows="1" placeholder="④ 약속 4 (선택)" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea id="sp_closing" rows="1" placeholder="함께 점검해 주십시오. — ○○○ 드림" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px;margin-top:4px"></textarea></div>
+                  <div class="sp-sign">
+                    <input id="sp_sign_y" placeholder="2026" maxlength="4"> 년
+                    <input id="sp_sign_m" placeholder="05" maxlength="2"> 월
+                    <input id="sp_sign_d" placeholder="27" maxlength="2"> 일
+                    &nbsp;팀장 <input class="sp-sign-name" id="sp_sign_name" placeholder="홍 길 동">
+                    &nbsp;<span style="color:#888">(서명)</span>
+                  </div>
+                </div>
+                <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
+                <div class="sp-input-box" style="min-height:60px"><textarea id="sp_share_plan" rows="2" placeholder="예) 5/28(목) 주간회의 10분 — 낭독 + 자리 비치 + 월 회고 점검." oninput="autoGrow(this)"></textarea></div>
+              </div>
+            </div>
+            <div class="sp-footer">
+              <span class="left">REINVENT 2.0</span>
+              <span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
+              <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-spread -->
+
+  </main>
 </div>
 
-<div class="main-area">
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:0">
-      <button class="admin-tab-btn active" id="tabBtnTask" onclick="switchAdminTab('task')">📋 과제 정의서</button>
-      <button class="admin-tab-btn" id="tabBtnSpread" onclick="switchAdminTab('spread')">📣 현업 전파 계획서</button>
-      <span class="topbar-count" id="topbarCount" style="margin-left:12px"></span>
-    </div>
-    <input class="search-box" type="text" placeholder="검색..." id="searchBox" oninput="applyFilter()">
+<!-- 뱃지 모달 -->
+<div class="modal-bg" id="badgeBg" onclick="if(event.target===this){this.style.display='none';this.classList.remove('open')}">
+  <div class="modal">
+    <div class="modal-title">과제 유형 선택</div>
+    <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
+    <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
+    <button class="badge-opt" onclick="setBadge('성장과 소통')">성장과 소통</button>
+    <button class="btn-modal-close" onclick="const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')">닫기</button>
   </div>
+</div>
 
-  <!-- 과제 정의서 탭 -->
-  <div class="content-area" id="adminTabTask">
-    <div class="list-panel" id="listPanel">
-      <div class="list-loading" id="listLoading"><span class="spin-sm"></span> 데이터 불러오는 중...</div>
+<!-- 이미지 모달 -->
+<div class="modal-bg" id="imgPickerBg" onclick="if(event.target===this)closeImgPicker()">
+  <div class="modal" style="max-width:640px;width:100%">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span style="font-size:14px;font-weight:700">🖼 이미지 선택</span>
+      <button onclick="closeImgPicker()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
     </div>
-    <div class="detail-panel" id="detailPanel">
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon">📋</div>
-        <div class="empty-text">왼쪽 목록에서 팀을 선택하세요</div>
+    <div id="imgPickerGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"></div>
+  </div>
+</div>
+
+<!-- 미리보기 모달 -->
+<div class="modal-bg" id="previewBg" onclick="if(event.target===this)closePreview()">
+  <div class="modal" style="max-width:1300px;width:100%;max-height:92vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-size:15px;font-weight:700">과제 정의서 미리보기</span>
+      <div style="display:flex;gap:8px">
+        <button onclick="currentTab==='spread'?saveSpreadHTML():savePreviewHTML()" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📥 HTML 저장</button>
+        <button onclick="closePreview()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
       </div>
-      <div id="detailContent" style="display:none;">
-        <div style="margin-bottom:12px">
-          <button onclick="closeDetail()" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='#aaa';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← 목록으로</button>
-        </div>
-        <div id="detailContentInner"></div>
-      </div>
+    </div>
+    <div id="previewContent"></div>
+  </div>
+</div>
+
+<!-- 전파계획서 사번 팝업 -->
+<div class="modal-bg" id="spEmpIdPopupBg" onclick="if(event.target===this)closeSpEmpIdPopup()">
+  <div class="modal" style="width:360px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 전파 계획서를 불러옵니다.</div>
+    <div class="field"><label>사번</label>
+      <input type="text" id="sp_popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px" onkeydown="if(event.key==='Enter')doSpEmpIdLoad()">
+    </div>
+    <div id="spPopupLoadStatus" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeSpEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="doSpEmpIdLoad()" id="spPopupLoadBtn" style="flex:2;padding:10px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
     </div>
   </div>
+</div>
 
-  <!-- 전파 계획서 탭 -->
-  <div class="content-area" id="adminTabSpread" style="display:none">
-    <div class="list-panel" id="spreadListPanel">
-      <div id="spreadListLoading" style="display:none;padding:16px;font-size:12px;color:#aaa"><span class="spin-sm"></span> 불러오는 중...</div>
-      <div id="spreadListInner"></div>
+<!-- 사번 팝업 -->
+<div class="modal-bg" id="empIdPopupBg" onclick="if(event.target===this)closeEmpIdPopup()">
+  <div class="modal" style="width:360px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 내용을 불러옵니다.</div>
+    <div class="field"><label>사번</label>
+      <input type="text" id="popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px" onkeydown="if(event.key==='Enter')doEmpIdLoad()">
     </div>
-    <div class="detail-panel" id="spreadDetailPanel">
-      <div class="empty-state" id="spreadEmptyState">
-        <div class="empty-icon">📣</div>
-        <div class="empty-text">왼쪽 목록에서 선택하세요</div>
-      </div>
-      <div id="spreadDetailContent" style="display:none">
-        <div style="margin-bottom:12px">
-          <button onclick="closeSpreadDetail()" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit">← 목록으로</button>
-        </div>
-        <div id="spreadDetailInner"></div>
-      </div>
+    <div id="popupLoadStatus" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="doEmpIdLoad()" id="popupLoadBtn" style="flex:2;padding:10px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- 전체화면 모달 -->
-<div id="fullscreenModal" style="display:none;position:fixed;inset:0;background:#1a1a1a;z-index:1000;overflow:hidden;">
-  <!-- 상단 바 -->
-  <div style="position:absolute;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.7);padding:8px 16px;display:flex;align-items:center;justify-content:space-between">
-    <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.8)" id="fsTitle">과제 정의서</span>
-    <div style="display:flex;gap:8px">
-      <button onclick="toggleBrowserFullscreen()" id="fsToggleBtn" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">⛶ 브라우저 전체화면</button>
-      <button onclick="closeFullscreen()" style="background:#A50034;color:white;border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✕ 닫기</button>
-    </div>
-  </div>
-  <!-- 문서 스케일 컨테이너 -->
-  <div style="position:absolute;inset:0;overflow-y:auto;padding:44px 0 20px 0" id="fsWrapper">
-    <div id="fsScaleBox" style="transform-origin:top center;width:1280px;margin:0 auto">
-      <div id="fullscreenContent"></div>
-    </div>
-  </div>
-</div>
-
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2a07Lt8Nchk4owuYeNJMAKxficoggGbNBN9HuPagw_QBS8cgGsAmTHvG3PFwtg9Mt9A/exec';
-let allData = [], filtered = [], selected = null;
+const PRESET_IMGS = Array.from({length:10},(_,i)=>`https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_%20(${i+1}).png`);
+let imgDataUrl=null, currentSubmitId=null, currentSpreadId=null, currentTab='task';
 
-// ── 데이터 로드 (JSONP 방식 - CORS 우회) ──
-function checkRefreshBtn() {
-  const cohort = document.getElementById('filterCohort').value;
-  const cls    = document.getElementById('filterClass').value;
-  const btn    = document.getElementById('refreshBtn');
-  const ready  = cohort && cls;
-  btn.disabled = !ready;
-  btn.style.opacity = ready ? '1' : '0.4';
-  btn.style.pointerEvents = ready ? 'auto' : 'none';
-  btn.style.cursor = ready ? 'pointer' : 'not-allowed';
-  btn.textContent = ready ? '↻ 데이터 새로고침' : '↻ 차수·반 선택 후 불러오기';
-}
+// ── 유틸 ──
+function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
+function syncField(a,b){const v=document.getElementById(a)?.value||'';const d=document.getElementById(b);if(d)d.value=v;}
+function getBullets(id){return Array.from(document.querySelectorAll('#'+id+' textarea')).map(t=>t.value.trim()).filter(Boolean)}
 
-async function loadData() {
-  const cohort = document.getElementById('filterCohort').value;
-  const cls    = document.getElementById('filterClass').value;
-  if (!cohort || !cls) {
-    showToast('차수와 반을 먼저 선택해 주세요.', '');
-    return;
-  }
-  const btn = document.getElementById('refreshBtn');
-  const loading = document.getElementById('listLoading');
-  btn.classList.add('loading'); btn.textContent = '불러오는 중...';
-  if (loading) loading.style.display = 'block';
-
-  try {
-    const url = APPS_SCRIPT_URL + '?t=' + Date.now();
-    const res = await fetch(url);
-    const result = await res.json();
-    if (result.status === 'ok') {
-      allData = result.data || [];
-      updateStats(); applyFilter();
-      showToast(allData.length + '건 불러왔습니다.', 'ok');
-    } else {
-      showToast('오류: ' + result.message, '');
+// ── 탭 전환 ──
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='task')||(i===1&&tab==='spread')));
+  document.getElementById('tab-task').classList.toggle('active',tab==='task');
+  document.getElementById('tab-spread').classList.toggle('active',tab==='spread');
+  document.getElementById('headerTitle').textContent=tab==='task'?"'26 피플 리더십 과제 정의서":"'26 피플 리더십 현업 전파 계획서";
+  document.getElementById('previewBtn').style.display=tab==='task'?'':'none';
+  document.getElementById('spreadPreviewBtn').style.display=tab==='spread'?'':'none';
+  document.getElementById('submitBtn').textContent=tab==='task'?'📥 다운로드':'📥 다운로드';
+  document.getElementById('submitBtn2').textContent=tab==='task'?'📥 과제 정의서 다운로드':'📥 전파 계획서 다운로드';
+  if(tab==='spread'){
+    const org=document.getElementById('s_org').value.trim();
+    const author=document.getElementById('s_author').value.trim();
+    if(org&&!document.getElementById('sp_org').value)document.getElementById('sp_org').value=org;
+    if(author&&!document.getElementById('sp_name').value)document.getElementById('sp_name').value=author;
+    if(author&&!document.getElementById('sp_sign_name').value)document.getElementById('sp_sign_name').value=author;
+    if(!document.getElementById('sp_date').value){
+      const t=new Date();const y=t.getFullYear();const m=String(t.getMonth()+1).padStart(2,'0');const d=String(t.getDate()).padStart(2,'0');
+      document.getElementById('sp_date').value=`${y}.${m}.${d}`;
+      document.getElementById('sp_sign_y').value=String(y);document.getElementById('sp_sign_m').value=m;document.getElementById('sp_sign_d').value=d;
     }
-  } catch(e) {
-    showToast('로딩 실패: ' + e.message, '');
-  } finally {
-    btn.classList.remove('loading'); btn.textContent = '↻ 데이터 새로고침';
-    if (loading) loading.style.display = 'none';
+    setTimeout(calcSpScale,100);
   }
 }
 
-function updateStats() {
-  const total = allData.length, done = allData.filter(d => d.checked).length;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statDone').textContent = done;
-  document.getElementById('statPending').textContent = total - done;
-}
+// ── 뱃지 ──
+function openBadgePicker(){const m=document.getElementById('badgeBg');m.style.display='flex';m.classList.add('open')}
+function setBadge(text){document.getElementById('badgeBtn').textContent=text+' ▾';const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')}
 
-function applyFilter() {
-  const cohort = document.getElementById('filterCohort').value.trim();
-  const cls    = document.getElementById('filterClass').value.trim();
-  const status = document.getElementById('filterStatus').value;
-  const search = document.getElementById('searchBox').value.toLowerCase();
-  filtered = allData.filter(d => {
-    if (cohort && d.cohort.trim() !== cohort) return false;
-    if (cls && d.classNum.trim() !== cls) return false;
-    if (status === 'done' && !d.checked) return false;
-    if (status === 'pending' && d.checked) return false;
-    if (search && ![d.teamName, d.mainTitle, d.org, d.author, d.classNum, d.cohort].join(' ').toLowerCase().includes(search)) return false;
-    return true;
+// ── 과제 유형 ──
+function selectType(el){
+  document.querySelectorAll('.type-item').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  const text=el.textContent.replace(/✓/g,'').trim();
+  document.querySelectorAll('.check-item').forEach(ci=>{
+    const label=ci.textContent.replace(/✓/g,'').trim();
+    ci.classList.toggle('on',label===text);
+    ci.querySelector('.ck').textContent=label===text?'✓':'';
   });
-  renderList();
+}
+function toggleDocType(text){
+  document.querySelectorAll('.check-item').forEach(ci=>{
+    const label=ci.textContent.replace(/✓/g,'').trim();
+    ci.classList.toggle('on',label===text);
+    ci.querySelector('.ck').textContent=label===text?'✓':'';
+  });
+  document.querySelectorAll('.type-item').forEach(ti=>{
+    const label=ti.textContent.replace(/✓/g,'').trim();
+    ti.classList.toggle('on',label===text);
+  });
+}
+function getSelectedType(){const on=document.querySelector('.type-item.on');return on?on.textContent.replace(/✓/g,'').trim():''}
+
+// ── 불릿 ──
+function addBullet(listId){
+  const list=document.getElementById(listId);
+  const row=document.createElement('div');row.className='bullet-row';
+  row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" placeholder="입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
+  list.appendChild(row);setTimeout(calcDocScale,50);
+}
+function rmBullet(btn){
+  const list=btn.closest('.bullet-list');
+  if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요합니다','err');return;}
+  btn.closest('.bullet-row').remove();setTimeout(calcDocScale,50);
 }
 
-function renderList() {
-  const panel = document.getElementById('listPanel');
-  document.getElementById('topbarCount').textContent = ` · ${filtered.length}건`;
-  if (!filtered.length) { panel.innerHTML = '<div class="list-loading" style="color:#aaa">검색 결과가 없습니다.</div>'; return; }
-  panel.innerHTML = filtered.map(d => `
-    <div class="sub-item ${d.checked?'done':''} ${selected&&selected.submitId===d.submitId?'selected':''}" onclick="selectItem('${d.submitId}')">
-      <div class="item-header">
-        <div class="item-team">${(d.cohort||'').replace(/ — .+/,'')} · ${d.classNum||''} ${d.teamNum||''} · ${d.author||'(이름없음)'}</div>
-        <div class="item-badges">
-          <span class="badge ${d.checked?'badge-done':'badge-pending'}">${d.checked?'✓ 완료':'미확인'}</span>
-        </div>
-      </div>
-      <div class="item-task">${d.mainTitle||'(제목없음)'}</div>
-      <div class="item-meta">
-        <span>${(d.submittedAt||'').split(' ').slice(0,3).join(' ')}</span>
-        <div class="item-dot"></div>
-        <span>${d.author||'-'}</span>
-        <div class="item-dot"></div>
-        <span>${d.org||'-'}</span>
-      </div>
-    </div>`).join('');
+// ── 이미지 ──
+function openImgPicker(){
+  const grid=document.getElementById('imgPickerGrid');
+  grid.innerHTML=PRESET_IMGS.map((url,i)=>`<div class="img-pick-item ${imgDataUrl===url?'selected':''}" onclick="selectPresetImg(${i})"><img src="${url}" onerror="this.style.display='none'"></div>`).join('');
+  const m=document.getElementById('imgPickerBg');m.style.display='flex';m.classList.add('open');
+}
+function closeImgPicker(){const m=document.getElementById('imgPickerBg');m.style.display='none';m.classList.remove('open')}
+function selectPresetImg(idx){
+  const url=PRESET_IMGS[idx];imgDataUrl=url;
+  document.querySelectorAll('.img-pick-item').forEach((el,i)=>el.classList.toggle('selected',i===idx));
+  const sbi=document.getElementById('sbImgPreview');sbi.src=url;sbi.style.display='block';
+  document.getElementById('sbImgIcon').style.display='none';document.getElementById('sbImgHint').style.display='none';
+  const pi=document.getElementById('posterImg');pi.src=url;pi.style.display='block';
+  document.getElementById('posterPlaceholder').style.display='none';
+  closeImgPicker();
 }
 
-function selectItem(id) {
-  selected = allData.find(d => d.submitId === id);
-  if (!selected) return;
-  renderList(); renderDetail();
+// ── 사번 팝업 ──
+function openEmpIdPopup(){
+  document.getElementById('popup_empid').value='';
+  document.getElementById('popupLoadStatus').innerHTML='';
+  const m=document.getElementById('empIdPopupBg');m.style.display='flex';m.classList.add('open');
+  setTimeout(()=>document.getElementById('popup_empid').focus(),100);
+}
+function closeEmpIdPopup(){const m=document.getElementById('empIdPopupBg');m.style.display='none';m.classList.remove('open')}
+function doEmpIdLoad(){
+  const empId=document.getElementById('popup_empid').value.trim();
+  const statusEl=document.getElementById('popupLoadStatus');
+  if(!empId){statusEl.className='load-status err';statusEl.textContent='사번을 입력해 주세요.';return;}
+  const btn=document.getElementById('popupLoadBtn');
+  btn.disabled=true;btn.textContent='불러오는 중...';
+  statusEl.className='load-status info';statusEl.textContent='조회 중...';
+  if(window.loadCb)delete window.loadCb;
+  const old=document.getElementById('loadScript');if(old)old.remove();
+  window.loadCb=function(result){
+    btn.disabled=false;btn.textContent='불러오기';
+    if(result.status!=='ok'||!result.data||!result.data.length){statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;}
+    const match=result.data.filter(d=>String(d.empId).trim()===empId).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 사번의 내용이 없습니다.';return;}
+    fillForm(match);
+    ['s_cohort','s_class','s_team'].forEach(id=>{
+      const key={s_cohort:'cohort',s_class:'classNum',s_team:'teamNum'}[id];
+      const val=match[key]||'';const sel=document.getElementById(id);
+      for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===val||sel.options[i].text===val){sel.selectedIndex=i;break;}}
+    });
+    closeEmpIdPopup();
+    document.getElementById('loadStatus').className='load-status ok';
+    document.getElementById('loadStatus').textContent='✓ 불러오기 완료 · '+match.submittedAt;
+  };
+  const s=document.createElement('script');s.id='loadScript';
+  s.src=APPS_SCRIPT_URL+'?callback=loadCb&t='+Date.now();
+  s.onerror=()=>{btn.disabled=false;btn.textContent='불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
+  document.body.appendChild(s);
+}
+function fillForm(d){
+  currentSubmitId=d.submitId;
+  if(d.org){document.getElementById('s_org').value=d.org;document.getElementById('r_org').value=d.org;}
+  if(d.author){document.getElementById('s_author').value=d.author;document.getElementById('r_author').value=d.author;}
+  if(d.empId){document.getElementById('s_empid').value=d.empId;}
+  if(d.types)toggleDocType(d.types);
+  if(d.mainTitle)document.getElementById('mainTitle').value=d.mainTitle;
+  if(d.oneliner)document.getElementById('oneliner').value=d.oneliner;
+  if(d.imgData){imgDataUrl=d.imgData;const pi=document.getElementById('posterImg');pi.src=d.imgData;pi.style.display='block';document.getElementById('posterPlaceholder').style.display='none';}
+  if(d.signY)document.getElementById('sign_y').value=d.signY;
+  if(d.signM)document.getElementById('sign_m').value=d.signM;
+  if(d.signD)document.getElementById('sign_d').value=d.signD;
+  if(d.signName)document.getElementById('sign_name').value=d.signName;
+  function fillBullets(listId,text){
+    if(!text)return;const list=document.getElementById(listId);
+    const items=text.split('\n').filter(Boolean);list.innerHTML='';
+    items.forEach(item=>{const row=document.createElement('div');row.className='bullet-row';
+      row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" oninput="autoGrow(this)">${item}</textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
+      list.appendChild(row);autoGrow(row.querySelector('textarea'));});
+  }
+  fillBullets('why_list',d.whys);
+  fillBullets('how_list',d.hows);
+  fillBullets('goal_list',d.goals);
+  document.getElementById('submitBtn').textContent='📥 다운로드 (수정)';
+  document.getElementById('submitBtn2').textContent='📥 과제 정의서 다운로드 (수정)';
+  setTimeout(calcDocScale,100);
 }
 
-function renderDetail() {
-  document.getElementById('emptyState').style.display = 'none';
-  const d = selected;
+// ── 미리보기 ──
+function openPreview(){
+  document.getElementById('previewContent').innerHTML=buildPreviewHTML(collectData());
+  const m=document.getElementById('previewBg');m.style.display='flex';m.classList.add('open');
+}
+function closePreview(){const m=document.getElementById('previewBg');m.style.display='none';m.classList.remove('open')}
 
-  document.getElementById('detailContent').style.display = 'block';
-  document.getElementById('detailContentInner').innerHTML = `
-    <div class="detail-card">
-      <div class="detail-title-main">${(d.cohort||'').replace(/ — .+/,'')} · ${d.classNum||''} ${d.teamNum||''} · ${d.author||''}</div>
-      <div class="detail-meta">
-        <span>${d.mainTitle||'(제목없음)'}</span><span class="detail-meta-dot">·</span>
-        <span style="color:var(--muted)">${d.submittedAt||''}</span>
-      </div>
-    </div>
-
-    <div class="detail-card">
-      <div class="detail-card-title" style="display:flex;align-items:center;justify-content:space-between">
-        <span>📋 과제 정의서 미리보기</span>
-        <button onclick="openFullscreen('${d.submitId}')" style="background:var(--lg);color:white;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">⛶ 전체화면</button>
-      </div>
-      <div id="previewFrame" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#f2f0ed">
-        ${buildPreviewHTML(d)}
-      </div>
-    </div>
-
-    <div class="detail-card">
-      <div class="detail-card-title">ℹ️ 제출 정보</div>
-      <div class="info-grid">
-        <div><div class="info-key">제출번호</div><div class="info-val" style="font-family:monospace;font-size:12px">${d.submitId||''}</div></div>
-        <div><div class="info-key">조직명</div><div class="info-val">${d.org||'-'}</div></div>
-        <div><div class="info-key">작성자</div><div class="info-val">${d.author||'-'}</div></div>
-        <div><div class="info-key">과제 유형</div><div class="info-val">${d.types||'-'}</div></div>
-      </div>
-    </div>
-
-    <div class="detail-card">
-      <div class="detail-card-title">✅ 확인 및 피드백</div>
-      <div class="check-row">
-        <label class="check-toggle">
-          <div class="toggle-switch">
-            <input type="checkbox" id="chk_${d.submitId}" ${d.checked?'checked':''} onchange="toggleCheck('${d.submitId}')">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </div>
-          <span class="toggle-label">${d.checked?'확인 완료':'확인 표시'}</span>
-        </label>
-        <span class="check-status ${d.checked?'done':'pending'}">${d.checked?'✓ 확인 완료':'미확인'}</span>
-      </div>
-      <div class="comment-area">
-        <textarea id="commentBox_${d.submitId}" placeholder="팀에게 전달할 피드백을 입력하세요...">${d.comment||''}</textarea>
-        <button class="btn-save" onclick="saveComment('${d.submitId}')">피드백 저장</button>
-      </div>
-    </div>`;
+function collectData(){
+  return {
+    badge:document.getElementById('badgeBtn').textContent.replace(' ▾',''),
+    mainTitle:document.getElementById('mainTitle').value||'(제목 없음)',
+    org:document.getElementById('r_org').value||'-',
+    author:document.getElementById('r_author').value||'-',
+    empId:document.getElementById('s_empid').value||'',
+    types:getSelectedType()||'-',
+    oneliner:document.getElementById('oneliner').value||'',
+    whys:getBullets('why_list').join('\n'),
+    hows:getBullets('how_list').join('\n'),
+    goals:getBullets('goal_list').join('\n'),
+    imgData:imgDataUrl||'',
+    cohort:document.getElementById('s_cohort').value,
+    classNum:document.getElementById('s_class').value,
+    teamNum:document.getElementById('s_team').value,
+    signY:document.getElementById('sign_y').value||'년',
+    signM:document.getElementById('sign_m').value||'월',
+    signD:document.getElementById('sign_d').value||'일',
+    signName:document.getElementById('sign_name').value||'',
+  };
 }
 
-function closeDetail() {
-  selected = null;
-  document.getElementById('detailContent').style.display = 'none';
-  document.getElementById('emptyState').style.display = 'flex';
-  renderList();
-}
-
-function buildPreviewHTML(d) {
-  const blist = str => (str||'').split('\n').filter(Boolean).map(t => {
-    const hl = t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
+function buildPreviewHTML(d){
+  const blist=arr=>(arr||'').split('\n').filter(Boolean).map(t=>{
+    const hl=t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
     return `<li style="font-size:14px;line-height:1.7;color:#1F1F1F;padding-left:16px;position:relative;margin-bottom:5px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${hl}</li>`;
-  }).join('') || `<li style="color:#ccc;font-size:13px;padding-left:16px">-</li>`;
-
-  const imgTag = d.imgData
-    ? `<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`
-    : `<div style="width:100%;min-height:240px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:13px">이미지 없음</div>`;
-
-  const badge = d.badge || '문제 드러내기';
-
+  }).join('')||'<li style="color:#ccc;font-size:13px;padding-left:16px">-</li>';
+  const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;min-height:240px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:13px">이미지 없음</div>`;
   return `
 <div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
 <div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;width:1280px;max-width:100%;margin:0 auto">
-
   <div style="background:#C8102E;color:#fff;height:52px;display:flex;align-items:center;padding:0 24px;justify-content:space-between">
     <span style="font-weight:900;font-size:18px;letter-spacing:1px">우리팀 REINVENT 과제</span>
     <span style="font-size:13px;font-weight:700;letter-spacing:2px;padding:5px 14px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px">과제 정의서</span>
   </div>
-
   <div style="padding:20px 28px 14px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #eee">
-    <span style="background:#C8102E;color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:999px;white-space:nowrap">${badge}</span>
-    <div style="font-size:26px;font-weight:900;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle||'(제목 없음)'}</div>
+    <span style="background:#C8102E;color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:999px;white-space:nowrap">${d.badge}</span>
+    <div style="font-size:26px;font-weight:900;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle}</div>
   </div>
-
   <div style="display:grid;grid-template-columns:320px 1fr">
     <div style="border-right:1px solid #EAD0D5;display:flex;flex-direction:column">
       <div>${imgTag}</div>
-      <div style="background:#FFF5F7;padding:14px 18px;font-size:13px;color:#444;border-top:1px solid #F0B4BE">
-        <div style="display:flex;gap:10px;padding:5px 0"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">조직명</span><b style="color:#1F1F1F">${d.org||'-'}</b></div>
-        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">작성자</span><span>${d.author||'-'}</span></div>
-        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px">
-          <span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">과제 유형</span>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 8px">
-            ${['팀 업무 개선','리더십','조직문화','기타'].map(t=>{
-              const checked=(d.types||'')===t;
-              return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:${checked?'#C8102E':'#888'};font-weight:${checked?700:500}"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid ${checked?'#C8102E':'#C8B0B5'};border-radius:2px;font-size:9px;background:${checked?'#C8102E':'#fff'};color:${checked?'#fff':'transparent'};font-weight:900">${checked?'✓':''}</span>${t}</span>`;
-            }).join('')}
-          </div>
-        </div>
+      <div style="background:#FFF5F7;padding:14px 18px;font-size:13px;border-top:1px solid #F0B4BE">
+        <div style="display:flex;gap:10px;padding:5px 0"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">조직명</span><b style="color:#1F1F1F">${d.org}</b></div>
+        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">작성자</span><span>${d.author}</span></div>
+        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">과제 유형</span><span style="color:#C8102E;font-weight:700">${d.types}</span></div>
       </div>
     </div>
-
     <div style="display:flex;flex-direction:column">
       <div style="background:#C8102E;padding:18px 24px">
         <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:8px">REINVENT 과제 지향점</div>
@@ -475,266 +838,374 @@ function buildPreviewHTML(d) {
       </div>
     </div>
   </div>
-
   <div style="background:#fff;border-top:2px solid #C8102E;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px">
     <span style="background:#C8102E;color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:3px;letter-spacing:.5px;flex-shrink:0">REINVENT 다짐</span>
     <span style="font-size:14px;color:#1F1F1F;line-height:1.6;flex:1">위 REINVENT 과제를 <b>우리 팀의 일하는 방식으로 정착시키고, 끝까지 책임지고 실행할 것을</b> 다짐합니다.</span>
-    <div style="font-size:12px;color:#6B6B6B;white-space:nowrap;flex-shrink:0">
-      작성일 ${d.signY||'년'}-${d.signM||'월'}-${d.signD||'일'} &nbsp; 팀장 서명 <b style="font-size:14px;color:#1F1F1F">${d.signName||'__________'}</b> (인)
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B6B6B;white-space:nowrap;flex-shrink:0">
+      작성일 ${d.signY}-${d.signM}-${d.signD} &nbsp; 팀장 서명 <b style="font-size:14px;color:#1F1F1F">${d.signName||'__________'}</b> (인)
     </div>
   </div>
-
-  <div style="background:#C8102E;color:#fff;padding:9px 24px;font-size:11px;font-style:italic;text-align:right">Powered by REINVENT 2.0</div>
+  <div style="background:#C8102E;color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px">
+    <span style="font-style:italic;opacity:.9">Powered by REINVENT 2.0</span>
+  </div>
 </div></div>`;
 }
+
+// ── HTML 저장 ──
+function savePreviewHTML(){
+  const d=collectData();
+  const cohortShort=(d.cohort||'').replace(/ — .+/,'');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.org||''}_${d.author||''}.html`;
+  a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+  showToast('HTML 파일이 저장됐습니다','ok');
 }
 
-async function toggleCheck(id) {
-  const item = allData.find(d => d.submitId === id);
-  if (!item) return;
-  item.checked = !item.checked;
-  if (selected && selected.submitId === id) selected = item;
-  updateStats(); applyFilter(); renderDetail();
-  showToast(item.checked ? '확인 완료로 표시했습니다.' : '미확인으로 변경했습니다.', 'ok');
-  try {
-    await fetch(`${APPS_SCRIPT_URL}?action=update&submitId=${id}&checked=${item.checked?'Y':'N'}`);
-  } catch(e) { showToast('저장 실패 (네트워크 오류)', ''); }
+// ── 프린트 ──
+function printDoc(){
+  const win=window.open('','_blank');
+  const d=collectData();
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:16px}@media print{body{padding:0}}</style></head><body>${buildPreviewHTML(d)}<script>window.onload=function(){window.print();window.close()}<\/script></body></html>`);
+  win.document.close();
 }
 
-async function saveComment(id) {
-  const txt = document.getElementById('commentBox_' + id)?.value || '';
-  const item = allData.find(d => d.submitId === id);
-  if (!item) return;
-  item.comment = txt;
-  showToast('피드백이 저장되었습니다.', 'ok');
-  try {
-    await fetch(`${APPS_SCRIPT_URL}?action=update&submitId=${id}&comment=${encodeURIComponent(txt)}`);
-  } catch(e) { showToast('저장 실패 (네트워크 오류)', ''); }
+// ── 검증 ──
+function validate(){
+  if(!document.getElementById('mainTitle').value.trim()){showToast('과제 제목을 입력해 주세요','err');return false;}
+  if(!document.getElementById('s_cohort').value){showToast('차수를 선택해 주세요','err');return false;}
+  if(!document.getElementById('s_class').value){showToast('반을 선택해 주세요','err');return false;}
+  if(!document.getElementById('s_team').value){showToast('팀을 선택해 주세요','err');return false;}
+  return true;
 }
 
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + (type==='ok'?'ok':'') + ' show';
-  setTimeout(() => t.classList.remove('show'), 5000);
-}
+// ── 제출 + 다운로드 ──
+async function submitForm(){
+  if(currentTab==='spread'){saveSpreadHTML();return;}
+  if(!validate())return;
+  const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
+  btns.forEach(b=>{b.disabled=true;b.textContent='처리 중...';});
+  try{
+    const isUpdate=!!currentSubmitId;
+    const submitId=currentSubmitId||('JB'+Date.now().toString(36).toUpperCase());
+    const d=collectData();
+    const payload={
+      submitId,isUpdate,
+      cohort:d.cohort,classNum:d.classNum,teamNum:d.teamNum,teamName:'',
+      org:d.org,author:d.author,empId:d.empId,types:d.types,badge:d.badge,
+      mainTitle:d.mainTitle,whys:d.whys,hows:d.hows,oneliner:d.oneliner,
+      goals:d.goals,imgData:d.imgData||'',
+      signY:d.signY,signM:d.signM,signD:d.signD,signName:d.signName,
+      submittedAt:new Date().toLocaleString('ko-KR'),
+    };
+    const cohortShort=d.cohort.replace(/ — .+/,'');
+    payload.previewFileName=`${cohortShort}-${d.classNum}-${d.teamNum}-${d.author||'미입력'}.html`;
+    payload.previewHtml=buildPreviewHTML(d);
 
-function calcFsScale() {
-  const wrapper = document.getElementById('fsWrapper');
-  const box = document.getElementById('fsScaleBox');
-  if (!wrapper || !box) return;
-  const availW = wrapper.clientWidth;
-  const docW = 1280;
-  // 화면 너비 기준 스케일에 1.25 배율 적용
-  const scale = Math.min((availW / docW) * 1.25, 1.5);
-  box.style.transform = 'scale(' + scale + ')';
-  box.style.transformOrigin = 'top center';
-}
+    // 1) 구글 시트 저장 (fire-and-forget)
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}).catch(()=>{});
+    currentSubmitId=submitId;
 
-function openFullscreen(submitId) {
-  const d = allData.find(item => item.submitId === submitId);
-  if (!d) return;
-  document.getElementById('fullscreenContent').innerHTML = buildPreviewHTML(d);
-  document.getElementById('fsTitle').textContent = d.mainTitle || '과제 정의서';
-  const modal = document.getElementById('fullscreenModal');
-  modal.style.display = 'block';
-  document.body.style.overflow = 'hidden';
-  setTimeout(calcFsScale, 50);
-  // 브라우저 전체화면 자동 진입
-  if (modal.requestFullscreen) modal.requestFullscreen();
-  else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
-}
+    // 2) HTML 파일 다운로드
+    const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
+    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const a=document.createElement('a');
+    a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.org||''}_${d.author||''}.html`;
+    a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
 
-function closeFullscreen() {
-  // 브라우저 전체화면 해제
-  if (document.fullscreenElement || document.webkitFullscreenElement) {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-  }
-  document.getElementById('fullscreenModal').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function toggleBrowserFullscreen() {
-  const modal = document.getElementById('fullscreenModal');
-  const btn = document.getElementById('fsToggleBtn');
-  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    if (modal.requestFullscreen) modal.requestFullscreen();
-    else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
-    btn.textContent = '⛶ 전체화면 해제';
-  } else {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    btn.textContent = '⛶ 브라우저 전체화면';
+    showToast('✓ 저장 완료 + HTML 다운로드됐습니다','ok');
+    btns.forEach(b=>{b.disabled=false;b.textContent='📥 다운로드';});
+  }catch(err){
+    showToast('오류가 발생했습니다.','err');
+    btns.forEach(b=>{b.disabled=false;b.textContent='📥 다운로드';});
   }
 }
 
-// ESC로 fullscreen 해제 시 모달도 같이 닫기
-document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
-  }
-  setTimeout(calcFsScale, 100);
-});
-document.addEventListener('webkitfullscreenchange', () => {
-  if (!document.webkitFullscreenElement) {
-    document.getElementById('fsToggleBtn').textContent = '⛶ 브라우저 전체화면';
-  }
-  setTimeout(calcFsScale, 100);
-});
-window.addEventListener('resize', calcFsScale);
-
-// ── 어드민 탭 전환 ──
-let adminTab = 'task';
-let spreadData = [];
-
-function switchAdminTab(tab) {
-  adminTab = tab;
-  document.getElementById('tabBtnTask').classList.toggle('active', tab==='task');
-  document.getElementById('tabBtnSpread').classList.toggle('active', tab==='spread');
-  document.getElementById('adminTabTask').style.display = tab==='task' ? '' : 'none';
-  document.getElementById('adminTabSpread').style.display = tab==='spread' ? '' : 'none';
-  if (tab==='spread' && spreadData.length===0) loadSpreadData();
+// ── 전파계획서 사번 팝업 ──
+function openSpEmpIdPopup(){
+  document.getElementById('sp_popup_empid').value='';
+  document.getElementById('spPopupLoadStatus').innerHTML='';
+  const m=document.getElementById('spEmpIdPopupBg');m.style.display='flex';m.classList.add('open');
+  setTimeout(()=>document.getElementById('sp_popup_empid').focus(),100);
 }
+function closeSpEmpIdPopup(){
+  const m=document.getElementById('spEmpIdPopupBg');m.style.display='none';m.classList.remove('open');
+}
+function doSpEmpIdLoad(){
+  const empId=document.getElementById('sp_popup_empid').value.trim();
+  const statusEl=document.getElementById('spPopupLoadStatus');
+  if(!empId){statusEl.className='load-status err';statusEl.textContent='사번을 입력해 주세요.';return;}
+  const btn=document.getElementById('spPopupLoadBtn');
+  btn.disabled=true;btn.textContent='불러오는 중...';
+  statusEl.className='load-status info';statusEl.textContent='조회 중...';
 
-// ── 전파 계획서 데이터 로드 ──
-async function loadSpreadData() {
-  document.getElementById('spreadListLoading').style.display = 'block';
-  try {
-    const res = await fetch(APPS_SCRIPT_URL + '?sheet=spread&t=' + Date.now());
-    const result = await res.json();
-    if (result.status === 'ok') {
-      spreadData = result.data || [];
-      renderSpreadList();
-    } else {
-      showToast('전파 계획서 로딩 실패: ' + result.message, '');
+  if(window.spLoadCb)delete window.spLoadCb;
+  const old=document.getElementById('spLoadScript');if(old)old.remove();
+
+  window.spLoadCb=function(result){
+    btn.disabled=false;btn.textContent='불러오기';
+    if(result.status!=='ok'||!result.data||!result.data.length){
+      statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
     }
-  } catch(e) {
-    showToast('전파 계획서 로딩 실패: ' + e.message, '');
-  } finally {
-    document.getElementById('spreadListLoading').style.display = 'none';
-  }
+    const match=result.data.filter(d=>String(d.empId).trim()===empId).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 사번의 전파 계획서가 없습니다.';return;}
+    fillSpreadForm(match);
+    closeSpEmpIdPopup();
+    document.getElementById('loadStatus').className='load-status ok';
+    document.getElementById('loadStatus').textContent='✓ 전파 계획서 불러오기 완료';
+    showToast('✓ 전파 계획서 불러오기 완료','ok');
+  };
+
+  const s=document.createElement('script');s.id='spLoadScript';
+  s.src=APPS_SCRIPT_URL+'?sheet=spread&callback=spLoadCb&t='+Date.now();
+  s.onerror=()=>{btn.disabled=false;btn.textContent='불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
+  document.body.appendChild(s);
 }
 
-// ── 전파 계획서 목록 렌더 ──
-function renderSpreadList() {
-  const panel = document.getElementById('spreadListInner');
-  const search = document.getElementById('searchBox').value.toLowerCase();
-  const list = spreadData.filter(d =>
-    !search || [d.org, d.name, d.empId].join(' ').toLowerCase().includes(search)
-  );
-  document.getElementById('topbarCount').textContent = '· ' + list.length + '건';
-  if (!list.length) {
-    panel.innerHTML = '<div style="padding:24px;text-align:center;color:#aaa;font-size:13px">데이터가 없습니다</div>';
-    return;
-  }
-  panel.innerHTML = list.map((d,i) => `
-    <div class="sub-item" onclick="selectSpread(${i})" style="cursor:pointer">
-      <div class="item-header">
-        <span class="item-team">${d.org||'-'} · ${d.name||'-'}</span>
-      </div>
-      <div style="font-size:11px;color:#aaa;margin-top:3px">${[(d.cohort||'').replace(/ — .+/,''),d.classNum,d.teamNum].filter(Boolean).join(' · ')}</div>
-      <div style="font-size:11px;color:#aaa;margin-top:2px">${d.submittedAt||''}</div>
-    </div>`).join('');
+function fillSpreadForm(d){
+  currentSpreadId=d.submitId;
+  if(d.org)document.getElementById('sp_org').value=d.org;
+  if(d.name)document.getElementById('sp_name').value=d.name;
+  if(d.date)document.getElementById('sp_date').value=d.date;
+  if(d.shareDate)document.getElementById('sp_share_date').value=d.shareDate;
+  if(d.keywords)document.getElementById('sp_keywords').value=d.keywords;
+  if(d.reveal)document.getElementById('sp_reveal').value=d.reveal;
+  if(d.win)document.getElementById('sp_win').value=d.win;
+  if(d.pledge1)document.getElementById('sp_pledge1').value=d.pledge1;
+  if(d.pledge2)document.getElementById('sp_pledge2').value=d.pledge2;
+  if(d.pledge3)document.getElementById('sp_pledge3').value=d.pledge3;
+  if(d.pledge4)document.getElementById('sp_pledge4').value=d.pledge4;
+  if(d.closing)document.getElementById('sp_closing').value=d.closing;
+  if(d.signY)document.getElementById('sp_sign_y').value=d.signY;
+  if(d.signM)document.getElementById('sp_sign_m').value=d.signM;
+  if(d.signD)document.getElementById('sp_sign_d').value=d.signD;
+  if(d.signName)document.getElementById('sp_sign_name').value=d.signName;
+  if(d.sharePlan)document.getElementById('sp_share_plan').value=d.sharePlan;
+  // textarea 높이 자동 조정
+  document.querySelectorAll('#tab-spread textarea').forEach(t=>autoGrow(t));
+  setTimeout(calcSpScale,100);
 }
 
-// ── 전파 계획서 상세 ──
-function selectSpread(idx) {
-  const d = spreadData[idx];
-  if (!d) return;
-  document.getElementById('spreadEmptyState').style.display = 'none';
-  document.getElementById('spreadDetailContent').style.display = 'block';
-  document.getElementById('spreadDetailInner').innerHTML = buildSpreadDetailHTML(d);
+// ── 전파 계획서 미리보기 ──
+function openSpreadPreview(){
+  const d=collectSpreadData();
+  document.getElementById('previewContent').innerHTML=buildSpreadPreviewHTML(d);
+  const m=document.getElementById('previewBg');m.style.display='flex';m.classList.add('open');
 }
-function closeSpreadDetail() {
-  document.getElementById('spreadEmptyState').style.display = 'flex';
-  document.getElementById('spreadDetailContent').style.display = 'none';
+function collectSpreadData(){
+  return {
+    org:document.getElementById('sp_org').value||'',
+    name:document.getElementById('sp_name').value||'',
+    date:document.getElementById('sp_date').value||'',
+    shareDate:document.getElementById('sp_share_date').value||'',
+    keywords:document.getElementById('sp_keywords').value||'',
+    reveal:document.getElementById('sp_reveal').value||'',
+    win:document.getElementById('sp_win').value||'',
+    pledge1:document.getElementById('sp_pledge1').value||'',
+    pledge2:document.getElementById('sp_pledge2').value||'',
+    pledge3:document.getElementById('sp_pledge3').value||'',
+    pledge4:document.getElementById('sp_pledge4').value||'',
+    closing:document.getElementById('sp_closing').value||'',
+    signY:document.getElementById('sp_sign_y').value||'',
+    signM:document.getElementById('sp_sign_m').value||'',
+    signD:document.getElementById('sp_sign_d').value||'',
+    signName:document.getElementById('sp_sign_name').value||'',
+    sharePlan:document.getElementById('sp_share_plan').value||'',
+  };
 }
-
-function buildSpreadDetailHTML(d) {
-  const nl2br = s => (s||'').replace(/\n/g,'<br>');
-  const val = s => nl2br(s) || '-';
+function buildSpreadPreviewHTML(d){
+  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
+  const val=s=>nl2br(s)||'-';
   return `
-<div style="font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#E8E8E8;padding:12px">
+<div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
 <div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;width:1280px;max-width:100%;margin:0 auto">
-
-  <!-- 헤더 -->
   <div style="padding:20px 32px 12px;border-bottom:2px solid #1a1a1a">
     <div style="font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
-    <div style="font-size:26px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px">우리 팀의 <span style="color:#C8102E">REINVENT</span> 현업 전파 계획서</div>
+    <div style="font-size:26px;font-weight:900;color:#1a1a1a;margin-bottom:4px">우리 팀의 <span style="color:#C8102E">REINVENT</span> 현업 전파 계획서</div>
     <div style="font-size:11px;color:#888;margin-bottom:10px">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
     <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:12px">
-      <span style="color:#888;font-weight:600">소속</span> <b style="color:#1a1a1a">${d.org||'-'}</b>
-      <span style="color:#888;font-weight:600">성명</span> <b style="color:#1a1a1a">${d.name||'-'}</b>
-      <span style="color:#888;font-weight:600">작성일</span> <b style="color:#1a1a1a">${d.date||'-'}</b>
-      <span style="color:#888;font-weight:600">공유예정</span> <b style="color:#1a1a1a">${d.shareDate||'-'}</b>
+      <span style="color:#888;font-weight:600">소속</span><b>${d.org||'-'}</b>
+      <span style="color:#888;font-weight:600">성명</span><b>${d.name||'-'}</b>
+      <span style="color:#888;font-weight:600">작성일</span><b>${d.date||'-'}</b>
+      <span style="color:#888;font-weight:600">공유예정</span><b>${d.shareDate||'-'}</b>
     </div>
   </div>
-
-  <!-- 바디 2컬럼 -->
   <div style="display:grid;grid-template-columns:1fr 1fr;min-height:560px">
-
-    <!-- 왼쪽: 01 -->
     <div style="padding:20px 24px;border-right:1px solid #e0dbd6">
       <div style="background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px">
         <span style="font-size:28px;font-weight:900;line-height:1;color:#C8102E">01</span>
-        <div>
-          <div style="font-size:16px;font-weight:800;line-height:1.2">우리 조직의 언어로 재정리</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px">TRANSLATE · From Corporate to Team Language</div>
-        </div>
+        <div><div style="font-size:16px;font-weight:800">우리 조직의 언어로 재정리</div><div style="font-size:10px;color:rgba(255,255,255,.5)">TRANSLATE · From Corporate to Team Language</div></div>
       </div>
-      <p style="font-size:12px;color:#555;line-height:1.7;margin-bottom:14px">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
-
-      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
-      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:40px">${val(d.keywords)}</div>
-
-      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-2. 우리 팀의 <em style="color:#C8102E;font-style:normal">「문제 드러내기」</em> — 가장 자주 마주치는 관성·침묵·회피의 사례와 함께</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px">1-1. REINVENT 핵심 키워드</div>
+      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7">${val(d.keywords)}</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-2. 우리 팀의 <em style="color:#C8102E;font-style:normal">「문제 드러내기」</em></div>
       <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:80px">${val(d.reveal)}</div>
-
-      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-3. 우리 팀의 <em style="color:#C8102E;font-style:normal">「이기는 실행하기」</em> — 경쟁의 대상과 '이긴다'의 구체적 기준</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-3. 우리 팀의 <em style="color:#C8102E;font-style:normal">「이기는 실행하기」</em></div>
       <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:80px">${val(d.win)}</div>
     </div>
-
-    <!-- 오른쪽: 02 -->
     <div style="padding:20px 24px">
       <div style="background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px">
         <span style="font-size:28px;font-weight:900;line-height:1;color:#C8102E">02</span>
-        <div>
-          <div style="font-size:16px;font-weight:800;line-height:1.2">팀장 선언문</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px">DECLARE · A Leader's Public Commitment</div>
-        </div>
+        <div><div style="font-size:16px;font-weight:800">팀장 선언문</div><div style="font-size:10px;color:rgba(255,255,255,.5)">DECLARE · A Leader's Public Commitment</div></div>
       </div>
-      <p style="font-size:12px;color:#555;line-height:1.7;margin-bottom:14px">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
-
       <div style="border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px">
         <div style="text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px">— 우리 팀의 REINVENT를 시작하며 —</div>
-        <div style="font-size:13px;line-height:1.8;color:#1a1a1a">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
-        ${d.pledge1?`<div style="font-size:13px;line-height:1.8;color:#1a1a1a">${nl2br(d.pledge1)}</div>`:''}
-        ${d.pledge2?`<div style="font-size:13px;line-height:1.8;color:#1a1a1a">${nl2br(d.pledge2)}</div>`:''}
-        ${d.pledge3?`<div style="font-size:13px;line-height:1.8;color:#1a1a1a">${nl2br(d.pledge3)}</div>`:''}
-        ${d.pledge4?`<div style="font-size:13px;line-height:1.8;color:#1a1a1a">${nl2br(d.pledge4)}</div>`:''}
-        ${d.closing?`<div style="font-size:13px;line-height:1.8;color:#1a1a1a;margin-top:6px">${nl2br(d.closing)}</div>`:''}
+        <div style="font-size:13px;line-height:1.8">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+        ${d.pledge1?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge1)}</div>`:''}
+        ${d.pledge2?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge2)}</div>`:''}
+        ${d.pledge3?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge3)}</div>`:''}
+        ${d.pledge4?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge4)}</div>`:''}
+        ${d.closing?`<div style="font-size:13px;line-height:1.8;margin-top:6px">${nl2br(d.closing)}</div>`:''}
         <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:12px;color:#555;margin-top:10px;padding-top:8px;border-top:1px solid #eee">
-          ${d.signY||''} 년 ${d.signM||''} 월 ${d.signD||''} 일 &nbsp; 팀장 <b style="font-size:14px;color:#1a1a1a">${d.signName||''}</b> &nbsp; (서명)
+          ${d.signY}년 ${d.signM}월 ${d.signD}일 &nbsp; 팀장 <b style="font-size:14px;color:#1a1a1a">${d.signName||''}</b> &nbsp; (서명)
         </div>
       </div>
-
-      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:0 0 6px">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:0 0 6px">2-1. 언제·어떻게 팀원에게 공유할 것인가?</div>
       <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:60px">${val(d.sharePlan)}</div>
     </div>
-
-  </div><!-- /grid -->
-
-  <!-- 푸터 -->
+  </div>
   <div style="background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px">
     <span style="color:#C8102E;font-weight:700;font-size:11px">REINVENT 2.0</span>
-    <span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
+    <span>현업 전파 계획서 (1Page)</span>
     <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
   </div>
-
 </div></div>`;
 }
 
-checkRefreshBtn();
+// ── 전파 계획서 저장 ──
+function saveSpreadHTML(){
+  const org=document.getElementById('sp_org').value||'';
+  const name=document.getElementById('sp_name').value||'';
+  const cohortShortSp=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
+  const clsSp=document.getElementById('s_class').value||'';
+  const teamSp=document.getElementById('s_team').value||'';
+  const d={
+    docType:'spread',
+    submitId:currentSpreadId||('SP'+Date.now().toString(36).toUpperCase()),
+    isUpdate:!!currentSpreadId,
+    submittedAt:new Date().toLocaleString('ko-KR'),
+    org,name,empId:document.getElementById('s_empid').value.trim()||'',
+    cohort:document.getElementById('s_cohort').value||'',
+    classNum:document.getElementById('s_class').value||'',
+    teamNum:document.getElementById('s_team').value||'',
+    date:document.getElementById('sp_date').value||'',
+    shareDate:document.getElementById('sp_share_date').value||'',
+    keywords:document.getElementById('sp_keywords').value||'',
+    reveal:document.getElementById('sp_reveal').value||'',
+    win:document.getElementById('sp_win').value||'',
+    pledge1:document.getElementById('sp_pledge1').value||'',
+    pledge2:document.getElementById('sp_pledge2').value||'',
+    pledge3:document.getElementById('sp_pledge3').value||'',
+    pledge4:document.getElementById('sp_pledge4').value||'',
+    closing:document.getElementById('sp_closing').value||'',
+    signY:document.getElementById('sp_sign_y').value||'',
+    signM:document.getElementById('sp_sign_m').value||'',
+    signD:document.getElementById('sp_sign_d').value||'',
+    signName:document.getElementById('sp_sign_name').value||'',
+    sharePlan:document.getElementById('sp_share_plan').value||'',
+  };
+  currentSpreadId=d.submitId;
+  fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
+  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${name} 현업 전파 계획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}
+.doc{background:#fff;max-width:1280px;margin:0 auto;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.hd{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
+.body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.col:last-child{border-right:none}
+.sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
+.num{font-size:28px;font-weight:900;line-height:1;color:#C8102E}
+.box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7}
+.declare{border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px}
+.ft{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+</style></head><body>
+<div class="doc">
+<div class="hd">
+  <div style="font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+  <div style="font-size:28px;font-weight:900;color:#1a1a1a;margin-bottom:4px">우리 팀의 <span style="color:#C8102E">REINVENT</span> 현업 전파 계획서</div>
+  <div style="font-size:11px;color:#888;margin-bottom:10px">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+  <div style="display:flex;gap:24px;font-size:12px">
+    <span style="color:#888;font-weight:600">소속</span><b>${d.org}</b>
+    <span style="color:#888;font-weight:600">성명</span><b>${d.name}</b>
+    <span style="color:#888;font-weight:600">작성일</span><b>${d.date}</b>
+    <span style="color:#888;font-weight:600">공유예정</span><b>${d.shareDate}</b>
+  </div>
+</div>
+<div class="body">
+  <div class="col">
+    <div class="sec-hd"><span class="num">01</span><div><div style="font-size:16px;font-weight:800">우리 조직의 언어로 재정리</div><div style="font-size:10px;color:rgba(255,255,255,.5)">TRANSLATE · From Corporate to Team Language</div></div></div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px">1-1. REINVENT 핵심 키워드</div>
+    <div class="box">${nl2br(d.keywords)||'—'}</div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-2. 우리 팀의 <em style="color:#C8102E;font-style:normal">「문제 드러내기」</em></div>
+    <div class="box" style="min-height:80px">${nl2br(d.reveal)||'—'}</div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-3. 우리 팀의 <em style="color:#C8102E;font-style:normal">「이기는 실행하기」</em></div>
+    <div class="box" style="min-height:80px">${nl2br(d.win)||'—'}</div>
+  </div>
+  <div class="col">
+    <div class="sec-hd"><span class="num">02</span><div><div style="font-size:16px;font-weight:800">팀장 선언문</div><div style="font-size:10px;color:rgba(255,255,255,.5)">DECLARE · A Leader's Public Commitment</div></div></div>
+    <div class="declare">
+      <div style="text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px">— 우리 팀의 REINVENT를 시작하며 —</div>
+      <div style="font-size:13px;line-height:1.8">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+      ${d.pledge1?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge1)}</div>`:''}
+      ${d.pledge2?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge2)}</div>`:''}
+      ${d.pledge3?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge3)}</div>`:''}
+      ${d.pledge4?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge4)}</div>`:''}
+      ${d.closing?`<div style="font-size:13px;line-height:1.8;margin-top:6px">${nl2br(d.closing)}</div>`:''}
+      <div style="text-align:right;font-size:12px;color:#555;margin-top:10px;padding-top:8px;border-top:1px solid #eee">
+        ${d.signY}년 ${d.signM}월 ${d.signD}일 &nbsp; 팀장 <b>${d.signName}</b> (서명)
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:0 0 6px">2-1. 언제·어떻게 팀원에게 공유할 것인가?</div>
+    <div class="box" style="min-height:60px">${nl2br(d.sharePlan)||'—'}</div>
+  </div>
+</div>
+<div class="ft"><span style="color:#C8102E;font-weight:700;font-size:11px">REINVENT 2.0</span><span>현업 전파 계획서 (1Page)</span><span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span></div>
+</div></body></html>`;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  const spPrefix=[cohortShortSp,clsSp,teamSp].filter(Boolean).join('_');
+  a.download=`현업전파계획서_${spPrefix}_${org}_${name}.html`;
+  a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+  showToast('전파 계획서가 저장됐습니다 (시트 + HTML)','ok');
+}
+
+// ── 스케일 ──
+function calcDocScale(){
+  const wrap=document.getElementById('docScaleWrap');const inner=document.getElementById('docScaleInner');
+  if(!wrap||!inner)return;
+  const scale=Math.min((wrap.clientWidth/1280)*1.25,1.25);
+  inner.style.transform='scale('+scale+')';inner.style.transformOrigin='top left';inner.style.width='1280px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';wrap.style.width=(1280*scale)+'px';
+}
+function calcSpScale(){
+  const wrap=document.getElementById('spScaleWrap');const inner=document.getElementById('spScaleInner');
+  if(!wrap||!inner)return;
+  const scale=Math.min((wrap.clientWidth/1280)*1.25,1.25);
+  inner.style.transform='scale('+scale+')';inner.style.transformOrigin='top left';inner.style.width='1280px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';wrap.style.width=(1280*scale)+'px';
+}
+window.addEventListener('resize',()=>{calcDocScale();calcSpScale();});
+window.addEventListener('load',calcDocScale);
+setTimeout(calcDocScale,200);
+
+// ── 오늘 날짜 자동 반영 ──
+(function(){
+  const t=new Date();
+  const y=String(t.getFullYear());
+  const m=String(t.getMonth()+1).padStart(2,'0');
+  const d=String(t.getDate()).padStart(2,'0');
+  document.getElementById('sign_y').value=y;
+  document.getElementById('sign_m').value=m;
+  document.getElementById('sign_d').value=d;
+})();
+
+// ── 토스트 ──
+function showToast(msg,type){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
 </script>
 </body>
 </html>
