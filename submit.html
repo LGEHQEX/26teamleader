@@ -444,7 +444,6 @@ body{display:flex;flex-direction:column;background:#E8E8E8}
               <!-- 문서 푸터 -->
               <div class="doc-footer">
                 <span class="powered">Powered by REINVENT 2.0</span>
-                <button class="btn-print" onclick="printDoc()">🖨 프린트 하기</button>
               </div>
 
             </div><!-- /doc -->
@@ -857,7 +856,7 @@ function savePreviewHTML(){
   const cohortShort=(d.cohort||'').replace(/ — .+/,'');
   const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.author}.html`;
+  const a=document.createElement('a');a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.org||''}_${d.author||''}.html`;
   a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
   showToast('HTML 파일이 저장됐습니다','ok');
 }
@@ -910,7 +909,7 @@ async function submitForm(){
     const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
     const blob=new Blob([html],{type:'text/html;charset=utf-8'});
     const a=document.createElement('a');
-    a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.author||'미입력'}.html`;
+    a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.org||''}_${d.author||''}.html`;
     a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
 
     showToast('✓ 저장 완료 + HTML 다운로드됐습니다','ok');
@@ -1076,12 +1075,18 @@ function buildSpreadPreviewHTML(d){
 function saveSpreadHTML(){
   const org=document.getElementById('sp_org').value||'';
   const name=document.getElementById('sp_name').value||'';
+  const cohortShortSp=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
+  const clsSp=document.getElementById('s_class').value||'';
+  const teamSp=document.getElementById('s_team').value||'';
   const d={
     docType:'spread',
     submitId:currentSpreadId||('SP'+Date.now().toString(36).toUpperCase()),
     isUpdate:!!currentSpreadId,
     submittedAt:new Date().toLocaleString('ko-KR'),
     org,name,empId:document.getElementById('s_empid').value.trim()||'',
+    cohort:document.getElementById('s_cohort').value||'',
+    classNum:document.getElementById('s_class').value||'',
+    teamNum:document.getElementById('s_team').value||'',
     date:document.getElementById('sp_date').value||'',
     shareDate:document.getElementById('sp_share_date').value||'',
     keywords:document.getElementById('sp_keywords').value||'',
@@ -1158,7 +1163,9 @@ function saveSpreadHTML(){
 <div class="ft"><span style="color:#C8102E;font-weight:700;font-size:11px">REINVENT 2.0</span><span>현업 전파 계획서 (1Page)</span><span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span></div>
 </div></body></html>`;
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');a.download=`현업전파계획서_${org}_${name}.html`;
+  const a=document.createElement('a');
+  const spPrefix=[cohortShortSp,clsSp,teamSp].filter(Boolean).join('_');
+  a.download=`현업전파계획서_${spPrefix}_${org}_${name}.html`;
   a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
   showToast('전파 계획서가 저장됐습니다 (시트 + HTML)','ok');
 }
