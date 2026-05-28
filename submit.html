@@ -540,6 +540,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8}
     <div class="modal-title">과제 유형 선택</div>
     <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
     <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
+    <button class="badge-opt" onclick="setBadge('성장과 소통')">성장과 소통</button>
     <button class="btn-modal-close" onclick="const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')">닫기</button>
   </div>
 </div>
@@ -1188,6 +1189,17 @@ function calcSpScale(){
 window.addEventListener('resize',()=>{calcDocScale();calcSpScale();});
 window.addEventListener('load',calcDocScale);
 setTimeout(calcDocScale,200);
+
+// ── 오늘 날짜 자동 반영 ──
+(function(){
+  const t=new Date();
+  const y=String(t.getFullYear());
+  const m=String(t.getMonth()+1).padStart(2,'0');
+  const d=String(t.getDate()).padStart(2,'0');
+  document.getElementById('sign_y').value=y;
+  document.getElementById('sign_m').value=m;
+  document.getElementById('sign_d').value=d;
+})();
 
 // ── 토스트 ──
 function showToast(msg,type){
