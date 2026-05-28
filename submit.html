@@ -280,7 +280,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8}
         <input type="text" id="s_org" placeholder="조직명 입력" oninput="syncField('s_org','r_org')">
       </div>
       <div class="field"><label>작성자</label>
-        <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author')">
+        <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author');document.getElementById('sign_name').value=this.value;">
       </div>
       <div class="field"><label>사번</label>
         <input type="text" id="s_empid" placeholder="사번 입력">
@@ -1199,6 +1199,9 @@ setTimeout(calcDocScale,200);
   document.getElementById('sign_y').value=y;
   document.getElementById('sign_m').value=m;
   document.getElementById('sign_d').value=d;
+  // 작성자가 이미 입력돼 있으면 서명 이름도 반영
+  const author=document.getElementById('s_author').value.trim();
+  if(author) document.getElementById('sign_name').value=author;
 })();
 
 // ── 토스트 ──
