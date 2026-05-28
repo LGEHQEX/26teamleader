@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REINVENT 과제 작성</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+:root {
+  --red: #A50034;
+  --red-dark: #7a0026;
+  --red-bg: #fdf0f3;
+  --red-border: #f2c0cb;
+  --gray1: #111;
+  --gray2: #333;
+  --gray3: #555;
+  --gray4: #888;
+  --gray5: #bbb;
+  --gray6: #ddd;
+  --gray7: #f0f0f0;
+  --gray8: #f7f7f7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #d0d0d0;
+  color: var(--gray1);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+/* ── 16:9 외부 틀 ── */
+.stage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* ── STICKY TOP ── */
+.sticky-top {
+  width: 100%;
+  flex-shrink: 0;
+  background: #1a1a1a;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 44px;
+  border-bottom: 2px solid var(--red);
+  z-index: 200;
+}
+.sticky-top-left { color: #fff; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; opacity: 0.85; }
+.sticky-top-right { display: flex; gap: 6px; }
+.btn-action {
+  font-family: inherit; font-size: 12px; font-weight: 500;
+  padding: 5px 14px; cursor: pointer; border-radius: 1px;
+  border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); color: #fff;
+  transition: background 0.15s;
+}
+.btn-action:hover { background: rgba(255,255,255,0.18); }
+.btn-action.submit { background: var(--red); border-color: var(--red); font-weight: 700; }
+.btn-action.submit:hover { background: var(--red-dark); }
+
+/* ── TABS ── */
+.tab-wrap {
+  width: 100%;
+  flex-shrink: 0;
+  background: #fff;
+  border-bottom: 1px solid var(--gray6);
+  display: flex; padding: 0 20px;
+}
+.tab-btn {
+  font-family: inherit; font-size: 13px; font-weight: 400;
+  background: none; border: none; border-bottom: 3px solid transparent;
+  padding: 13px 20px; margin-bottom: -1px;
+  color: var(--gray4); cursor: pointer; transition: all 0.15s;
+  letter-spacing: -0.01em;
+}
+.tab-btn:hover { color: var(--gray2); }
+.tab-btn.on { color: var(--red); border-bottom-color: var(--red); font-weight: 700; }
+
+/* ── 16:9 스케일 박스 ── */
+.scale-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px;
+  background: #d0d0d0;
+}
+.doc-viewport {
+  /* 기준 크기: 1440×810 (16:9) × 1.5 = 2160×1215, 하지만 CSS transform으로 뷰포트에 맞게 스케일 */
+  width: 1440px;
+  height: 810px;
+  transform-origin: top center;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── CONTENT ── */
+.wrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 16px 24px;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray5) transparent;
+}
+.panel { display: none; height: 100%; }
+.panel.on { display: block; }
+
+/* ════════════════════════════
+   TAB 1 — 과제 정의서
+════════════════════════════ */
+.doc1 {
+  background: #fff;
+  border: 1px solid var(--gray6);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 최상단 타이틀바 */
+.d1-topbar {
+  background: var(--red);
+  color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+}
+.d1-topbar-r {
+  border: 1px solid rgba(255,255,255,0.5);
+  padding: 4px 14px; font-size: 12px; font-weight: 500;
+  cursor: default;
+}
+
+/* 제목 행 */
+.d1-title-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--gray6);
+}
+.d1-badge {
+  background: var(--red); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  white-space: nowrap; letter-spacing: 0.02em;
+}
+.d1-title-text {
+  font-size: 19px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3;
+  flex: 1;
+}
+.d1-title-text em { color: var(--red); font-style: normal; }
+[contenteditable]:focus { outline: 1px solid var(--red-border); background: #fffbfc; border-radius: 1px; }
+
+/* 본문 2단 */
+.d1-body {
+  display: grid; grid-template-columns: 210px 1fr;
+  border-bottom: 1px solid var(--gray6);
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 좌측 */
+.d1-left { border-right: 1px solid var(--gray6); display: flex; flex-direction: column; }
+
+.d1-img-zone {
+  flex: 1; min-height: 220px;
+  background: #f3f6f9;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; cursor: pointer; transition: background 0.15s;
+  position: relative; overflow: hidden; padding: 16px;
+}
+.d1-img-zone:hover { background: #eaeff5; }
+.d1-img-zone img { max-width: 100%; max-height: 180px; object-fit: contain; display: none; }
+.d1-img-hint { text-align: center; color: var(--gray4); pointer-events: none; }
+.d1-img-hint .ico { font-size: 28px; margin-bottom: 6px; }
+.d1-img-hint p { font-size: 11px; line-height: 1.5; }
+#imgInput { display: none; }
+
+.d1-meta { border-top: 1px solid var(--gray6); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.d1-meta-row { display: flex; align-items: flex-start; gap: 6px; }
+.d1-meta-label { font-size: 12px; color: var(--gray4); white-space: nowrap; min-width: 46px; padding-top: 3px; }
+.d1-meta-val {
+  flex: 1; font-size: 13px; font-weight: 500; color: var(--gray1);
+  border: none; outline: none; font-family: inherit; background: transparent;
+  padding: 2px 4px; border-radius: 1px; transition: background 0.1s; width: 100%;
+}
+.d1-meta-val:hover { background: var(--gray8); }
+.d1-meta-val:focus { background: #fffbfc; outline: 1px solid var(--red-border); }
+.cb-wrap { display: flex; flex-direction: column; gap: 5px; }
+.cb-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.cb-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--gray2); cursor: pointer; }
+.cb-item input { accent-color: var(--red); width: 13px; height: 13px; cursor: pointer; }
+
+/* 우측 */
+.d1-right { display: flex; flex-direction: column; overflow-y: auto; }
+
+.d1-aim {
+  background: var(--red); color: #fff;
+  padding: 14px 18px;
+}
+.d1-aim-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 5px; }
+.d1-aim-text {
+  font-family: inherit; font-size: 13px; font-weight: 700; line-height: 1.75;
+  background: transparent; border: none; color: #fff; width: 100%; resize: none; outline: none;
+}
+.d1-aim-text::placeholder { opacity: 0.5; }
+
+.d1-section { border-bottom: 1px solid var(--gray6); }
+.d1-section:last-child { border-bottom: none; }
+.d1-sec-head {
+  background: var(--red-bg);
+  border-bottom: 1px solid var(--red-border);
+  padding: 9px 18px;
+  font-size: 13px; font-weight: 700; color: var(--red-dark);
+}
+.d1-bullets { padding: 10px 18px; display: flex; flex-direction: column; gap: 5px; }
+.d1-bullet { display: flex; align-items: flex-start; gap: 7px; }
+.d1-dot { width: 5px; height: 5px; background: var(--red); border-radius: 50%; margin-top: 9px; flex-shrink: 0; }
+.d1-bi {
+  flex: 1; border: none; outline: none; font-family: inherit;
+  font-size: 13px; color: var(--gray2); background: transparent;
+  resize: none; line-height: 1.7; padding: 2px 4px; border-radius: 1px;
+  min-height: 26px; transition: background 0.1s;
+}
+.d1-bi:hover { background: var(--gray8); }
+.d1-bi:focus { background: #fffbfc; outline: 1px solid var(--red-border); }
+.d1-del {
+  background: none; border: none; color: var(--gray5); font-size: 15px;
+  cursor: pointer; padding: 2px 3px; line-height: 1; border-radius: 1px;
+  transition: color 0.1s; margin-top: 4px; flex-shrink: 0;
+}
+.d1-del:hover { color: var(--red); }
+.d1-add-btn {
+  background: none; border: 1px dashed var(--gray5); color: var(--gray4);
+  font-family: inherit; font-size: 11px; padding: 3px 10px; cursor: pointer;
+  border-radius: 1px; margin: 0 18px 10px; align-self: flex-start; transition: all 0.15s;
+}
+.d1-add-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+/* 푸터 다짐 */
+.d1-foot {
+  background: var(--gray8);
+  border-top: 2px solid var(--red);
+  padding: 13px 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.d1-foot-badge {
+  background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  white-space: nowrap; letter-spacing: 0.04em;
+}
+.d1-foot-text { flex: 1; font-size: 13px; line-height: 1.6; color: var(--gray2); }
+.d1-foot-text em { color: var(--red); font-style: normal; font-weight: 700; }
+.d1-foot-right {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 12px; color: var(--gray3); white-space: nowrap; flex-wrap: wrap;
+}
+.d1-foot-field { display: flex; align-items: center; gap: 5px; }
+.d1-fi {
+  border: none; border-bottom: 1px solid var(--gray5); background: transparent;
+  font-family: inherit; font-size: 12px; color: var(--gray1);
+  padding: 2px 4px; outline: none; width: 88px; text-align: center;
+}
+.d1-fi:focus { border-bottom-color: var(--red); }
+.d1-sign {
+  border: none; border-bottom: 1px solid var(--gray5); background: transparent;
+  font-family: inherit; font-size: 12px; color: var(--gray1);
+  padding: 2px 4px; outline: none; width: 76px; text-align: center;
+}
+.d1-sign:focus { border-bottom-color: var(--red); }
+
+/* ════════════════════════════
+   TAB 2 — 현업 전파 계획서
+════════════════════════════ */
+.doc2 {
+  background: #fff;
+  border: 1px solid var(--gray6);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 상단 헤더 */
+.d2-head {
+  background: var(--red); color: #fff;
+  padding: 0;
+}
+.d2-head-top {
+  padding: 4px 24px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; opacity: 0.8;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.d2-head-main {
+  padding: 10px 24px 12px;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
+  flex-wrap: wrap;
+}
+.d2-head-title-wrap {}
+.d2-head-title {
+  font-size: 22px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.2;
+}
+.d2-head-title em { color: #ffb3c6; font-style: normal; }
+.d2-head-sub { font-size: 11px; opacity: 0.6; margin-top: 3px; letter-spacing: 0.01em; }
+.d2-head-meta {
+  display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+  font-size: 12px; opacity: 0.9;
+}
+.d2-hm-item { display: flex; align-items: center; gap: 5px; }
+.d2-hm-label { opacity: 0.7; white-space: nowrap; }
+.d2-hm-val {
+  border: none; border-bottom: 1px solid rgba(255,255,255,0.4); background: transparent;
+  color: #fff; font-family: inherit; font-size: 12px; font-weight: 700;
+  padding: 1px 4px; outline: none; min-width: 70px;
+}
+.d2-hm-val:focus { border-bottom-color: #fff; }
+.d2-hm-val::placeholder { opacity: 0.4; }
+
+/* 2단 그리드 */
+.d2-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--gray6);
+  flex: 1;
+  overflow: hidden;
+}
+.d2-col { display: flex; flex-direction: column; overflow-y: auto; }
+.d2-col:first-child { border-right: 1px solid var(--gray6); }
+
+/* 섹션 헤더 */
+.d2-sec-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 20px 10px;
+  border-bottom: 1px solid var(--gray6);
+}
+.d2-num {
+  width: 34px; height: 34px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 900; color: #fff; border-radius: 1px;
+}
+.d2-num.dark { background: #1a1a1a; }
+.d2-num.red  { background: var(--red); }
+.d2-sec-info {}
+.d2-sec-title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.d2-sec-title em { color: var(--red); font-style: normal; }
+.d2-sec-sub { font-size: 10px; color: var(--gray4); letter-spacing: 0.06em; margin-top: 1px; }
+
+/* 섹션 본문 */
+.d2-body { padding: 14px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+
+.d2-intro {
+  font-size: 12px; color: var(--gray3); line-height: 1.75;
+}
+.d2-intro em { color: var(--gray1); font-style: normal; font-weight: 500; }
+
+.d2-sub { display: flex; flex-direction: column; gap: 5px; }
+.d2-sub-label { font-size: 12px; font-weight: 700; color: var(--gray1); }
+.d2-sub-label em { color: var(--red); font-style: normal; }
+.d2-sub-note { font-size: 11px; color: var(--gray4); font-weight: 400; }
+
+.d2-keyword {
+  border: 1px solid var(--gray6); padding: 9px 12px;
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--gray1);
+  outline: none; background: #fff; width: 100%; border-radius: 1px; transition: border-color 0.1s;
+}
+.d2-keyword:hover { border-color: var(--gray5); }
+.d2-keyword:focus { border-color: var(--red); }
+
+.d2-ta {
+  border: 1px solid var(--gray6); padding: 9px 12px;
+  font-family: inherit; font-size: 13px; color: var(--gray2); line-height: 1.75;
+  outline: none; background: #fff; width: 100%; border-radius: 1px;
+  resize: none; transition: border-color 0.1s;
+}
+.d2-ta:hover { border-color: var(--gray5); }
+.d2-ta:focus { border-color: var(--red); }
+
+/* 선언문 박스 */
+.decl-box {
+  border: 2px solid var(--red);
+  background: #fff;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 9px;
+}
+.decl-title {
+  text-align: center; font-size: 13px; font-weight: 700; color: var(--red);
+  letter-spacing: 0.03em; padding-bottom: 9px; border-bottom: 1px solid var(--red-border);
+}
+.decl-opening { font-size: 13px; color: var(--gray2); }
+.decl-items { display: flex; flex-direction: column; gap: 6px; }
+.decl-item { display: flex; align-items: flex-start; gap: 6px; }
+.decl-no { font-size: 13px; font-weight: 700; color: var(--gray2); min-width: 18px; padding-top: 3px; }
+.decl-inp {
+  flex: 1; border: none; border-bottom: 1px solid var(--gray6); background: transparent;
+  font-family: inherit; font-size: 13px; color: var(--gray1);
+  padding: 3px 4px; outline: none; transition: border-color 0.1s;
+}
+.decl-inp:focus { border-bottom-color: var(--red); }
+.decl-foot {
+  border-top: 1px solid var(--gray6);
+  padding-top: 10px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.decl-closing-text { font-size: 12px; color: var(--gray3); }
+.decl-sign-row {
+  display: flex; align-items: center; justify-content: flex-end; gap: 5px;
+  font-size: 12px; color: var(--gray3);
+}
+.decl-date-inp {
+  border: none; border-bottom: 1px solid var(--gray5); background: transparent;
+  font-family: inherit; font-size: 12px; color: var(--gray1);
+  padding: 1px 3px; outline: none; text-align: center;
+}
+.decl-date-inp:focus { border-bottom-color: var(--red); }
+.decl-name-inp {
+  border: none; border-bottom: 1px solid var(--gray5); background: transparent;
+  font-family: inherit; font-size: 13px; font-weight: 700; color: var(--gray1);
+  padding: 2px 4px; outline: none; width: 80px; text-align: center;
+}
+.decl-name-inp:focus { border-bottom-color: var(--red); }
+
+/* 하단 푸터바 */
+.d2-footer {
+  border-top: 1px solid var(--gray6); background: var(--gray8);
+  padding: 9px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; color: var(--gray4); letter-spacing: 0.03em;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: #111; color: #fff;
+  padding: 9px 20px; font-size: 13px; border-radius: 2px;
+  opacity: 0; pointer-events: none; z-index: 999;
+  transition: all 0.25s;
+}
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── 제출 모달 ── */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55); z-index: 300;
+  align-items: center; justify-content: center;
+}
+.modal-bg.on { display: flex; }
+.modal-box {
+  background: #fff; padding: 28px 30px;
+  max-width: 400px; width: 92%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.22); border-radius: 1px;
+}
+.modal-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.modal-box p { font-size: 12px; color: var(--gray3); line-height: 1.65; margin-bottom: 14px; }
+.modal-label { font-size: 11px; color: var(--gray4); display: block; margin-bottom: 4px; margin-top: 11px; }
+.modal-inp {
+  width: 100%; border: 1px solid var(--gray6); padding: 8px 10px;
+  font-family: inherit; font-size: 13px; outline: none; border-radius: 1px;
+  transition: border-color 0.1s;
+}
+.modal-inp:focus { border-color: var(--red); }
+.modal-btns { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+.modal-btn {
+  padding: 8px 18px; font-family: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer; border-radius: 1px; border: 1px solid var(--gray6); background: #fff;
+  transition: background 0.1s;
+}
+.modal-btn:hover { background: var(--gray8); }
+.modal-btn.red { background: var(--red); color: #fff; border-color: var(--red); font-weight: 700; }
+.modal-btn.red:hover { background: var(--red-dark); }
+
+/* ── PRINT ── */
+@media print {
+  html, body { overflow: visible; height: auto; }
+  .sticky-top, .tab-wrap, .d1-add-btn, .d1-del, .toast, .modal-bg { display: none !important; }
+  .stage, .scale-wrap, .doc-viewport { all: unset; display: block; }
+  body { background: #fff; }
+  .wrap { padding: 0; overflow: visible; }
+  .panel { display: block !important; }
+  .panel + .panel { page-break-before: always; }
+  .doc1, .doc2 { box-shadow: none; border: none; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+
+<!-- STICKY TOP -->
+<div class="sticky-top">
+  <span class="sticky-top-left">REINVENT 2.0 · 과제 작성</span>
+  <div class="sticky-top-right">
+    <button class="btn-action" onclick="window.print()">🖨 프린트</button>
+    <button class="btn-action submit" onclick="openModal()">📤 제출하기</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tab-wrap">
+  <button class="tab-btn on" onclick="setTab(0,this)">우리 팀의 REINVENT 과제 정의서</button>
+  <button class="tab-btn" onclick="setTab(1,this)">우리 팀의 REINVENT 현업 전파 계획서</button>
+</div>
+
+<div class="scale-wrap">
+<div class="doc-viewport" id="docViewport">
+<div class="wrap">
+
+<!-- ══════════════════════════════════
+     PANEL 0 — 과제 정의서
+══════════════════════════════════ -->
+<div class="panel on" id="p0">
+<div class="doc1">
+
+  <!-- 최상단 바 -->
+  <div class="d1-topbar">
+    <span>우리팀 REINVENT 과제</span>
+    <span class="d1-topbar-r">과제 정의서</span>
+  </div>
+
+  <!-- 제목 행 -->
+  <div class="d1-title-row">
+    <span class="d1-badge">문제 드러내기</span>
+    <h1 class="d1-title-text">
+      <em contenteditable="true" spellcheck="false" id="t-em" data-placeholder="과제 제목 입력"></em><span contenteditable="true" spellcheck="false" id="t-rest" data-placeholder=""></span>
+    </h1>
+  </div>
+
+  <!-- 본문 2단 -->
+  <div class="d1-body">
+
+    <!-- 좌측 -->
+    <div class="d1-left">
+      <div class="d1-img-zone" id="imgZone" onclick="document.getElementById('imgInput').click()" title="클릭하여 이미지 업로드">
+        <img id="previewImg" src="" alt="">
+        <div class="d1-img-hint" id="imgHint">
+          <div class="ico">🖼</div>
+          <p>클릭하여<br>이미지 업로드</p>
+        </div>
+      </div>
+      <input type="file" id="imgInput" accept="image/*" onchange="loadImg(this)">
+
+      <div class="d1-meta">
+        <div class="d1-meta-row">
+          <span class="d1-meta-label">조직명</span>
+          <input class="d1-meta-val" type="text" id="m-org" placeholder="조직명 입력">
+        </div>
+        <div class="d1-meta-row">
+          <span class="d1-meta-label">작성자</span>
+          <input class="d1-meta-val" type="text" id="m-author" placeholder="이름 직책">
+        </div>
+        <div class="d1-meta-row">
+          <span class="d1-meta-label">과제 유형</span>
+          <div class="cb-wrap">
+            <div class="cb-row">
+              <label class="cb-item"><input type="checkbox" id="cb0"> 팀 업무 개선</label>
+              <label class="cb-item"><input type="checkbox" id="cb1"> 조직문화</label>
+            </div>
+            <div class="cb-row">
+              <label class="cb-item"><input type="checkbox" id="cb2"> 리더십</label>
+              <label class="cb-item"><input type="checkbox" id="cb3"> 기타</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우측 -->
+    <div class="d1-right">
+
+      <!-- 과제 지향점 -->
+      <div class="d1-aim">
+        <div class="d1-aim-label">REINVENT 과제 지향점</div>
+        <textarea class="d1-aim-text" id="aim" rows="3" placeholder="과제 지향점을 입력하세요..."></textarea>
+      </div>
+
+      <!-- Why -->
+      <div class="d1-section">
+        <div class="d1-sec-head">우리 팀의 문제 드러내기 (Why)</div>
+        <div class="d1-bullets" id="why">
+          <div class="d1-bullet"><span class="d1-dot"></span><textarea class="d1-bi" oninput="ar(this)" placeholder="내용 입력..."></textarea><button class="d1-del" onclick="del(this)">×</button></div>
+        </div>
+        <button class="d1-add-btn" onclick="add('why')">+ 항목 추가</button>
+      </div>
+
+      <!-- How -->
+      <div class="d1-section">
+        <div class="d1-sec-head">우리 팀의 이기는 실행하기 (How)</div>
+        <div class="d1-bullets" id="how">
+          <div class="d1-bullet"><span class="d1-dot"></span><textarea class="d1-bi" oninput="ar(this)" placeholder="내용 입력..."></textarea><button class="d1-del" onclick="del(this)">×</button></div>
+        </div>
+        <button class="d1-add-btn" onclick="add('how')">+ 항목 추가</button>
+      </div>
+
+      <!-- 목표 -->
+      <div class="d1-section">
+        <div class="d1-sec-head">REINVENT 과제 목표</div>
+        <div class="d1-bullets" id="goal">
+          <div class="d1-bullet"><span class="d1-dot"></span><textarea class="d1-bi" oninput="ar(this)" placeholder="내용 입력..."></textarea><button class="d1-del" onclick="del(this)">×</button></div>
+        </div>
+        <button class="d1-add-btn" onclick="add('goal')">+ 항목 추가</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 다짐 푸터 -->
+  <div class="d1-foot">
+    <span class="d1-foot-badge">REINVENT 다짐</span>
+    <div class="d1-foot-text">
+      위 REINVENT 과제를 <em>우리 팀의 일하는 방식으로 정착시키고, 끝까지 책임지고 실행할 것</em>을 다짐합니다.
+    </div>
+    <div class="d1-foot-right">
+      <div class="d1-foot-field">
+        작성일 <input class="d1-fi" type="text" id="wdate" placeholder="년-월-일">
+      </div>
+      <div class="d1-foot-field">
+        팀장 서명 <input class="d1-sign" type="text" id="sign1" placeholder="이름 입력"> (인)
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /p0 -->
+
+
+<!-- ══════════════════════════════════
+     PANEL 1 — 현업 전파 계획서
+══════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="doc2">
+
+  <!-- 헤더 -->
+  <div class="d2-head">
+    <div class="d2-head-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+    <div class="d2-head-main">
+      <div class="d2-head-title-wrap">
+        <div class="d2-head-title">우리 팀의 <em>REINVENT</em> 현업 전파 계획서</div>
+        <div class="d2-head-sub">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+      </div>
+      <div class="d2-head-meta">
+        <div class="d2-hm-item">
+          <span class="d2-hm-label">소속</span>
+          <input class="d2-hm-val" type="text" id="h-org" placeholder="소속 입력" style="width:110px">
+        </div>
+        <div class="d2-hm-item">
+          <span class="d2-hm-label">성명</span>
+          <input class="d2-hm-val" type="text" id="h-name" placeholder="성명 입력" style="width:90px">
+        </div>
+        <div class="d2-hm-item">
+          <span class="d2-hm-label">작성일</span>
+          <input class="d2-hm-val" type="text" id="h-wdate" placeholder="작성일" style="width:82px">
+        </div>
+        <div class="d2-hm-item">
+          <span class="d2-hm-label">공유예정</span>
+          <input class="d2-hm-val" type="text" id="h-sdate" placeholder="공유예정일" style="width:82px">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2단 -->
+  <div class="d2-grid">
+
+    <!-- 왼쪽 -->
+    <div class="d2-col">
+      <div class="d2-sec-head">
+        <div class="d2-num dark">01</div>
+        <div class="d2-sec-info">
+          <div class="d2-sec-title">우리 조직의 언어로 재정리</div>
+          <div class="d2-sec-sub">TRANSLATE · From Corporate to Team Language</div>
+        </div>
+      </div>
+      <div class="d2-body">
+        <div class="d2-intro">
+          전사 메시지를 그대로 옮기면 '남의 이야기'. <em>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</em>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.
+        </div>
+
+        <div class="d2-sub">
+          <div class="d2-sub-label">1-1. REINVENT 핵심 키워드 <span class="d2-sub-note">— 우리 팀이 기억할 3~5개 단어로</span></div>
+          <input class="d2-keyword" type="text" id="kw" placeholder="키워드를 입력하세요 (3~5개)">
+        </div>
+
+        <div class="d2-sub">
+          <div class="d2-sub-label">1-2. 우리 팀의 <em>「문제 드러내기」</em> <span class="d2-sub-note">— 가장 자주 마주치는 관성·침묵·회피의 사례와 함께</span></div>
+          <textarea class="d2-ta" id="prob" rows="6" placeholder="내용을 입력하세요..."></textarea>
+        </div>
+
+        <div class="d2-sub">
+          <div class="d2-sub-label">1-3. 우리 팀의 <em>「이기는 실행하기」</em> <span class="d2-sub-note">— 경쟁의 대상과 '이긴다'의 구체적 기준</span></div>
+          <textarea class="d2-ta" id="win" rows="5" placeholder="내용을 입력하세요..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 오른쪽 -->
+    <div class="d2-col">
+      <div class="d2-sec-head">
+        <div class="d2-num red">02</div>
+        <div class="d2-sec-info">
+          <div class="d2-sec-title">팀장 선언문</div>
+          <div class="d2-sec-sub">DECLARE · A Leader's Public Commitment</div>
+        </div>
+      </div>
+      <div class="d2-body">
+        <div class="d2-intro">
+          변화는 <em>리더의 약속이 공개될 때</em> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <em>약속 3~4개</em>를 구체적 행동 언어로.
+        </div>
+
+        <div class="decl-box">
+          <div class="decl-title">— 우리 팀의 REINVENT를 시작하며 —</div>
+          <div class="decl-opening">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+          <div class="decl-items" id="decl">
+            <div class="decl-item"><span class="decl-no">①</span><input class="decl-inp" type="text" placeholder="약속 내용을 입력하세요"></div>
+            <div class="decl-item"><span class="decl-no">②</span><input class="decl-inp" type="text" placeholder="약속 내용을 입력하세요"></div>
+            <div class="decl-item"><span class="decl-no">③</span><input class="decl-inp" type="text" placeholder="약속 내용을 입력하세요"></div>
+            <div class="decl-item"><span class="decl-no">④</span><input class="decl-inp" type="text" placeholder="약속 내용을 입력하세요"></div>
+          </div>
+          <div class="decl-foot">
+            <div class="decl-closing-text">함께 점검해 주십시오.</div>
+            <div class="decl-sign-row">
+              <input class="decl-date-inp" type="text" id="dy" placeholder="년" style="width:40px"> .
+              <input class="decl-date-inp" type="text" id="dm" placeholder="월" style="width:26px"> .
+              <input class="decl-date-inp" type="text" id="dd" placeholder="일" style="width:26px">
+              &nbsp;&nbsp;팀장&nbsp;
+              <input class="decl-name-inp" type="text" id="dsign" placeholder="이름 입력">
+              &nbsp;(서명)
+            </div>
+          </div>
+        </div>
+
+        <div class="d2-sub">
+          <div class="d2-sub-label">2-1. 언제·어떻게 팀원에게 공유할 것인가?</div>
+          <textarea class="d2-ta" id="shareplan" rows="3" placeholder="내용을 입력하세요..."></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /d2-grid -->
+
+  <div class="d2-footer">
+    <span>REINVENT 2.0 · 전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
+    <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+  </div>
+
+</div>
+</div><!-- /p1 -->
+
+</div><!-- /wrap -->
+</div><!-- /doc-viewport -->
+</div><!-- /scale-wrap -->
+</div><!-- /stage -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- 제출 모달 -->
+<div class="modal-bg" id="mBg">
+  <div class="modal-box">
+    <h3>📤 과제 제출</h3>
+    <p>작성한 내용을 Google Sheets에 저장합니다.<br>사번과 이름을 확인 후 제출해주세요.</p>
+    <label class="modal-label">사번</label>
+    <input class="modal-inp" type="text" id="m-empno" placeholder="사번 입력">
+    <label class="modal-label">이름</label>
+    <input class="modal-inp" type="text" id="m-name" placeholder="이름 입력">
+    <label class="modal-label">Apps Script URL <span style="font-size:11px;color:var(--gray4)">(관리자 설정)</span></label>
+    <input class="modal-inp" type="text" id="m-url" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal()">취소</button>
+      <button class="modal-btn red" onclick="submitData()">제출하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// 16:9 스케일 계산
+function scaleDoc() {
+  const topH = document.querySelector('.sticky-top').offsetHeight;
+  const tabH = document.querySelector('.tab-wrap').offsetHeight;
+  const avail = window.innerHeight - topH - tabH;
+  const availW = window.innerWidth - 32; // padding 16*2
+  const BASE_W = 1440, BASE_H = 810;
+  const scaleW = availW / BASE_W;
+  const scaleH = avail / BASE_H;
+  const scale = Math.min(scaleW, scaleH);
+  const vp = document.getElementById('docViewport');
+  vp.style.transform = `scale(${scale})`;
+  vp.style.marginTop = `${(avail - BASE_H * scale) / 2}px`;
+}
+window.addEventListener('load', scaleDoc);
+window.addEventListener('resize', scaleDoc);
+
+// 탭
+function setTab(i, btn) {
+  document.querySelectorAll('.panel').forEach((p,j) => p.classList.toggle('on', i===j));
+  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('on', i===j));
+}
+
+// textarea 자동 높이
+function ar(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+window.addEventListener('load', () => {
+  document.querySelectorAll('textarea').forEach(t => ar(t));
+});
+
+// 불릿 추가
+function add(id) {
+  const list = document.getElementById(id);
+  const div = document.createElement('div');
+  div.className = 'd1-bullet';
+  div.innerHTML = '<span class="d1-dot"></span><textarea class="d1-bi" oninput="ar(this)" placeholder="내용 입력..."></textarea><button class="d1-del" onclick="del(this)">×</button>';
+  list.appendChild(div);
+  div.querySelector('textarea').focus();
+}
+
+// 불릿 삭제
+function del(btn) {
+  const list = btn.closest('.d1-bullets');
+  if (list.querySelectorAll('.d1-bullet').length > 1) btn.closest('.d1-bullet').remove();
+  else toast('최소 1개 항목이 필요합니다.');
+}
+
+// 이미지
+function loadImg(input) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = document.getElementById('previewImg');
+    img.src = e.target.result; img.style.display = 'block';
+    document.getElementById('imgHint').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+
+// Toast
+function toast(msg, ms=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), ms);
+}
+
+// 모달
+function openModal() {
+  const n = document.getElementById('m-author').value || document.getElementById('h-name').value;
+  if (n) document.getElementById('m-name').value = n;
+  document.getElementById('mBg').classList.add('on');
+}
+function closeModal() { document.getElementById('mBg').classList.remove('on'); }
+document.getElementById('mBg').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
+
+// 데이터 수집
+function collect() {
+  const bullets = id => [...document.querySelectorAll(`#${id} .d1-bi`)].map(t=>t.value.trim()).filter(Boolean).join('\n');
+  return {
+    timestamp: new Date().toISOString(),
+    d1_title: (document.getElementById('t-em').textContent + document.getElementById('t-rest').textContent).trim(),
+    d1_org: document.getElementById('m-org').value,
+    d1_author: document.getElementById('m-author').value,
+    d1_type: ['팀 업무 개선','조직문화','리더십','기타'].filter((_,i)=>document.getElementById('cb'+i).checked).join(', '),
+    d1_aim: document.getElementById('aim').value,
+    d1_why: bullets('why'),
+    d1_how: bullets('how'),
+    d1_goal: bullets('goal'),
+    d1_writedate: document.getElementById('wdate').value,
+    d1_sign: document.getElementById('sign1').value,
+    d2_org: document.getElementById('h-org').value,
+    d2_name: document.getElementById('h-name').value,
+    d2_writedate: document.getElementById('h-wdate').value,
+    d2_sharedate: document.getElementById('h-sdate').value,
+    d2_keywords: document.getElementById('kw').value,
+    d2_problem: document.getElementById('prob').value,
+    d2_winning: document.getElementById('win').value,
+    d2_decl: [...document.querySelectorAll('#decl .decl-inp')].map(i=>i.value).join('\n'),
+    d2_sign: document.getElementById('dsign').value,
+    d2_plan: document.getElementById('shareplan').value,
+  };
+}
+
+// 제출
+async function submitData() {
+  const empno = document.getElementById('m-empno').value.trim();
+  const name = document.getElementById('m-name').value.trim();
+  const url = document.getElementById('m-url').value.trim();
+  if (!empno) { toast('사번을 입력하세요.'); return; }
+  if (!name)  { toast('이름을 입력하세요.'); return; }
+  if (!url)   { toast('Apps Script URL을 입력하세요.'); return; }
+  const btn = document.querySelector('.modal-btn.red');
+  btn.textContent = '제출 중...'; btn.disabled = true;
+  try {
+    await fetch(url, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({...collect(), empno, name})
+    });
+    closeModal(); toast('✅ 제출이 완료되었습니다!', 3000);
+  } catch(e) {
+    toast('⚠️ 제출 중 오류가 발생했습니다.'); console.error(e);
+  } finally {
+    btn.textContent = '제출하기'; btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
