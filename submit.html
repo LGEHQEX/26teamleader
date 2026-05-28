@@ -4,532 +4,244 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>과제 정의서 작성 | '26 피플 리더십</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-/* ============================
-   기본 설정 & 예시 문서 스타일 (그대로 유지)
-   ============================ */
 :root {
-  --reinvent-red: #C8102E;
-  --reinvent-red-dark: #A50C25;
-  --reinvent-red-deep: #8C0A1F;
+  --red: #C8102E;
+  --red-dark: #A50C25;
   --pink-light: #FCE4E8;
   --pink-bg: #FFF5F7;
   --pink-border: #F0B4BE;
-  --cream-bg: #FFFAFB;
-  --text-dark: #1F1F1F;
-  --text-mid: #444;
-  --text-soft: #6B6B6B;
-  --label-red: #C8102E;
+  --cream: #FFFAFB;
+  --dark: #1F1F1F;
+  --mid: #444;
+  --soft: #6B6B6B;
   --sidebar-w: 280px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  color:var(--text-dark);
-  -webkit-font-smoothing:antialiased;
-  height:100%;
-}
-body{display:flex;flex-direction:column;background:#E8E8E8;}
+html,body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--dark);-webkit-font-smoothing:antialiased;height:100%}
+body{display:flex;flex-direction:column;background:#E8E8E8}
 
-/* ============================
-   앱 헤더
-   ============================ */
-.app-header{
-  background:var(--reinvent-red);height:48px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;flex-shrink:0;z-index:200;
-}
-.app-header-left{display:flex;align-items:center;gap:12px}
+/* 앱 헤더 */
+.app-header{background:var(--red);height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;z-index:200}
 .app-logo{font-weight:900;font-size:16px;letter-spacing:1.5px;color:#fff}
-.app-title-text{color:rgba(255,255,255,.85);font-size:13px;font-weight:500}
-.app-header-right{display:flex;align-items:center;gap:8px}
-.btn-hd{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:5px;cursor:pointer;font-family:inherit;transition:background .15s}
+.app-title{color:rgba(255,255,255,.85);font-size:13px;font-weight:500}
+.btn-hd{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:5px;cursor:pointer;font-family:inherit;transition:background .15s}
 .btn-hd:hover{background:rgba(255,255,255,.25)}
-.btn-hd.primary{background:white;color:var(--reinvent-red);border-color:white}
+.btn-hd.primary{background:#fff;color:var(--red);border-color:#fff}
 .btn-hd.primary:hover{background:#ffe8ec}
-.btn-hd:disabled{opacity:.5;cursor:not-allowed}
 
-/* ============================
-   메인 레이아웃
-   ============================ */
+/* 레이아웃 */
 .app-body{display:flex;flex:1;overflow:clip}
 
-/* ============================
-   사이드바
-   ============================ */
-.sidebar{
-  width:var(--sidebar-w);flex-shrink:0;
-  background:#fff;border-right:1px solid #e0dbd6;
-  display:flex;flex-direction:column;overflow-y:auto;
-}
+/* 사이드바 */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:#fff;border-right:1px solid #e0dbd6;display:flex;flex-direction:column;overflow-y:auto}
 .sb-section{padding:16px 16px 0}
 .sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:4px}
-.field input,.field select,.field textarea{
-  width:100%;border:1px solid #ddd;border-radius:6px;
-  padding:7px 10px;font-size:13px;font-family:inherit;
-  color:var(--text-dark);background:#fafaf9;outline:none;transition:border-color .15s
-}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--reinvent-red);background:white}
+.field input,.field select{width:100%;border:1px solid #ddd;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:var(--dark);background:#fafaf9;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--red);background:#fff}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sb-divider{border:none;border-top:1px solid #eee;margin:4px 0 14px}
 
-/* 과제 유형 체크 */
-.type-grid{display:flex;flex-direction:column;gap:6px}
-.type-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #ddd;transition:all .15s;font-size:12px;font-weight:600;color:#777}
-.type-item:hover{border-color:var(--reinvent-red);color:var(--reinvent-red)}
-.type-item.on{background:#fff5f7;border-color:var(--reinvent-red);color:var(--reinvent-red)}
+/* 과제 유형 */
+.type-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #ddd;transition:all .15s;font-size:12px;font-weight:600;color:#777;margin-bottom:6px}
+.type-item:hover{border-color:var(--red);color:var(--red)}
+.type-item.on{background:#fff5f7;border-color:var(--red);color:var(--red)}
 .type-item .cb{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;background:#fff;flex-shrink:0}
-.type-item.on .cb{background:var(--reinvent-red);border-color:var(--reinvent-red);color:#fff}
+.type-item.on .cb{background:var(--red);border-color:var(--red);color:#fff}
 
-/* 불러오기 버튼 */
-.btn-load{
-  width:100%;background:#f7f5f2;border:1px solid #ddd;border-radius:6px;
-  padding:8px;font-size:12px;font-weight:600;color:var(--reinvent-red);
-  cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px
-}
-.btn-load:hover{background:#fff5f7;border-color:var(--reinvent-red)}
-.btn-load:disabled{opacity:.5;cursor:not-allowed}
+/* 불러오기 */
+.btn-load{width:100%;background:#f7f5f2;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:12px;font-weight:600;color:var(--red);cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px}
+.btn-load:hover{background:#fff5f7;border-color:var(--red)}
 .load-status{font-size:11px;margin-top:6px;padding:6px 8px;border-radius:6px;line-height:1.4}
 .load-status.ok{background:#e6f5ee;color:#0f7a4a}
 .load-status.err{background:#fef2f2;color:#c62828}
 .load-status.info{background:#fff8e1;color:#7a5c00}
 
 /* 이미지 선택 */
-.img-selector{
-  border:1.5px dashed #ddd;border-radius:8px;min-height:100px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;color:#aaa;font-size:12px;cursor:pointer;transition:all .15s;
-  background:#fafaf9;position:relative;overflow:hidden
-}
-.img-selector:hover{border-color:var(--reinvent-red);color:var(--reinvent-red);background:#fff5f7}
+.img-selector{border:1.5px dashed #ddd;border-radius:8px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#aaa;font-size:12px;cursor:pointer;transition:all .15s;background:#fafaf9;position:relative;overflow:hidden}
+.img-selector:hover{border-color:var(--red);color:var(--red);background:#fff5f7}
 .img-selector img{width:100%;height:auto;display:block;object-fit:contain;border-radius:6px}
-.img-selector-icon{font-size:22px;opacity:.4}
 
-/* 사이드바 하단 버튼 */
+/* 사이드바 하단 */
 .sb-footer{padding:16px;margin-top:auto;border-top:1px solid #eee}
-.btn-submit{
-  width:100%;height:44px;background:var(--reinvent-red);color:white;
-  border:none;border-radius:8px;font-size:14px;font-weight:700;
-  cursor:pointer;font-family:inherit;transition:background .15s
-}
-.btn-submit:hover{background:var(--reinvent-red-dark)}
+.btn-submit{width:100%;height:44px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-submit:hover{background:var(--red-dark)}
 .btn-submit:disabled{opacity:.5;cursor:not-allowed}
 
-/* ============================
-   탭 네비게이션
-   ============================ */
-.tab-nav{display:flex;gap:0;margin-bottom:12px;border-bottom:2px solid var(--reinvent-red)}
-.tab-btn{
-  padding:9px 22px;font-size:13px;font-weight:700;font-family:inherit;
-  background:none;border:none;border-bottom:3px solid transparent;
-  color:#aaa;cursor:pointer;transition:all .15s;margin-bottom:-2px;
-}
-.tab-btn.active{color:var(--reinvent-red);border-bottom:3px solid var(--reinvent-red)}
-.tab-btn:hover:not(.active){color:#666;background:rgba(200,16,46,.04)}
+/* 에디터 */
+.editor-area{flex:1;overflow-y:auto;padding:16px}
+.doc-scale-wrap{width:100%;display:flex;justify-content:flex-start}
+.doc-scale-inner{width:1280px;transform-origin:top left;flex-shrink:0}
+
+/* 탭 */
+.tab-nav{display:flex;gap:0;margin-bottom:12px;border-bottom:2px solid var(--red)}
+.tab-btn{padding:9px 22px;font-size:13px;font-weight:700;font-family:inherit;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;cursor:pointer;transition:all .15s;margin-bottom:-2px}
+.tab-btn.active{color:var(--red);border-bottom:3px solid var(--red)}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
 /* ============================
-   현업 전파 계획서 스타일
+   문서 스타일 (새 양식)
    ============================ */
-.sp-doc{
-  background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);
-  overflow:hidden;width:1280px;max-width:100%;
-  font-family:'Pretendard',-apple-system,sans-serif;
-}
-/* 전파 계획서 헤더 */
-.sp-header{
-  padding:20px 32px 12px;border-bottom:2px solid #1a1a1a;
-}
-.sp-header-top{font-size:11px;font-weight:700;color:var(--reinvent-red);letter-spacing:1px;margin-bottom:4px}
-.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
-.sp-title .hl{color:var(--reinvent-red)}
-.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
-.sp-meta{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
-.sp-meta-item{display:flex;align-items:center;gap:6px;font-size:12px}
-.sp-meta-item label{color:#888;font-weight:600;white-space:nowrap}
-.sp-meta-input{
-  border:none;border-bottom:1px solid #ccc;background:transparent;
-  font-size:12px;font-family:inherit;color:#1a1a1a;outline:none;
-  padding:2px 4px;min-width:80px;
-}
-.sp-meta-input:focus{border-bottom-color:var(--reinvent-red)}
-/* 전파 계획서 바디 */
-.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
-.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
-.sp-col:last-child{border-right:none}
-/* 섹션 헤더 */
-.sp-sec-hd{
-  background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;
-  display:flex;align-items:flex-end;gap:12px
-}
-.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:var(--reinvent-red)}
-.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
-.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
-/* 안내문 */
-.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
-.sp-guide b{color:#1a1a1a}
-/* 소항목 라벨 */
-.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px;line-height:1.4}
-.sp-sub-label .em{color:var(--reinvent-red);font-style:normal}
-.sp-sub-desc{font-size:11px;color:#888;margin-bottom:6px}
-/* 입력 박스 */
-.sp-input-box{
-  border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;
-  min-height:40px;background:#fafaf9;
-}
-.sp-input-box textarea{
-  width:100%;border:none;background:transparent;font-size:13px;
-  font-family:inherit;color:#1a1a1a;outline:none;resize:none;
-  line-height:1.7;min-height:28px;
-}
-.sp-input-box textarea::placeholder{color:#ccc}
-/* 선언문 박스 */
-.sp-declare-box{
-  border:2px solid var(--reinvent-red);border-radius:4px;padding:16px 18px;
-  margin-bottom:14px;
-}
-.sp-declare-title{
-  text-align:center;font-size:13px;font-weight:800;color:var(--reinvent-red);
-  margin-bottom:12px;letter-spacing:.5px
-}
-.sp-declare-item{
-  font-size:13px;line-height:1.8;color:#1a1a1a;padding:3px 0;
-}
-.sp-declare-item textarea{
-  width:100%;border:none;background:transparent;font-size:13px;
-  font-family:inherit;color:#1a1a1a;outline:none;resize:none;
-  line-height:1.8;min-height:26px;
-}
-.sp-declare-item textarea::placeholder{color:#ccc}
-/* 서명 영역 */
-.sp-sign{
-  display:flex;align-items:center;justify-content:flex-end;
-  gap:8px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;
-  border-top:1px solid #eee
-}
-.sp-sign input{
-  border:none;border-bottom:1px solid #999;background:transparent;
-  font-size:12px;font-family:inherit;outline:none;text-align:center;
-  width:36px;padding:2px 4px;
-}
-.sp-sign input:focus{border-bottom-color:var(--reinvent-red)}
-.sp-sign-name{
-  border:none;border-bottom:1px solid #999;background:transparent;
-  font-size:13px;font-weight:700;font-family:inherit;outline:none;
-  width:60px;padding:2px 4px;text-align:center;
-}
-.sp-sign-name:focus{border-bottom-color:var(--reinvent-red)}
-/* 전파 계획서 푸터 */
-.sp-footer{
-  background:#1a1a1a;color:rgba(255,255,255,.5);
-  padding:8px 24px;display:flex;align-items:center;justify-content:space-between;
-  font-size:10px
-}
-.sp-footer .left{color:var(--reinvent-red);font-weight:700;font-size:11px}
+.doc{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;width:1280px;max-width:100%}
 
-.editor-area{flex:1;overflow-y:auto;padding:16px 16px}
-.editor-inner{max-width:100%;margin:0 auto}
+/* 문서 헤더 */
+.doc-hd{background:var(--red);color:#fff;height:52px;display:flex;align-items:center;padding:0 24px;justify-content:space-between}
+.doc-hd-title{font-weight:900;font-size:18px;letter-spacing:1px}
+.doc-hd-badge{font-size:13px;font-weight:700;letter-spacing:2px;padding:5px 14px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px}
 
-/* 문서 스케일 래퍼 */
-.doc-scale-wrap{
-  width:100%;
-  display:flex;
-  justify-content:center;
-}
-.doc-scale-inner{
-  width:1280px;
-  transform-origin:top left;
-  flex-shrink:0;
-}
+/* 제목행 */
+.doc-title-row{padding:20px 28px 14px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #eee}
+.badge-btn{background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:999px;flex-shrink:0;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}
+.doc-title-input{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;font-size:26px;font-weight:900;font-family:inherit;color:var(--dark);letter-spacing:-.5px;line-height:1.25;outline:none;transition:border-color .15s}
+.doc-title-input:focus{border-bottom-color:var(--red);background:rgba(200,16,46,.02)}
+.doc-title-input::placeholder{color:#ccc}
 
-/* ============================
-   문서 미리보기 (1280×720 16:9 기준)
-   ============================ */
-.doc-preview{
-  background:#fff;
-  box-shadow:0 8px 32px rgba(0,0,0,.12);
-  overflow:hidden;
-  width:1280px;max-width:100%;
-}
+/* 바디 2컬럼 */
+.doc-body{display:grid;grid-template-columns:320px 1fr;gap:0}
 
-/* Header */
-.doc-header{
-  background:var(--reinvent-red);color:#fff;
-  height:48px;display:flex;align-items:center;padding:0 20px;
-  font-size:13px;font-weight:500;
-}
-.doc-header .brand{font-weight:900;font-size:17px;letter-spacing:1.5px;margin-right:24px}
-.doc-header .doc-type{
-  margin-left:auto;color:#fff;font-size:13px;font-weight:700;letter-spacing:2px;
-  padding:4px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px
-}
+/* 왼쪽 */
+.doc-left{border-right:1px solid #EAD0D5;display:flex;flex-direction:column}
+.doc-img-area{background:#f7f5f2;cursor:pointer;position:relative;overflow:hidden;min-height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#bbb;font-size:13px}
+.doc-img-area:hover::after{content:'이미지 변경';position:absolute;inset:0;background:rgba(200,16,46,.7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;display:flex;justify-content:center;align-items:center}
+.doc-img-area img{width:100%;height:auto;display:block;object-fit:contain}
+.doc-info{background:var(--pink-bg);padding:14px 18px;font-size:13px;color:var(--mid);border-top:1px solid var(--pink-border)}
+.info-row{display:flex;align-items:baseline;gap:10px;padding:5px 0}
+.info-row+.info-row{border-top:1px dashed rgba(200,16,46,.15);padding-top:8px;margin-top:2px}
+.info-lbl{color:var(--soft);font-size:11px;font-weight:600;flex-shrink:0;width:54px;letter-spacing:.3px}
+.info-input{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--dark);outline:none;border-bottom:1px dashed transparent;transition:border-color .15s;padding:0 2px}
+.info-input:focus{border-bottom-color:var(--red);background:rgba(200,16,46,.03)}
+.check-item{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--soft);font-weight:500;white-space:nowrap;cursor:pointer;user-select:none}
+.check-item .ck{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid #C8B0B5;border-radius:3px;font-size:10px;color:transparent;background:#fff;line-height:1;font-weight:900;flex-shrink:0}
+.check-item.on{color:var(--red);font-weight:700}
+.check-item.on .ck{background:var(--red);border-color:var(--red);color:#fff}
 
-/* Title row */
-.doc-title-row{
-  padding:18px 24px 12px;display:flex;align-items:center;gap:14px
-}
-.doc-badge{
-  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
-  padding:8px 18px;border-radius:999px;flex-shrink:0;white-space:nowrap
-}
-.doc-badge-input{
-  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
-  padding:8px 18px;border-radius:999px;flex-shrink:0;white-space:nowrap;
-  border:none;cursor:pointer;font-family:inherit;position:relative
-}
-.doc-main-title{
-  flex:1;font-size:24px;font-weight:800;color:var(--text-dark);
-  letter-spacing:-.5px;line-height:1.25
-}
-.doc-main-title input{
-  width:100%;background:transparent;border:none;border-bottom:2px solid transparent;
-  font-size:24px;font-weight:800;font-family:inherit;color:var(--text-dark);
-  letter-spacing:-.5px;line-height:1.25;outline:none;transition:border-color .15s
-}
-.doc-main-title input:focus{border-bottom-color:var(--reinvent-red);background:rgba(200,16,46,.03)}
-.doc-main-title input::placeholder{color:#ccc}
-.accent{color:var(--reinvent-red)}
+/* 오른쪽 섹션들 */
+.doc-right{display:flex;flex-direction:column}
 
-/* Body grid */
-.doc-body{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:4px 28px 20px}
+/* 지향점 (빨간 박스) */
+.sec-goal{background:var(--red);padding:18px 24px}
+.sec-goal-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:8px}
+.sec-goal-input{background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.4);width:100%;font-size:17px;font-weight:800;color:#fff;font-family:inherit;outline:none;padding:4px 0;line-height:1.5}
+.sec-goal-input::placeholder{color:rgba(255,255,255,.4)}
+.sec-goal-input:focus{border-bottom-color:rgba(255,255,255,.9)}
 
-/* Left: poster card */
-.poster-card{
-  border:1px solid #EAD0D5;border-radius:6px;overflow:hidden;
-  display:flex;flex-direction:column;background:#fff
-}
-.poster-visual{background:#fff;position:relative;overflow:hidden;display:block;cursor:pointer}
-.poster-visual:hover::after{
-  content:'이미지 변경';position:absolute;inset:0;background:rgba(200,16,46,.7);
-  color:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:700;display:flex;justify-content:center;align-items:center
-}
-.poster-img{width:100%;height:auto;display:block}
-.poster-img-placeholder{
-  width:100%;height:180px;background:#f7f3f4;
-  display:flex;align-items:center;justify-content:center;
-  color:#ccc;font-size:13px;flex-direction:column;gap:6px
-}
-.poster-img-placeholder span{font-size:28px;opacity:.4}
+/* 일반 섹션 */
+.sec{border-bottom:1px solid var(--pink-border);background:var(--cream)}
+.sec-title{background:var(--pink-light);padding:9px 18px;font-size:14px;font-weight:800;color:var(--red);border-left:4px solid var(--red);letter-spacing:-.2px}
+.sec-body{padding:12px 18px 14px}
 
-/* Info block */
-.info-block{
-  background:var(--pink-bg);padding:12px 16px;font-size:12.5px;
-  color:var(--text-mid);border-top:1px solid var(--pink-border);flex-shrink:0
-}
-.info-row{display:flex;align-items:baseline;gap:10px;padding:4px 0;line-height:1.6}
-.info-row+.info-row{border-top:1px dashed rgba(200,16,46,.15);padding-top:7px;margin-top:3px}
-.info-label{color:var(--text-soft);font-size:11px;font-weight:600;flex-shrink:0;width:52px;letter-spacing:.3px}
-.info-val-display{color:var(--text-dark);font-size:12.5px;flex:1}
-.info-val-display b{color:var(--text-dark);font-weight:700}
-.info-input{
-  flex:1;border:none;background:transparent;font-size:12.5px;
-  font-family:inherit;color:var(--text-dark);outline:none;border-bottom:1px dashed transparent;
-  transition:border-color .15s;padding:0 2px
-}
-.info-input:focus{border-bottom-color:var(--reinvent-red);background:rgba(200,16,46,.03)}
-
-/* Type check items (in doc) */
-.info-row-types .info-val-display{
-  display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;align-items:center
-}
-.check-item{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:12px;color:var(--text-soft);font-weight:500;white-space:nowrap;
-  cursor:pointer;user-select:none
-}
-.check-item .check-mark{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;border:1.5px solid #C8B0B5;border-radius:3px;
-  font-size:10px;color:transparent;background:#fff;line-height:1;font-weight:900;flex-shrink:0
-}
-.check-item.checked{color:var(--reinvent-red);font-weight:700}
-.check-item.checked .check-mark{background:var(--reinvent-red);border-color:var(--reinvent-red);color:#fff}
-
-/* Right: sections */
-.right-col{display:flex;flex-direction:column;gap:10px}
-.section{
-  border-left:4px solid var(--reinvent-red);
-  background:var(--cream-bg);
-  border-top:1px solid var(--pink-border);
-  border-right:1px solid var(--pink-border);
-  border-bottom:1px solid var(--pink-border);
-}
-.section-title{
-  background:var(--pink-light);padding:7px 14px;
-  font-size:13.5px;font-weight:800;color:var(--reinvent-red);letter-spacing:-.2px
-}
-.section-body{padding:10px 16px 12px}
-
-/* Bullet list editing */
-.bullet-list{display:flex;flex-direction:column;gap:3px}
+/* 불릿 */
+.bullet-list{display:flex;flex-direction:column;gap:4px}
 .bullet-row{display:flex;align-items:flex-start;gap:8px}
-.bullet-dot{
-  width:5px;height:5px;background:var(--text-dark);border-radius:50%;
-  flex-shrink:0;margin-top:8px
-}
-.bullet-row textarea{
-  flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;
-  color:var(--text-dark);outline:none;resize:none;line-height:1.6;
-  min-height:22px;padding:2px 4px;border-radius:4px
-}
+.bullet-dot{width:5px;height:5px;background:var(--dark);border-radius:50%;flex-shrink:0;margin-top:9px}
+.bullet-row textarea{flex:1;border:none;background:transparent;font-size:14px;font-family:inherit;color:var(--dark);outline:none;resize:none;line-height:1.6;min-height:24px;padding:2px 4px;border-radius:4px}
 .bullet-row textarea:focus{background:rgba(200,16,46,.04)}
 .bullet-row textarea::placeholder{color:#ccc}
-.btn-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px}
-.btn-rm:hover{color:var(--reinvent-red)}
-.btn-add{
-  display:flex;align-items:center;gap:5px;font-size:11px;color:var(--reinvent-red);
-  font-weight:600;background:none;border:1px dashed var(--pink-border);
-  border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:5px;
-  font-family:inherit;transition:background .15s
-}
+.btn-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;margin-top:4px}
+.btn-rm:hover{color:var(--red)}
+.btn-add{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--red);font-weight:600;background:none;border:1px dashed var(--pink-border);border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:6px;font-family:inherit;transition:background .15s}
 .btn-add:hover{background:rgba(200,16,46,.06)}
 
-/* Range section */
-.range-section{
-  background:var(--reinvent-red);color:#fff;padding:12px 20px 15px
-}
-.range-title{font-size:13px;font-weight:700;margin-bottom:7px}
-.range-input{
-  background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.35);
-  width:100%;font-size:16px;font-weight:800;color:white;font-family:inherit;
-  outline:none;padding:3px 0;line-height:1.5
-}
-.range-input::placeholder{color:rgba(255,255,255,.4)}
-.range-input:focus{border-bottom-color:rgba(255,255,255,.8)}
+/* 다짐 푸터 */
+.doc-pledge{background:#fff;border-top:2px solid var(--red);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.pledge-badge{background:var(--red);color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:3px;white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
+.pledge-text{font-size:14px;color:var(--dark);line-height:1.6;flex:1}
+.pledge-sign{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--soft);white-space:nowrap;flex-shrink:0}
+.sign-input{border:none;border-bottom:1px solid #999;background:transparent;font-size:12px;font-family:inherit;outline:none;text-align:center;padding:2px 4px}
+.sign-input:focus{border-bottom-color:var(--red)}
+.sign-name{border:none;border-bottom:1px solid #999;background:transparent;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:80px;text-align:center;padding:2px 4px}
+.sign-name:focus{border-bottom-color:var(--red)}
 
-/* Triple grid */
-.triple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.triple-grid .section-body{min-height:110px}
+/* 문서 하단 */
+.doc-footer{background:var(--red);color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.doc-footer .powered{font-style:italic;opacity:.9;font-size:11px}
+.btn-print{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:5px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
+.btn-print:hover{background:rgba(255,255,255,.3)}
 
-/* Footer */
-.doc-footer{
-  background:var(--reinvent-red);color:#fff;padding:9px 20px;
-  display:flex;align-items:center;justify-content:flex-end;
-  font-size:11.5px;font-weight:600
-}
-.doc-footer .powered{font-style:italic;font-weight:500;opacity:.9;font-size:11px}
-
-/* ============================
-   뱃지 선택 모달
-   ============================ */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:10px;padding:22px 24px;width:340px}
-.modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
-.badge-options{display:flex;flex-direction:column;gap:8px}
-.badge-opt{
-  background:var(--reinvent-red);color:#fff;font-weight:700;font-size:13px;
-  padding:10px 18px;border-radius:999px;cursor:pointer;border:none;
-  font-family:inherit;text-align:center;transition:background .15s
-}
-.badge-opt:hover{background:var(--reinvent-red-dark)}
-.btn-modal-close{
-  width:100%;margin-top:12px;background:none;border:1px solid #ddd;
-  border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-family:inherit
-}
-
-/* ============================
-   이미지 선택 팝업
-   ============================ */
-.img-pick-label{display:none}
-.img-pick-item{border:2px solid #e0dbd6;border-radius:7px;overflow:hidden;cursor:pointer;transition:all .15s;background:#f7f5f2}
-.img-pick-item:hover{border-color:var(--reinvent-red);transform:scale(1.03)}
-.img-pick-item.selected{border-color:var(--reinvent-red);box-shadow:0 0 0 3px #fff5f7}
-.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
-
-/* ============================
-   정량화 Gap 팝업
-   ============================ */
-.gap-display{display:flex;flex-direction:column;gap:3px}
-.gap-display-row{display:flex;align-items:center;gap:6px;font-size:13px;line-height:1.6;color:var(--text-dark);padding-left:14px;position:relative;margin-bottom:2px}
-.gap-display-row::before{content:'•';position:absolute;left:0;font-weight:700}
-.gap-arrow-red{color:var(--reinvent-red);font-weight:900;padding:0 2px}
-.btn-gap-edit{
-  display:flex;align-items:center;gap:5px;font-size:11px;color:var(--reinvent-red);
-  font-weight:600;background:#fff5f7;border:1px solid var(--pink-border);
-  border-radius:6px;padding:5px 12px;cursor:pointer;font-family:inherit;
-  transition:background .15s;margin-top:6px
-}
-.btn-gap-edit:hover{background:#ffe0e6}
-.gap-modal{background:#fff;border-radius:12px;padding:24px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto}
-.gap-modal-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.gap-modal-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;border:1px solid #eee;border-radius:8px;padding:8px 12px;background:#fafaf9}
-.gap-modal-row input{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--text-dark);outline:none;padding:3px 4px;min-width:0}
-.gap-modal-row input:focus{background:rgba(200,16,46,.04);border-radius:4px}
-.gap-modal-arrow{color:var(--reinvent-red);font-weight:900;font-size:15px;flex-shrink:0}
-.gap-modal-rm{background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0}
-.gap-modal-rm:hover{color:var(--reinvent-red)}
-.gap-col-hd{display:flex;gap:8px;margin-bottom:4px;padding:0 12px 0 12px}
-.gap-col-hd span{flex:1;font-size:10px;font-weight:600;color:#aaa;text-align:center}
-.gap-col-hd .gap-col-arr{width:24px;flex-shrink:0}
-.gap-col-hd .gap-col-rm{width:24px;flex-shrink:0}
-
-/* ============================
-   완료 화면
-   ============================ */
-.done-card{
-  background:#fff;border-radius:12px;padding:48px 24px;
-  text-align:center;max-width:480px;margin:40px auto;
-  box-shadow:0 4px 20px rgba(0,0,0,.08)
-}
+/* 완료 화면 */
+.done-card{background:#fff;border-radius:12px;padding:48px 24px;text-align:center;max-width:480px;margin:40px auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
 .done-icon{font-size:44px;margin-bottom:14px}
 .done-title{font-size:20px;font-weight:800;color:#0f7a4a;margin-bottom:8px}
 .done-msg{font-size:13px;color:#666;line-height:1.7}
 .done-id{margin-top:16px;display:inline-block;font-size:13px;background:#e6f5ee;color:#0f7a4a;padding:6px 16px;border-radius:20px;font-weight:700;font-family:monospace}
 
-/* ============================
-   토스트
-   ============================ */
-.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:white;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(60px);transition:transform .25s;z-index:999}
-.toast.show{transform:translateY(0)}
-.toast.err{background:#c62828}
-.toast.ok{background:#0f7a4a}
+/* 모달 */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:10px;padding:22px 24px;width:340px}
+.modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
+.badge-opt{background:var(--red);color:#fff;font-weight:700;font-size:13px;padding:10px 18px;border-radius:999px;cursor:pointer;border:none;font-family:inherit;text-align:center;transition:background .15s;width:100%;margin-bottom:8px}
+.badge-opt:hover{background:var(--red-dark)}
+.btn-modal-close{width:100%;margin-top:4px;background:none;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-family:inherit}
+.img-pick-item{border:2px solid #e0dbd6;border-radius:7px;overflow:hidden;cursor:pointer;transition:all .15s;background:#f7f5f2}
+.img-pick-item:hover{border-color:var(--red);transform:scale(1.03)}
+.img-pick-item.selected{border-color:var(--red);box-shadow:0 0 0 3px #fff5f7}
+.img-pick-item img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#f7f5f2}
 
-/* ============================
-   반응형
-   ============================ */
-@media(max-width:900px){
-  .doc-body{grid-template-columns:1fr}
-  .triple-grid{grid-template-columns:1fr}
-  .sidebar{width:240px}
-}
-@media(max-width:640px){
-  .app-body{flex-direction:column}
-  .sidebar{width:100%;max-height:50vh}
-  .editor-area{padding:12px}
-}
+/* 토스트 */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(60px);transition:transform .25s;z-index:9999}
+.toast.show{transform:translateY(0)}
+.toast.ok{background:#0f7a4a}
+.toast.err{background:#c62828}
+
+/* 현업 전파 계획서 (기존 유지) */
+.sp-doc{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;width:1280px;max-width:100%;font-family:'Pretendard',-apple-system,sans-serif}
+.sp-header{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
+.sp-header-top{font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:4px}
+.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
+.sp-title .hl{color:var(--red)}
+.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
+.sp-meta{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.sp-meta-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.sp-meta-item label{color:#888;font-weight:600;white-space:nowrap}
+.sp-meta-input{border:none;border-bottom:1px solid #ccc;background:transparent;font-size:12px;font-family:inherit;color:#1a1a1a;outline:none;padding:2px 4px;min-width:80px}
+.sp-meta-input:focus{border-bottom-color:var(--red)}
+.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.sp-col:last-child{border-right:none}
+.sp-sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
+.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:var(--red)}
+.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
+.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
+.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
+.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px;line-height:1.4}
+.sp-input-box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9}
+.sp-input-box textarea{width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.7;min-height:28px}
+.sp-input-box textarea::placeholder{color:#ccc}
+.sp-declare-box{border:2px solid var(--red);border-radius:4px;padding:16px 18px;margin-bottom:14px}
+.sp-declare-title{text-align:center;font-size:13px;font-weight:800;color:var(--red);margin-bottom:12px;letter-spacing:.5px}
+.sp-declare-item textarea{width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px}
+.sp-declare-item textarea::placeholder{color:#ccc}
+.sp-sign{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
+.sp-sign input{border:none;border-bottom:1px solid #999;background:transparent;font-size:12px;font-family:inherit;outline:none;text-align:center;width:36px;padding:2px 4px}
+.sp-sign input:focus{border-bottom-color:var(--red)}
+.sp-sign-name{border:none;border-bottom:1px solid #999;background:transparent;font-size:13px;font-weight:700;font-family:inherit;outline:none;width:60px;text-align:center;padding:2px 4px}
+.sp-footer{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+.sp-footer .left{color:var(--red);font-weight:700;font-size:11px}
 </style>
 </head>
 <body>
 
-<!-- ============================
-     앱 헤더
-     ============================ -->
+<!-- 앱 헤더 -->
 <header class="app-header">
-  <div class="app-header-left">
+  <div style="display:flex;align-items:center;gap:12px">
     <span class="app-logo">REINVENT</span>
-    <span class="app-title-text" id="headerTitle">'26 피플 리더십 과제 정의서</span>
+    <span class="app-title" id="headerTitle">'26 피플 리더십 과제 정의서</span>
   </div>
-  <div class="app-header-right">
+  <div style="display:flex;align-items:center;gap:8px">
     <button class="btn-hd" id="previewBtn" onclick="openPreview()">미리보기</button>
-    <button class="btn-hd primary" id="submitBtn" onclick="submitForm()">제출하기</button>
+    <button class="btn-hd" id="spreadPreviewBtn" onclick="openSpreadPreview()" style="display:none">미리보기</button>
+    <button class="btn-hd primary" id="submitBtn" onclick="submitForm()">📥 다운로드</button>
   </div>
 </header>
 
 <div class="app-body">
 
-  <!-- ============================
-       사이드바
-       ============================ -->
+  <!-- 사이드바 -->
   <aside class="sidebar">
     <div class="sb-section">
       <div class="sb-label">기본 정보</div>
@@ -571,9 +283,9 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
         <input type="text" id="s_author" placeholder="이름 / 직책" oninput="syncField('s_author','r_author')">
       </div>
       <div class="field"><label>사번</label>
-        <input type="text" id="s_empid" placeholder="사번 입력" oninput="syncField('s_empid','r_empid')">
+        <input type="text" id="s_empid" placeholder="사번 입력">
       </div>
-      <button class="btn-load" id="loadBtn" onclick="openEmpIdPopup()">↓ 사번으로 불러오기</button>
+      <button class="btn-load" onclick="currentTab==='spread'?openSpEmpIdPopup():openEmpIdPopup()">🔍 사번으로 불러오기</button>
       <div id="loadStatus"></div>
     </div>
 
@@ -581,7 +293,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 
     <div class="sb-section">
       <div class="sb-label">과제 유형 (1개 선택)</div>
-      <div class="type-grid">
+      <div id="typeGrid">
         <div class="type-item" onclick="selectType(this)"><span class="cb"></span>팀 업무 개선</div>
         <div class="type-item" onclick="selectType(this)"><span class="cb"></span>리더십</div>
         <div class="type-item" onclick="selectType(this)"><span class="cb"></span>조직문화</div>
@@ -595,22 +307,20 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
       <div class="sb-label">대표 이미지</div>
       <div class="img-selector" onclick="openImgPicker()" style="min-height:80px">
         <img id="sbImgPreview" style="display:none">
-        <span class="img-selector-icon" id="sbImgIcon">🖼</span>
+        <span id="sbImgIcon" style="font-size:22px;opacity:.4">🖼</span>
         <span id="sbImgHint" style="font-size:11px">클릭하여 선택</span>
       </div>
     </div>
 
     <div class="sb-footer">
-      <button class="btn-submit" id="submitBtn2" onclick="submitForm()">과제 정의서 제출</button>
+      <button class="btn-submit" id="submitBtn2" onclick="submitForm()">📥 과제 정의서 다운로드</button>
     </div>
   </aside>
 
-  <!-- ============================
-       에디터
-       ============================ -->
+  <!-- 에디터 -->
   <main class="editor-area" id="editorArea">
 
-    <!-- 탭 네비 -->
+    <!-- 탭 -->
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('task')">📋 과제 정의서</button>
       <button class="tab-btn" onclick="switchTab('spread')">📣 현업 전파 계획서</button>
@@ -618,325 +328,224 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
 
     <!-- 탭1: 과제 정의서 -->
     <div class="tab-panel active" id="tab-task">
-    <div class="editor-inner" id="formArea">
-      <div class="doc-scale-wrap" id="docScaleWrap">
-        <div class="doc-scale-inner" id="docScaleInner">
-          <div class="doc-preview" id="docPreview">
+      <div id="formArea">
+        <div class="doc-scale-wrap" id="docScaleWrap">
+          <div class="doc-scale-inner" id="docScaleInner">
+            <div class="doc" id="docPreview">
 
-        <!-- Header -->
-        <div class="doc-header">
-          <span class="brand">우리팀 REINVENT 과제</span>
-          <span class="doc-type">과제 정의서</span>
-        </div>
+              <!-- 문서 헤더 -->
+              <div class="doc-hd">
+                <span class="doc-hd-title">우리팀 REINVENT 과제</span>
+                <span class="doc-hd-badge">과제 정의서</span>
+              </div>
 
-        <!-- Title row -->
-        <div class="doc-title-row">
-          <button class="doc-badge-input" id="badgeBtn" onclick="openBadgePicker()">문제 드러내기 ▾</button>
-          <div class="doc-main-title">
-            <input type="text" id="mainTitle" placeholder="과제 제목을 입력하세요">
+              <!-- 제목행 -->
+              <div class="doc-title-row">
+                <button class="badge-btn" id="badgeBtn" onclick="openBadgePicker()">문제 드러내기 ▾</button>
+                <input class="doc-title-input" id="mainTitle" type="text" placeholder="과제 제목을 입력하세요">
+              </div>
+
+              <!-- 바디 -->
+              <div class="doc-body">
+
+                <!-- 왼쪽 -->
+                <div class="doc-left">
+                  <div class="doc-img-area" onclick="openImgPicker()">
+                    <div id="posterPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                      <span style="font-size:32px;opacity:.3">🖼</span>
+                      <span style="font-size:12px">클릭하여 이미지 선택</span>
+                    </div>
+                    <img id="posterImg" style="display:none">
+                  </div>
+                  <div class="doc-info">
+                    <div class="info-row">
+                      <span class="info-lbl">조직명</span>
+                      <input class="info-input" id="r_org" placeholder="조직명" oninput="syncField('r_org','s_org')">
+                    </div>
+                    <div class="info-row">
+                      <span class="info-lbl">작성자</span>
+                      <input class="info-input" id="r_author" placeholder="이름 / 직책" oninput="syncField('r_author','s_author')">
+                    </div>
+                    <div class="info-row">
+                      <span class="info-lbl">과제 유형</span>
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px" id="typeDisplay">
+                        <span class="check-item" onclick="toggleDocType('팀 업무 개선')"><span class="ck"></span>팀 업무 개선</span>
+                        <span class="check-item" onclick="toggleDocType('리더십')"><span class="ck"></span>리더십</span>
+                        <span class="check-item" onclick="toggleDocType('조직문화')"><span class="ck"></span>조직문화</span>
+                        <span class="check-item" onclick="toggleDocType('기타')"><span class="ck"></span>기타</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 오른쪽 -->
+                <div class="doc-right">
+
+                  <!-- 지향점 -->
+                  <div class="sec-goal">
+                    <div class="sec-goal-label">REINVENT 과제 지향점</div>
+                    <input class="sec-goal-input" id="oneliner" type="text" placeholder='"팀의 ○○ 활동을 통해, ○○을 달성하여 ○○에 기여"'>
+                  </div>
+
+                  <!-- Why -->
+                  <div class="sec">
+                    <div class="sec-title">우리 팀의 문제 드러내기 (Why)</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="why_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('why_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                  <!-- How -->
+                  <div class="sec">
+                    <div class="sec-title">우리 팀의 이기는 실행하기 (How)</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="how_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="실행 방향을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="실행 방향을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('how_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                  <!-- 과제 목표 -->
+                  <div class="sec">
+                    <div class="sec-title">REINVENT 과제 목표</div>
+                    <div class="sec-body">
+                      <div class="bullet-list" id="goal_list">
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표를 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                        <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표를 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
+                      </div>
+                      <button class="btn-add" onclick="addBullet('goal_list')">＋ 항목 추가</button>
+                    </div>
+                  </div>
+
+                </div><!-- /doc-right -->
+              </div><!-- /doc-body -->
+
+              <!-- 다짐 -->
+              <div class="doc-pledge">
+                <span class="pledge-badge">REINVENT 다짐</span>
+                <span class="pledge-text">위 REINVENT 과제를 <b>우리 팀의 일하는 방식으로 정착시키고, 끝까지 책임지고 실행할 것을</b> 다짐합니다.</span>
+                <div class="pledge-sign">
+                  작성일
+                  <input class="sign-input" id="sign_y" placeholder="년" style="width:44px">-
+                  <input class="sign-input" id="sign_m" placeholder="월" style="width:32px">-
+                  <input class="sign-input" id="sign_d" placeholder="일" style="width:32px">
+                  &nbsp;팀장 서명
+                  <input class="sign-name" id="sign_name" placeholder="이름 입력">
+                  (인)
+                </div>
+              </div>
+
+              <!-- 문서 푸터 -->
+              <div class="doc-footer">
+                <span class="powered">Powered by REINVENT 2.0</span>
+                <button class="btn-print" onclick="printDoc()">🖨 프린트 하기</button>
+              </div>
+
+            </div><!-- /doc -->
           </div>
-        </div>
-
-        <!-- Body -->
-        <div class="doc-body">
-
-          <!-- Left: poster -->
-          <div class="poster-card">
-            <div class="poster-visual" onclick="openImgPicker()">
-              <div class="poster-img-placeholder" id="posterPlaceholder">
-                <span>🖼</span>
-                <span style="font-size:12px;color:#bbb">클릭하여 이미지 선택</span>
-              </div>
-              <img class="poster-img" id="posterImg" style="display:none">
-            </div>
-            <!-- Info block -->
-            <div class="info-block">
-              <div class="info-row">
-                <span class="info-label">조직명</span>
-                <input class="info-input" id="r_org" placeholder="조직명" oninput="syncField('r_org','s_org')">
-              </div>
-              <div class="info-row">
-                <span class="info-label">작성자</span>
-                <input class="info-input" id="r_author" placeholder="이름 / 직책" oninput="syncField('r_author','s_author')">
-              </div>
-              <div class="info-row">
-                <span class="info-label">사번</span>
-                <input class="info-input" id="r_empid" placeholder="사번" oninput="syncField('r_empid','s_empid')">
-              </div>
-              <div class="info-row info-row-types">
-                <span class="info-label">과제 유형</span>
-                <div class="info-val-display" id="typeDisplay">
-                  <span class="check-item" onclick="toggleDocType('팀 업무 개선')"><span class="check-mark"></span>팀 업무 개선</span>
-                  <span class="check-item" onclick="toggleDocType('리더십')"><span class="check-mark"></span>리더십</span>
-                  <span class="check-item" onclick="toggleDocType('조직문화')"><span class="check-mark"></span>조직문화</span>
-                  <span class="check-item" onclick="toggleDocType('기타')"><span class="check-mark"></span>기타</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: sections -->
-          <div class="right-col">
-
-            <!-- Why -->
-            <div class="section">
-              <div class="section-title">지금 우리 팀의 문제 / 배경 (Why)</div>
-              <div class="section-body">
-                <div class="bullet-list" id="why_list">
-                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="문제 배경을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                </div>
-                <button class="btn-add" onclick="addBullet('why_list')">＋ 항목 추가</button>
-              </div>
-            </div>
-
-            <!-- To-Be -->
-            <div class="section">
-              <div class="section-title">우리가 바꾸고 싶은 모습 (To-Be)</div>
-              <div class="section-body">
-                <div class="bullet-list" id="tobe_list">
-                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                  <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 모습을 입력하세요..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                </div>
-                <button class="btn-add" onclick="addBullet('tobe_list')">＋ 항목 추가</button>
-              </div>
-            </div>
-
-            <!-- Range / 한줄 정의 -->
-            <div class="range-section">
-              <div class="range-title">과제의 범위 / 한 줄 정의</div>
-              <input class="range-input" id="oneliner" type="text" placeholder="한 줄로 정의해 주세요">
-            </div>
-
-            <!-- Triple grid -->
-            <div class="triple-grid">
-              <div class="section">
-                <div class="section-title">근본원인 분석</div>
-                <div class="section-body">
-                  <div class="bullet-list" id="cause_list">
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="원인 입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                  </div>
-                  <button class="btn-add" onclick="addBullet('cause_list')">＋</button>
-                </div>
-              </div>
-              <div class="section">
-                <div class="section-title">정량화 (Gap)</div>
-                <div class="section-body">
-                  <div class="gap-display" id="gap_display">
-                    <div class="gap-display-row"><span class="gap-empty" style="color:#ccc;font-size:12px">현재 → 목표를 입력해 주세요</span></div>
-                  </div>
-                  <button class="btn-gap-edit" onclick="openGapModal()">✎ 현재 → 목표 편집</button>
-                </div>
-              </div>
-              <div class="section">
-                <div class="section-title">개선과제 목표</div>
-                <div class="section-body">
-                  <div class="bullet-list" id="goal_list">
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                    <div class="bullet-row"><div class="bullet-dot"></div><textarea rows="1" placeholder="목표 지표..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button></div>
-                  </div>
-                  <button class="btn-add" onclick="addBullet('goal_list')">＋</button>
-                </div>
-              </div>
-            </div>
-
-          </div><!-- /right-col -->
-        </div><!-- /doc-body -->
-
-        <!-- Footer -->
-        <div class="doc-footer">
-          <span class="powered">Powered by REINVENT 2.0</span>
-        </div>
-
-      </div><!-- /doc-preview -->
-        </div><!-- /doc-scale-inner -->
-      </div><!-- /doc-scale-wrap -->
-    </div><!-- /formArea -->
-
-    <!-- 제출 완료 -->
-    <div id="doneArea" style="display:none;padding:40px 24px">
-      <div class="done-card">
-        <div class="done-icon">✅</div>
-        <div class="done-title">과제 정의서가 제출되었습니다!</div>
-        <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.<br>제출 내용은 강사 확인 페이지에서 열람됩니다.</div>
-        <div class="done-id" id="doneId">-</div>
-        <div style="margin-top:20px">
-          <button onclick="goBack()" style="display:inline-block;background:none;border:2px solid var(--reinvent-red);border-radius:8px;padding:10px 28px;font-size:14px;font-weight:700;color:var(--reinvent-red);cursor:pointer;font-family:inherit;transition:all .15s">← 수정하러 돌아가기</button>
         </div>
       </div>
-    </div>
 
-    </div><!-- /tab-panel task -->
+      <!-- 제출 완료 -->
+      <div id="doneArea" style="display:none;padding:40px 24px">
+        <div class="done-card">
+          <div class="done-icon">✅</div>
+          <div class="done-title">과제 정의서가 제출되었습니다!</div>
+          <div class="done-msg">강사가 내용을 검토한 후 피드백을 드릴 예정입니다.</div>
+          <div class="done-id" id="doneId">-</div>
+          <div style="margin-top:20px">
+            <button onclick="goBack()" style="display:inline-block;background:none;border:2px solid var(--red);border-radius:8px;padding:10px 28px;font-size:14px;font-weight:700;color:var(--red);cursor:pointer;font-family:inherit">← 수정하러 돌아가기</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-task -->
 
     <!-- 탭2: 현업 전파 계획서 -->
     <div class="tab-panel" id="tab-spread">
-      <div class="editor-inner">
-        <div class="doc-scale-wrap" id="spScaleWrap">
-          <div class="doc-scale-inner" id="spScaleInner">
-            <div class="sp-doc">
-
-              <!-- 전파 계획서 헤더 -->
-              <div class="sp-header">
-                <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
-                <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
-                <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
-                <div class="sp-meta">
-                  <div class="sp-meta-item"><label>소속</label><input class="sp-meta-input" id="sp_org" placeholder="조직명" style="width:100px"></div>
-                  <div class="sp-meta-item"><label>성명</label><input class="sp-meta-input" id="sp_name" placeholder="홍길동 팀장" style="width:90px"></div>
-                  <div class="sp-meta-item"><label>작성일</label><input class="sp-meta-input" id="sp_date" placeholder="2026.05.20" style="width:90px"></div>
-                  <div class="sp-meta-item"><label>공유예정</label><input class="sp-meta-input" id="sp_share_date" placeholder="2026.05.27" style="width:90px"></div>
-                </div>
+      <div class="doc-scale-wrap" id="spScaleWrap">
+        <div class="doc-scale-inner" id="spScaleInner">
+          <div class="sp-doc">
+            <div class="sp-header">
+              <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+              <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
+              <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+              <div class="sp-meta">
+                <div class="sp-meta-item"><label>소속</label><input class="sp-meta-input" id="sp_org" placeholder="조직명" style="width:100px"></div>
+                <div class="sp-meta-item"><label>성명</label><input class="sp-meta-input" id="sp_name" placeholder="홍길동 팀장" style="width:90px"></div>
+                <div class="sp-meta-item"><label>작성일</label><input class="sp-meta-input" id="sp_date" placeholder="2026.05.20" style="width:90px"></div>
+                <div class="sp-meta-item"><label>공유예정</label><input class="sp-meta-input" id="sp_share_date" placeholder="2026.05.27" style="width:90px"></div>
               </div>
-
-              <!-- 전파 계획서 바디 -->
-              <div class="sp-body">
-
-                <!-- 왼쪽: 01 우리 조직의 언어로 재정리 -->
-                <div class="sp-col">
-                  <div class="sp-sec-hd">
-                    <span class="sp-sec-num">01</span>
-                    <div>
-                      <div class="sp-sec-title">우리 조직의 언어로 재정리</div>
-                      <div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div>
-                    </div>
-                  </div>
-                  <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
-
-                  <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
-                  <div class="sp-input-box">
-                    <textarea id="sp_keywords" rows="1" placeholder="예) 문제 드러내기 · 이기는 실행하기 · 리더 주도의 변화" oninput="autoGrow(this)"></textarea>
-                  </div>
-
-                  <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em class="em">「문제 드러내기」</em> — 가장 자주 마주치는 관성·침묵·회피의 사례와 함께</div>
-                  <div class="sp-input-box" style="min-height:100px">
-                    <textarea id="sp_reveal" rows="4" placeholder="예) 우리 팀의 관성: VOE 데이터를 '좋게 다듬어' 보고하는 패턴." oninput="autoGrow(this)"></textarea>
-                  </div>
-
-                  <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em class="em">「이기는 실행하기」</em> — 경쟁의 대상과 '이긴다'의 구체적 기준</div>
-                  <div class="sp-input-box" style="min-height:100px">
-                    <textarea id="sp_win" rows="4" placeholder="예) 경쟁 대상: 글로벌 Top-tier 기업의 EX 조직." oninput="autoGrow(this)"></textarea>
-                  </div>
+            </div>
+            <div class="sp-body">
+              <div class="sp-col">
+                <div class="sp-sec-hd">
+                  <span class="sp-sec-num">01</span>
+                  <div><div class="sp-sec-title">우리 조직의 언어로 재정리</div><div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div></div>
                 </div>
-
-                <!-- 오른쪽: 02 팀장 선언문 -->
-                <div class="sp-col">
-                  <div class="sp-sec-hd">
-                    <span class="sp-sec-num">02</span>
-                    <div>
-                      <div class="sp-sec-title">팀장 선언문</div>
-                      <div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div>
-                    </div>
-                  </div>
-                  <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
-
-                  <div class="sp-declare-box">
-                    <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
-                    <div class="sp-declare-item">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
-                    <div class="sp-declare-item">
-                      <textarea id="sp_pledge1" rows="1" placeholder="① 약속 1을 입력하세요" oninput="autoGrow(this)"></textarea>
-                    </div>
-                    <div class="sp-declare-item">
-                      <textarea id="sp_pledge2" rows="1" placeholder="② 약속 2를 입력하세요" oninput="autoGrow(this)"></textarea>
-                    </div>
-                    <div class="sp-declare-item">
-                      <textarea id="sp_pledge3" rows="1" placeholder="③ 약속 3을 입력하세요" oninput="autoGrow(this)"></textarea>
-                    </div>
-                    <div class="sp-declare-item">
-                      <textarea id="sp_pledge4" rows="1" placeholder="④ 약속 4를 입력하세요 (선택)" oninput="autoGrow(this)"></textarea>
-                    </div>
-                    <div class="sp-declare-item" style="margin-top:6px">
-                      <textarea id="sp_closing" rows="1" placeholder="함께 점검해 주십시오. — ○○○ 드림" oninput="autoGrow(this)"></textarea>
-                    </div>
-                    <div class="sp-sign">
-                      <input id="sp_sign_y" placeholder="2026" maxlength="4"> 년
-                      <input id="sp_sign_m" placeholder="05" maxlength="2"> 월
-                      <input id="sp_sign_d" placeholder="27" maxlength="2"> 일
-                      &nbsp;팀장 <input class="sp-sign-name" id="sp_sign_name" placeholder="홍 길 동">
-                      &nbsp;<span style="color:#888">(서명)</span>
-                    </div>
-                  </div>
-
-                  <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
-                  <div class="sp-input-box" style="min-height:60px">
-                    <textarea id="sp_share_plan" rows="2" placeholder="예) 5/28(목) 주간회의 10분 — 낭독 + 자리 비치 + 월 회고 점검." oninput="autoGrow(this)"></textarea>
-                  </div>
-                </div>
-
-              </div><!-- /sp-body -->
-
-              <!-- 전파 계획서 푸터 -->
-              <div class="sp-footer">
-                <span class="left">REINVENT 2.0</span>
-                <span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
-                <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+                <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
+                <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
+                <div class="sp-input-box"><textarea id="sp_keywords" rows="1" placeholder="예) 문제 드러내기 · 이기는 실행하기 · 리더 주도의 변화" oninput="autoGrow(this)"></textarea></div>
+                <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em style="color:var(--red);font-style:normal">「문제 드러내기」</em></div>
+                <div class="sp-input-box" style="min-height:100px"><textarea id="sp_reveal" rows="4" placeholder="예) 우리 팀의 관성: VOE 데이터를 '좋게 다듬어' 보고하는 패턴." oninput="autoGrow(this)"></textarea></div>
+                <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em style="color:var(--red);font-style:normal">「이기는 실행하기」</em></div>
+                <div class="sp-input-box" style="min-height:100px"><textarea id="sp_win" rows="4" placeholder="예) 경쟁 대상: 글로벌 Top-tier 기업의 EX 조직." oninput="autoGrow(this)"></textarea></div>
               </div>
-
-            </div><!-- /sp-doc -->
-          </div><!-- /spScaleInner -->
-        </div><!-- /spScaleWrap -->
-      </div><!-- /editor-inner -->
-    </div><!-- /tab-panel spread -->
+              <div class="sp-col">
+                <div class="sp-sec-hd">
+                  <span class="sp-sec-num">02</span>
+                  <div><div class="sp-sec-title">팀장 선언문</div><div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div></div>
+                </div>
+                <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
+                <div class="sp-declare-box">
+                  <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
+                  <div style="font-size:13px;line-height:1.8;color:#1a1a1a;padding:3px 0">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge1" rows="1" placeholder="① 약속 1을 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge2" rows="1" placeholder="② 약속 2를 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge3" rows="1" placeholder="③ 약속 3을 입력하세요" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea class="sp-declare-item" id="sp_pledge4" rows="1" placeholder="④ 약속 4 (선택)" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px"></textarea></div>
+                  <div style="padding:3px 0"><textarea id="sp_closing" rows="1" placeholder="함께 점검해 주십시오. — ○○○ 드림" oninput="autoGrow(this)" style="width:100%;border:none;background:transparent;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;resize:none;line-height:1.8;min-height:26px;margin-top:4px"></textarea></div>
+                  <div class="sp-sign">
+                    <input id="sp_sign_y" placeholder="2026" maxlength="4"> 년
+                    <input id="sp_sign_m" placeholder="05" maxlength="2"> 월
+                    <input id="sp_sign_d" placeholder="27" maxlength="2"> 일
+                    &nbsp;팀장 <input class="sp-sign-name" id="sp_sign_name" placeholder="홍 길 동">
+                    &nbsp;<span style="color:#888">(서명)</span>
+                  </div>
+                </div>
+                <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
+                <div class="sp-input-box" style="min-height:60px"><textarea id="sp_share_plan" rows="2" placeholder="예) 5/28(목) 주간회의 10분 — 낭독 + 자리 비치 + 월 회고 점검." oninput="autoGrow(this)"></textarea></div>
+              </div>
+            </div>
+            <div class="sp-footer">
+              <span class="left">REINVENT 2.0</span>
+              <span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span>
+              <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-spread -->
 
   </main>
-</div><!-- /app-body -->
-
-<!-- 사번 불러오기 팝업 -->
-<div class="modal-bg" id="empIdPopupBg" onclick="if(event.target===this)closeEmpIdPopup()">
-  <div class="modal" style="width:360px">
-    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
-    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 내용을 불러옵니다.</div>
-    <div class="field">
-      <label>사번</label>
-      <input type="text" id="popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px"
-        onkeydown="if(event.key==='Enter')doEmpIdLoad()">
-    </div>
-    <div id="popupLoadStatus" style="margin-bottom:8px"></div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button onclick="closeEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
-      <button onclick="doEmpIdLoad()" id="popupLoadBtn" style="flex:2;padding:10px;background:var(--reinvent-red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
-    </div>
-  </div>
 </div>
 
-<!-- Gap 편집 모달 -->
-<div class="modal-bg" id="gapModalBg" onclick="if(event.target===this)closeGapModal()">
-  <div class="gap-modal">
-    <div class="gap-modal-title">
-      <span>📊 정량화 (Gap) 편집</span>
-      <button onclick="closeGapModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
-    </div>
-    <div class="gap-col-hd">
-      <span style="flex:1;text-align:center">현재</span>
-      <span class="gap-col-arr"></span>
-      <span style="flex:1;text-align:center">목표</span>
-      <span class="gap-col-rm"></span>
-    </div>
-    <div id="gapModalList"></div>
-    <button class="btn-add" onclick="addGapRow()" style="margin-top:4px">＋ 항목 추가</button>
-    <div style="display:flex;gap:8px;margin-top:16px">
-      <button onclick="closeGapModal()" style="flex:1;padding:9px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
-      <button onclick="applyGap()" style="flex:2;padding:9px;background:var(--reinvent-red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">적용</button>
-    </div>
-  </div>
-</div>
-
-<!-- 뱃지 선택 모달 -->
+<!-- 뱃지 모달 -->
 <div class="modal-bg" id="badgeBg" onclick="if(event.target===this){this.style.display='none';this.classList.remove('open')}">
   <div class="modal">
     <div class="modal-title">과제 유형 선택</div>
-    <div class="badge-options">
-      <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
-      <button class="badge-opt" onclick="setBadge('성장과 소통')">성장과 소통</button>
-      <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
-    </div>
+    <button class="badge-opt" onclick="setBadge('문제 드러내기')">문제 드러내기</button>
+    <button class="badge-opt" onclick="setBadge('이기는 실행하기')">이기는 실행하기</button>
     <button class="btn-modal-close" onclick="const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')">닫기</button>
   </div>
 </div>
 
-<!-- ============================
-     이미지 선택 팝업
-     ============================ -->
+<!-- 이미지 모달 -->
 <div class="modal-bg" id="imgPickerBg" onclick="if(event.target===this)closeImgPicker()">
   <div class="modal" style="max-width:640px;width:100%">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -953,7 +562,7 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <span style="font-size:15px;font-weight:700">과제 정의서 미리보기</span>
       <div style="display:flex;gap:8px">
-        <button onclick="savePreviewImage()" style="background:var(--reinvent-red);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">↓ HTML 저장</button>
+        <button onclick="currentTab==='spread'?saveSpreadHTML():savePreviewHTML()" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📥 HTML 저장</button>
         <button onclick="closePreview()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
       </div>
     </div>
@@ -961,172 +570,130 @@ body{display:flex;flex-direction:column;background:#E8E8E8;}
   </div>
 </div>
 
+<!-- 전파계획서 사번 팝업 -->
+<div class="modal-bg" id="spEmpIdPopupBg" onclick="if(event.target===this)closeSpEmpIdPopup()">
+  <div class="modal" style="width:360px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 전파 계획서를 불러옵니다.</div>
+    <div class="field"><label>사번</label>
+      <input type="text" id="sp_popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px" onkeydown="if(event.key==='Enter')doSpEmpIdLoad()">
+    </div>
+    <div id="spPopupLoadStatus" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeSpEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="doSpEmpIdLoad()" id="spPopupLoadBtn" style="flex:2;padding:10px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 사번 팝업 -->
+<div class="modal-bg" id="empIdPopupBg" onclick="if(event.target===this)closeEmpIdPopup()">
+  <div class="modal" style="width:360px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">사번으로 불러오기</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">사번을 입력하면 이전에 작성한 내용을 불러옵니다.</div>
+    <div class="field"><label>사번</label>
+      <input type="text" id="popup_empid" placeholder="사번 입력" style="font-size:15px;padding:10px 12px" onkeydown="if(event.key==='Enter')doEmpIdLoad()">
+    </div>
+    <div id="popupLoadStatus" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeEmpIdPopup()" style="flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit">취소</button>
+      <button onclick="doEmpIdLoad()" id="popupLoadBtn" style="flex:2;padding:10px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">불러오기</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2a07Lt8Nchk4owuYeNJMAKxficoggGbNBN9HuPagw_QBS8cgGsAmTHvG3PFwtg9Mt9A/exec';
+const PRESET_IMGS = Array.from({length:10},(_,i)=>`https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_%20(${i+1}).png`);
+let imgDataUrl=null, currentSubmitId=null, currentSpreadId=null, currentTab='task';
 
-// ── 이미지 ──
-const PRESET_IMGS = Array.from({length:10},(_,i)=>
-  `https://raw.githubusercontent.com/LGEHQEX/26teamleader/main/reinvent_img_%20(${i+1}).png`
-);
-let imgDataUrl = null;
-let currentSubmitId = null;
-let currentSpreadId = null;
-
-// ── 자동 높이 ──
+// ── 유틸 ──
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
+function syncField(a,b){const v=document.getElementById(a)?.value||'';const d=document.getElementById(b);if(d)d.value=v;}
+function getBullets(id){return Array.from(document.querySelectorAll('#'+id+' textarea')).map(t=>t.value.trim()).filter(Boolean)}
 
-// ── 필드 동기화 ──
-function syncField(srcId, destId){
-  const v=document.getElementById(srcId)?.value||'';
-  const d=document.getElementById(destId);
-  if(d)d.value=v;
+// ── 탭 전환 ──
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='task')||(i===1&&tab==='spread')));
+  document.getElementById('tab-task').classList.toggle('active',tab==='task');
+  document.getElementById('tab-spread').classList.toggle('active',tab==='spread');
+  document.getElementById('headerTitle').textContent=tab==='task'?"'26 피플 리더십 과제 정의서":"'26 피플 리더십 현업 전파 계획서";
+  document.getElementById('previewBtn').style.display=tab==='task'?'':'none';
+  document.getElementById('spreadPreviewBtn').style.display=tab==='spread'?'':'none';
+  document.getElementById('submitBtn').textContent=tab==='task'?'📥 다운로드':'📥 다운로드';
+  document.getElementById('submitBtn2').textContent=tab==='task'?'📥 과제 정의서 다운로드':'📥 전파 계획서 다운로드';
+  if(tab==='spread'){
+    const org=document.getElementById('s_org').value.trim();
+    const author=document.getElementById('s_author').value.trim();
+    if(org&&!document.getElementById('sp_org').value)document.getElementById('sp_org').value=org;
+    if(author&&!document.getElementById('sp_name').value)document.getElementById('sp_name').value=author;
+    if(author&&!document.getElementById('sp_sign_name').value)document.getElementById('sp_sign_name').value=author;
+    if(!document.getElementById('sp_date').value){
+      const t=new Date();const y=t.getFullYear();const m=String(t.getMonth()+1).padStart(2,'0');const d=String(t.getDate()).padStart(2,'0');
+      document.getElementById('sp_date').value=`${y}.${m}.${d}`;
+      document.getElementById('sp_sign_y').value=String(y);document.getElementById('sp_sign_m').value=m;document.getElementById('sp_sign_d').value=d;
+    }
+    setTimeout(calcSpScale,100);
+  }
 }
 
 // ── 뱃지 ──
-function openBadgePicker(){
-  const m=document.getElementById('badgeBg');m.style.display='flex';m.classList.add('open');
-}
-function setBadge(text){
-  document.getElementById('badgeBtn').textContent=text+' ▾';
-  const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open');
-}
+function openBadgePicker(){const m=document.getElementById('badgeBg');m.style.display='flex';m.classList.add('open')}
+function setBadge(text){document.getElementById('badgeBtn').textContent=text+' ▾';const m=document.getElementById('badgeBg');m.style.display='none';m.classList.remove('open')}
 
-// ── 과제 유형 (사이드바 → 문서 동기화) ──
+// ── 과제 유형 ──
 function selectType(el){
   document.querySelectorAll('.type-item').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
   const text=el.textContent.replace(/✓/g,'').trim();
-  // 문서 내 체크 아이템 동기화
   document.querySelectorAll('.check-item').forEach(ci=>{
     const label=ci.textContent.replace(/✓/g,'').trim();
-    ci.classList.toggle('checked',label===text);
-    ci.querySelector('.check-mark').textContent=label===text?'✓':'';
+    ci.classList.toggle('on',label===text);
+    ci.querySelector('.ck').textContent=label===text?'✓':'';
   });
 }
 function toggleDocType(text){
   document.querySelectorAll('.check-item').forEach(ci=>{
     const label=ci.textContent.replace(/✓/g,'').trim();
-    const match=label===text;
-    ci.classList.toggle('checked',match);
-    ci.querySelector('.check-mark').textContent=match?'✓':'';
+    ci.classList.toggle('on',label===text);
+    ci.querySelector('.ck').textContent=label===text?'✓':'';
   });
-  // 사이드바 동기화
   document.querySelectorAll('.type-item').forEach(ti=>{
     const label=ti.textContent.replace(/✓/g,'').trim();
     ti.classList.toggle('on',label===text);
   });
 }
-function getSelectedType(){
-  const on=document.querySelector('.type-item.on');
-  return on?on.textContent.replace(/✓/g,'').trim():'';
-}
-
-// ── Gap 팝업 ──
-let gapData = []; // [{from:'', to:''}]
-
-function openGapModal(){
-  const list=document.getElementById('gapModalList');
-  list.innerHTML='';
-  gapData.forEach((_,i)=>renderGapRow(i));
-  if(!gapData.length){gapData=[{from:'',to:''}];renderGapRow(0);}
-  const m=document.getElementById('gapModalBg');m.style.display='flex';m.classList.add('open');
-}
-function closeGapModal(){
-  const m=document.getElementById('gapModalBg');m.style.display='none';m.classList.remove('open');
-}
-
-function renderGapRow(i){
-  const list=document.getElementById('gapModalList');
-  const row=document.createElement('div');row.className='gap-modal-row';row.dataset.idx=i;
-  row.innerHTML=`<input placeholder="현재 (예: 61%)" value="${gapData[i]?.from||''}" oninput="gapData[${i}].from=this.value"><span class="gap-modal-arrow">→</span><input placeholder="목표 (예: 90%↑)" value="${gapData[i]?.to||''}" oninput="gapData[${i}].to=this.value"><button class="gap-modal-rm" onclick="removeGapRow(${i})">×</button>`;
-  list.appendChild(row);
-}
-function addGapRow(){
-  gapData.push({from:'',to:''});
-  renderGapRow(gapData.length-1);
-}
-function removeGapRow(i){
-  if(gapData.length<=1){showToast('최소 1개는 필요합니다','err');return;}
-  gapData.splice(i,1);
-  document.getElementById('gapModalList').innerHTML='';
-  gapData.forEach((_,idx)=>renderGapRow(idx));
-}
-function applyGap(){
-  // 입력값 최신화
-  document.querySelectorAll('#gapModalList .gap-modal-row').forEach((row,i)=>{
-    const inputs=row.querySelectorAll('input');
-    if(gapData[i]){gapData[i].from=inputs[0].value.trim();gapData[i].to=inputs[1].value.trim();}
-  });
-  // 화면 표시 업데이트
-  const display=document.getElementById('gap_display');
-  const valid=gapData.filter(g=>g.from||g.to);
-  if(!valid.length){
-    display.innerHTML=`<div class="gap-display-row"><span style="color:#ccc;font-size:12px">현재 → 목표를 입력해 주세요</span></div>`;
-  } else {
-    display.innerHTML=valid.map(g=>
-      `<div class="gap-display-row">${g.from}<span class="gap-arrow-red">→</span>${g.to}</div>`
-    ).join('');
-  }
-  closeGapModal();
-  setTimeout(calcDocScale,50);
-}
-function getGapText(){
-  return gapData.filter(g=>g.from||g.to).map(g=>`${g.from} → ${g.to}`).join('\n');
-}
-function fillGapData(text){
-  if(!text){gapData=[{from:'',to:''}];return;}
-  gapData=text.split('\n').filter(Boolean).map(line=>{
-    const parts=line.split('→');
-    return{from:(parts[0]||'').trim(),to:(parts[1]||'').trim()};
-  });
-  applyGap();
-}
+function getSelectedType(){const on=document.querySelector('.type-item.on');return on?on.textContent.replace(/✓/g,'').trim():''}
 
 // ── 불릿 ──
 function addBullet(listId){
   const list=document.getElementById(listId);
-  const ph=listId.includes('cause')||listId.includes('gap')||listId.includes('goal')?'입력...':'내용을 입력하세요...';
   const row=document.createElement('div');row.className='bullet-row';
-  row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" placeholder="${ph}" oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
-  list.appendChild(row);
-  setTimeout(calcDocScale,50);
+  row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" placeholder="입력..." oninput="autoGrow(this)"></textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
+  list.appendChild(row);setTimeout(calcDocScale,50);
 }
 function rmBullet(btn){
   const list=btn.closest('.bullet-list');
   if(list.querySelectorAll('.bullet-row').length<=1){showToast('최소 1개는 필요합니다','err');return;}
-  btn.closest('.bullet-row').remove();
-  setTimeout(calcDocScale,50);
-}
-function getBullets(listId){
-  return Array.from(document.querySelectorAll('#'+listId+' textarea')).map(t=>t.value.trim()).filter(Boolean);
+  btn.closest('.bullet-row').remove();setTimeout(calcDocScale,50);
 }
 
-// ── 이미지 팝업 ──
+// ── 이미지 ──
 function openImgPicker(){
   const grid=document.getElementById('imgPickerGrid');
-  grid.innerHTML=PRESET_IMGS.map((url,i)=>`
-    <div class="img-pick-item ${imgDataUrl===url?'selected':''}" onclick="selectPresetImg(${i})">
-      <img src="${url}" onerror="this.style.display='none';this.parentElement.style.background='#f2f0ed'">
-      <div class="img-pick-label">이미지 ${i+1}</div>
-    </div>`).join('');
+  grid.innerHTML=PRESET_IMGS.map((url,i)=>`<div class="img-pick-item ${imgDataUrl===url?'selected':''}" onclick="selectPresetImg(${i})"><img src="${url}" onerror="this.style.display='none'"></div>`).join('');
   const m=document.getElementById('imgPickerBg');m.style.display='flex';m.classList.add('open');
 }
-function closeImgPicker(){
-  const m=document.getElementById('imgPickerBg');m.style.display='none';m.classList.remove('open');
-}
+function closeImgPicker(){const m=document.getElementById('imgPickerBg');m.style.display='none';m.classList.remove('open')}
 function selectPresetImg(idx){
   const url=PRESET_IMGS[idx];imgDataUrl=url;
   document.querySelectorAll('.img-pick-item').forEach((el,i)=>el.classList.toggle('selected',i===idx));
-  // 사이드바
-  const sbi=document.getElementById('sbImgPreview');
-  sbi.src=url;sbi.style.display='block';
-  document.getElementById('sbImgIcon').style.display='none';
-  document.getElementById('sbImgHint').style.display='none';
-  // 문서
-  const pi=document.getElementById('posterImg');
-  pi.src=url;pi.style.display='block';
+  const sbi=document.getElementById('sbImgPreview');sbi.src=url;sbi.style.display='block';
+  document.getElementById('sbImgIcon').style.display='none';document.getElementById('sbImgHint').style.display='none';
+  const pi=document.getElementById('posterImg');pi.src=url;pi.style.display='block';
   document.getElementById('posterPlaceholder').style.display='none';
   closeImgPicker();
 }
@@ -1135,14 +702,10 @@ function selectPresetImg(idx){
 function openEmpIdPopup(){
   document.getElementById('popup_empid').value='';
   document.getElementById('popupLoadStatus').innerHTML='';
-  const m=document.getElementById('empIdPopupBg');
-  m.style.display='flex';m.classList.add('open');
+  const m=document.getElementById('empIdPopupBg');m.style.display='flex';m.classList.add('open');
   setTimeout(()=>document.getElementById('popup_empid').focus(),100);
 }
-function closeEmpIdPopup(){
-  const m=document.getElementById('empIdPopupBg');
-  m.style.display='none';m.classList.remove('open');
-}
+function closeEmpIdPopup(){const m=document.getElementById('empIdPopupBg');m.style.display='none';m.classList.remove('open')}
 function doEmpIdLoad(){
   const empId=document.getElementById('popup_empid').value.trim();
   const statusEl=document.getElementById('popupLoadStatus');
@@ -1154,20 +717,14 @@ function doEmpIdLoad(){
   const old=document.getElementById('loadScript');if(old)old.remove();
   window.loadCb=function(result){
     btn.disabled=false;btn.textContent='불러오기';
-    if(result.status!=='ok'||!result.data||!result.data.length){
-      statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
-    }
+    if(result.status!=='ok'||!result.data||!result.data.length){statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;}
     const match=result.data.filter(d=>String(d.empId).trim()===empId).pop();
     if(!match){statusEl.className='load-status err';statusEl.textContent='해당 사번의 내용이 없습니다.';return;}
     fillForm(match);
-    // 사이드바 차수/반/팀 자동 설정
     ['s_cohort','s_class','s_team'].forEach(id=>{
       const key={s_cohort:'cohort',s_class:'classNum',s_team:'teamNum'}[id];
-      const val=match[key]||'';
-      const sel=document.getElementById(id);
-      for(let i=0;i<sel.options.length;i++){
-        if(sel.options[i].value===val||sel.options[i].text===val){sel.selectedIndex=i;break;}
-      }
+      const val=match[key]||'';const sel=document.getElementById(id);
+      for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===val||sel.options[i].text===val){sel.selectedIndex=i;break;}}
     });
     closeEmpIdPopup();
     document.getElementById('loadStatus').className='load-status ok';
@@ -1178,16 +735,19 @@ function doEmpIdLoad(){
   s.onerror=()=>{btn.disabled=false;btn.textContent='불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
   document.body.appendChild(s);
 }
-function loadDraft(){openEmpIdPopup();}
 function fillForm(d){
   currentSubmitId=d.submitId;
   if(d.org){document.getElementById('s_org').value=d.org;document.getElementById('r_org').value=d.org;}
   if(d.author){document.getElementById('s_author').value=d.author;document.getElementById('r_author').value=d.author;}
-  if(d.empId){document.getElementById('s_empid').value=d.empId;document.getElementById('r_empid').value=d.empId;}
+  if(d.empId){document.getElementById('s_empid').value=d.empId;}
   if(d.types)toggleDocType(d.types);
   if(d.mainTitle)document.getElementById('mainTitle').value=d.mainTitle;
   if(d.oneliner)document.getElementById('oneliner').value=d.oneliner;
   if(d.imgData){imgDataUrl=d.imgData;const pi=document.getElementById('posterImg');pi.src=d.imgData;pi.style.display='block';document.getElementById('posterPlaceholder').style.display='none';}
+  if(d.signY)document.getElementById('sign_y').value=d.signY;
+  if(d.signM)document.getElementById('sign_m').value=d.signM;
+  if(d.signD)document.getElementById('sign_d').value=d.signD;
+  if(d.signName)document.getElementById('sign_name').value=d.signName;
   function fillBullets(listId,text){
     if(!text)return;const list=document.getElementById(listId);
     const items=text.split('\n').filter(Boolean);list.innerHTML='';
@@ -1195,254 +755,247 @@ function fillForm(d){
       row.innerHTML=`<div class="bullet-dot"></div><textarea rows="1" oninput="autoGrow(this)">${item}</textarea><button class="btn-rm" onclick="rmBullet(this)">×</button>`;
       list.appendChild(row);autoGrow(row.querySelector('textarea'));});
   }
-  fillBullets('why_list',d.whys);fillBullets('tobe_list',d.tobes);
-  fillBullets('cause_list',d.causes);fillGapData(d.gaps);fillBullets('goal_list',d.goals);
-  document.getElementById('submitBtn').textContent='수정 제출';
-  document.getElementById('submitBtn2').textContent='수정 제출';
+  fillBullets('why_list',d.whys);
+  fillBullets('how_list',d.hows);
+  fillBullets('goal_list',d.goals);
+  document.getElementById('submitBtn').textContent='📥 다운로드 (수정)';
+  document.getElementById('submitBtn2').textContent='📥 과제 정의서 다운로드 (수정)';
+  setTimeout(calcDocScale,100);
 }
 
 // ── 미리보기 ──
 function openPreview(){
-  document.getElementById('previewContent').innerHTML=buildPreviewHTML({
+  document.getElementById('previewContent').innerHTML=buildPreviewHTML(collectData());
+  const m=document.getElementById('previewBg');m.style.display='flex';m.classList.add('open');
+}
+function closePreview(){const m=document.getElementById('previewBg');m.style.display='none';m.classList.remove('open')}
+
+function collectData(){
+  return {
     badge:document.getElementById('badgeBtn').textContent.replace(' ▾',''),
     mainTitle:document.getElementById('mainTitle').value||'(제목 없음)',
     org:document.getElementById('r_org').value||'-',
     author:document.getElementById('r_author').value||'-',
+    empId:document.getElementById('s_empid').value||'',
     types:getSelectedType()||'-',
     oneliner:document.getElementById('oneliner').value||'',
     whys:getBullets('why_list').join('\n'),
-    tobes:getBullets('tobe_list').join('\n'),
-    causes:getBullets('cause_list').join('\n'),
-    gaps:getGapText(),
+    hows:getBullets('how_list').join('\n'),
     goals:getBullets('goal_list').join('\n'),
     imgData:imgDataUrl||'',
     cohort:document.getElementById('s_cohort').value,
     classNum:document.getElementById('s_class').value,
     teamNum:document.getElementById('s_team').value,
-  });
-  const modal=document.getElementById('previewBg');
-  modal.style.display='flex';
-  modal.classList.add('open');
-}
-function closePreview(){
-  const modal=document.getElementById('previewBg');
-  modal.style.display='none';
-  modal.classList.remove('open');
+    signY:document.getElementById('sign_y').value||'년',
+    signM:document.getElementById('sign_m').value||'월',
+    signD:document.getElementById('sign_d').value||'일',
+    signName:document.getElementById('sign_name').value||'',
+  };
 }
 
 function buildPreviewHTML(d){
-  const blist=arr=>(arr||[]).split('\n').filter(Boolean).map(t=>{
-    // → 화살표를 붉은색으로 강조
-    const highlighted=t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
-    return `<li style="font-size:13.2px;line-height:1.65;color:#1F1F1F;padding-left:14px;position:relative;margin-bottom:4px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${highlighted}</li>`;
-  }).join('')||'<li style="color:#ccc;font-size:12px;padding-left:14px">-</li>';
-  const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;height:160px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px">이미지 없음</div>`;
+  const blist=arr=>(arr||'').split('\n').filter(Boolean).map(t=>{
+    const hl=t.replace(/→/g,'<span style="color:#C8102E;font-weight:900;padding:0 2px">→</span>');
+    return `<li style="font-size:14px;line-height:1.7;color:#1F1F1F;padding-left:16px;position:relative;margin-bottom:5px"><span style="position:absolute;left:0;top:0;font-weight:700">•</span>${hl}</li>`;
+  }).join('')||'<li style="color:#ccc;font-size:13px;padding-left:16px">-</li>';
+  const imgTag=d.imgData?`<img src="${d.imgData}" style="width:100%;height:auto;object-fit:contain;display:block">`:`<div style="width:100%;min-height:240px;background:#f7f3f4;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:13px">이미지 없음</div>`;
   return `
 <div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
 <div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;width:1280px;max-width:100%;margin:0 auto">
-  <div style="background:#C8102E;color:#fff;height:48px;display:flex;align-items:center;padding:0 20px;font-size:13px;font-weight:500">
-    <span style="font-weight:900;font-size:17px;letter-spacing:1.5px;margin-right:24px">우리팀 REINVENT 과제</span>
-    <span style="margin-left:auto;font-size:13px;font-weight:700;letter-spacing:2px;padding:4px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px">과제 정의서</span>
+  <div style="background:#C8102E;color:#fff;height:52px;display:flex;align-items:center;padding:0 24px;justify-content:space-between">
+    <span style="font-weight:900;font-size:18px;letter-spacing:1px">우리팀 REINVENT 과제</span>
+    <span style="font-size:13px;font-weight:700;letter-spacing:2px;padding:5px 14px;border:1.5px solid rgba(255,255,255,.7);border-radius:3px">과제 정의서</span>
   </div>
-  <div style="padding:18px 24px 12px;display:flex;align-items:center;gap:14px">
-    <span style="background:#C8102E;color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border-radius:999px;white-space:nowrap">${d.badge}</span>
-    <div style="flex:1;font-size:22px;font-weight:800;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle}</div>
+  <div style="padding:20px 28px 14px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #eee">
+    <span style="background:#C8102E;color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:999px;white-space:nowrap">${d.badge}</span>
+    <div style="font-size:26px;font-weight:900;color:#1F1F1F;letter-spacing:-.5px;line-height:1.25">${d.mainTitle}</div>
   </div>
-  <div style="display:grid;grid-template-columns:300px 1fr;gap:16px;padding:4px 28px 20px">
-    <div style="border:1px solid #EAD0D5;border-radius:6px;overflow:hidden;display:flex;flex-direction:column">
+  <div style="display:grid;grid-template-columns:320px 1fr">
+    <div style="border-right:1px solid #EAD0D5;display:flex;flex-direction:column">
       <div>${imgTag}</div>
-      <div style="background:#FFF5F7;padding:12px 14px;font-size:12.5px;color:#444;border-top:1px solid #F0B4BE">
-        <div style="display:flex;gap:10px;padding:4px 0"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">조직명</span><span style="font-size:12.5px;color:#1F1F1F"><b>${d.org}</b></span></div>
-        <div style="display:flex;gap:10px;padding:4px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:4px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">작성자</span><span style="font-size:12.5px;color:#1F1F1F">${d.author}</span></div>
-        <div style="display:flex;gap:10px;padding:4px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:4px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:52px">과제 유형</span><span style="font-size:12px;color:#C8102E;font-weight:700">${d.types}</span></div>
+      <div style="background:#FFF5F7;padding:14px 18px;font-size:13px;border-top:1px solid #F0B4BE">
+        <div style="display:flex;gap:10px;padding:5px 0"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">조직명</span><b style="color:#1F1F1F">${d.org}</b></div>
+        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">작성자</span><span>${d.author}</span></div>
+        <div style="display:flex;gap:10px;padding:5px 0;border-top:1px dashed rgba(200,16,46,.15);margin-top:2px"><span style="color:#6B6B6B;font-size:11px;font-weight:600;width:54px">과제 유형</span><span style="color:#C8102E;font-weight:700">${d.types}</span></div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E">
-        <div style="background:#FCE4E8;padding:7px 14px;font-size:13.5px;font-weight:800;color:#C8102E">지금 우리 팀의 문제 / 배경 (Why)</div>
-        <ul style="list-style:none;padding:10px 16px 12px;margin:0">${blist(d.whys)}</ul>
+    <div style="display:flex;flex-direction:column">
+      <div style="background:#C8102E;padding:18px 24px">
+        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:8px">REINVENT 과제 지향점</div>
+        <div style="font-size:17px;font-weight:800;color:#fff;line-height:1.5">"${d.oneliner||''}"</div>
       </div>
-      <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E">
-        <div style="background:#FCE4E8;padding:7px 14px;font-size:13.5px;font-weight:800;color:#C8102E">우리가 바꾸고 싶은 모습 (To-Be)</div>
-        <ul style="list-style:none;padding:10px 16px 12px;margin:0">${blist(d.tobes)}</ul>
+      <div style="border-bottom:1px solid #F0B4BE;background:#FFFAFB">
+        <div style="background:#FCE4E8;padding:9px 18px;font-size:14px;font-weight:800;color:#C8102E;border-left:4px solid #C8102E">우리 팀의 문제 드러내기 (Why)</div>
+        <ul style="list-style:none;padding:12px 18px 14px;margin:0">${blist(d.whys)}</ul>
       </div>
-      <div style="background:#C8102E;color:#fff;padding:12px 20px 15px">
-        <div style="font-size:13px;font-weight:700;margin-bottom:7px">과제의 범위 / 한 줄 정의</div>
-        <div style="font-size:16px;font-weight:800;line-height:1.4">"${d.oneliner}"</div>
+      <div style="border-bottom:1px solid #F0B4BE;background:#FFFAFB">
+        <div style="background:#FCE4E8;padding:9px 18px;font-size:14px;font-weight:800;color:#C8102E;border-left:4px solid #C8102E">우리 팀의 이기는 실행하기 (How)</div>
+        <ul style="list-style:none;padding:12px 18px 14px;margin:0">${blist(d.hows)}</ul>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">근본원인 분석</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.causes)}</ul></div>
-        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">정량화 (Gap)</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.gaps)}</ul></div>
-        <div style="border-left:4px solid #C8102E;background:#FFFAFB;border:1px solid #F0B4BE;border-left:4px solid #C8102E"><div style="background:#FCE4E8;padding:7px 14px;font-size:13px;font-weight:800;color:#C8102E">개선과제 목표</div><ul style="list-style:none;padding:10px 14px 12px;margin:0">${blist(d.goals)}</ul></div>
+      <div style="background:#FFFAFB">
+        <div style="background:#FCE4E8;padding:9px 18px;font-size:14px;font-weight:800;color:#C8102E;border-left:4px solid #C8102E">REINVENT 과제 목표</div>
+        <ul style="list-style:none;padding:12px 18px 14px;margin:0">${blist(d.goals)}</ul>
       </div>
     </div>
   </div>
-  <div style="background:#C8102E;color:#fff;padding:9px 20px;display:flex;align-items:center;justify-content:flex-end;font-size:11px;font-style:italic">Powered by REINVENT 2.0</div>
+  <div style="background:#fff;border-top:2px solid #C8102E;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <span style="background:#C8102E;color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:3px;letter-spacing:.5px;flex-shrink:0">REINVENT 다짐</span>
+    <span style="font-size:14px;color:#1F1F1F;line-height:1.6;flex:1">위 REINVENT 과제를 <b>우리 팀의 일하는 방식으로 정착시키고, 끝까지 책임지고 실행할 것을</b> 다짐합니다.</span>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B6B6B;white-space:nowrap;flex-shrink:0">
+      작성일 ${d.signY}-${d.signM}-${d.signD} &nbsp; 팀장 서명 <b style="font-size:14px;color:#1F1F1F">${d.signName||'__________'}</b> (인)
+    </div>
+  </div>
+  <div style="background:#C8102E;color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px">
+    <span style="font-style:italic;opacity:.9">Powered by REINVENT 2.0</span>
+  </div>
 </div></div>`;
 }
 
 // ── HTML 저장 ──
-function savePreviewImage(){
-  const cohort=(document.getElementById('s_cohort').value||'').replace(/ — .+/,'');
-  const cls=document.getElementById('s_class').value||'';
-  const team=document.getElementById('s_team').value||'';
-  const author=document.getElementById('r_author').value.trim()||'';
-  const d={
-    badge:document.getElementById('badgeBtn').textContent.replace(' ▾',''),
-    mainTitle:document.getElementById('mainTitle').value||'(제목 없음)',
-    org:document.getElementById('r_org').value||'-',
-    author:document.getElementById('r_author').value||'-',
-    types:getSelectedType()||'-',
-    oneliner:document.getElementById('oneliner').value||'',
-    whys:getBullets('why_list').join('\n'),
-    tobes:getBullets('tobe_list').join('\n'),
-    causes:getBullets('cause_list').join('\n'),
-    gaps:getGapText(),
-    goals:getBullets('goal_list').join('\n'),
-    imgData:imgDataUrl||'',
-    cohort:document.getElementById('s_cohort').value,
-    classNum:document.getElementById('s_class').value,
-    teamNum:document.getElementById('s_team').value,
-  };
-  const html=buildStandaloneHTML(d);
+function savePreviewHTML(){
+  const d=collectData();
+  const cohortShort=(d.cohort||'').replace(/ — .+/,'');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const link=document.createElement('a');
-  link.download=`과제정의서_${cohort}_${cls}_${team}_${author}.html`;
-  link.href=URL.createObjectURL(blob);link.click();
-  URL.revokeObjectURL(link.href);
+  const a=document.createElement('a');a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.author}.html`;
+  a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
   showToast('HTML 파일이 저장됐습니다','ok');
 }
 
-// ── 제출 검증 ──
+// ── 프린트 ──
+function printDoc(){
+  const win=window.open('','_blank');
+  const d=collectData();
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:16px}@media print{body{padding:0}}</style></head><body>${buildPreviewHTML(d)}<script>window.onload=function(){window.print();window.close()}<\/script></body></html>`);
+  win.document.close();
+}
+
+// ── 검증 ──
 function validate(){
+  if(!document.getElementById('mainTitle').value.trim()){showToast('과제 제목을 입력해 주세요','err');return false;}
   if(!document.getElementById('s_cohort').value){showToast('차수를 선택해 주세요','err');return false;}
   if(!document.getElementById('s_class').value){showToast('반을 선택해 주세요','err');return false;}
   if(!document.getElementById('s_team').value){showToast('팀을 선택해 주세요','err');return false;}
-  if(!document.getElementById('mainTitle').value.trim()){showToast('과제 제목을 입력해 주세요','err');return false;}
-  if(!document.getElementById('oneliner').value.trim()){showToast('한 줄 정의를 입력해 주세요','err');return false;}
   return true;
 }
 
-// ── 제출 ──
+// ── 제출 + 다운로드 ──
 async function submitForm(){
   if(currentTab==='spread'){saveSpreadHTML();return;}
   if(!validate())return;
   const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
-  btns.forEach(b=>{b.disabled=true;b.textContent='제출 중...';});
+  btns.forEach(b=>{b.disabled=true;b.textContent='처리 중...';});
   try{
     const isUpdate=!!currentSubmitId;
     const submitId=currentSubmitId||('JB'+Date.now().toString(36).toUpperCase());
-    const cohort=document.getElementById('s_cohort').value;
-    const classNum=document.getElementById('s_class').value;
-    const teamNum=document.getElementById('s_team').value;
-    const author=document.getElementById('r_author').value.trim();
-    const badge=document.getElementById('badgeBtn').textContent.replace(' ▾','');
-    const d={
-      submitId,isUpdate,cohort,classNum,teamNum,teamName:'',
-      org:document.getElementById('r_org').value.trim(),
-      author,
-      empId:document.getElementById('s_empid').value.trim(),
-      types:getSelectedType(),
-      badge,
-      mainTitle:document.getElementById('mainTitle').value.trim(),
-      whys:getBullets('why_list').join('\n'),
-      tobes:getBullets('tobe_list').join('\n'),
-      oneliner:document.getElementById('oneliner').value.trim(),
-      causes:getBullets('cause_list').join('\n'),
-      gaps:getGapText(),
-      goals:getBullets('goal_list').join('\n'),
-      imgData:imgDataUrl||'',
-      submittedAt:new Date().toLocaleString('ko-KR')
+    const d=collectData();
+    const payload={
+      submitId,isUpdate,
+      cohort:d.cohort,classNum:d.classNum,teamNum:d.teamNum,teamName:'',
+      org:d.org,author:d.author,empId:d.empId,types:d.types,badge:d.badge,
+      mainTitle:d.mainTitle,whys:d.whys,hows:d.hows,oneliner:d.oneliner,
+      goals:d.goals,imgData:d.imgData||'',
+      signY:d.signY,signM:d.signM,signD:d.signD,signName:d.signName,
+      submittedAt:new Date().toLocaleString('ko-KR'),
     };
-    const cohortShort=cohort.replace(/ — .+/,'');
-    d.previewFileName=`${cohortShort}-${classNum}-${teamNum}-${author||'미입력'}.html`;
-    d.previewHtml=buildPreviewHTML(d);
-    // no-cors 모드: await 없이 fire-and-forget, 완료 화면 즉시 표시
-    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
-    document.getElementById('formArea').style.display='none';
-    document.getElementById('doneArea').style.display='block';
-    document.getElementById('doneId').textContent=(isUpdate?'수정 완료 · ':'제출번호: ')+submitId;
-    btns.forEach(b=>{b.disabled=false;b.textContent=isUpdate?'수정 제출':'제출하기';});
+    const cohortShort=d.cohort.replace(/ — .+/,'');
+    payload.previewFileName=`${cohortShort}-${d.classNum}-${d.teamNum}-${d.author||'미입력'}.html`;
+    payload.previewHtml=buildPreviewHTML(d);
+
+    // 1) 구글 시트 저장 (fire-and-forget)
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}).catch(()=>{});
+    currentSubmitId=submitId;
+
+    // 2) HTML 파일 다운로드
+    const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.mainTitle}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
+    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const a=document.createElement('a');
+    a.download=`과제정의서_${cohortShort}_${d.classNum}_${d.teamNum}_${d.author||'미입력'}.html`;
+    a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+
+    showToast('✓ 저장 완료 + HTML 다운로드됐습니다','ok');
+    btns.forEach(b=>{b.disabled=false;b.textContent='📥 다운로드';});
   }catch(err){
-    showToast('제출 오류가 발생했습니다. 다시 시도해 주세요.','err');
-    btns.forEach(b=>{b.disabled=false;b.textContent=currentSubmitId?'수정 제출':'제출하기';});
+    showToast('오류가 발생했습니다.','err');
+    btns.forEach(b=>{b.disabled=false;b.textContent='📥 다운로드';});
   }
 }
 
-// ── 독립 HTML 생성 (저장용) ──
-function buildStandaloneHTML(d){
-  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${d.mainTitle} - 과제정의서</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px;-webkit-font-smoothing:antialiased}</style></head><body>${buildPreviewHTML(d)}</body></html>`;
+// ── 전파계획서 사번 팝업 ──
+function openSpEmpIdPopup(){
+  document.getElementById('sp_popup_empid').value='';
+  document.getElementById('spPopupLoadStatus').innerHTML='';
+  const m=document.getElementById('spEmpIdPopupBg');m.style.display='flex';m.classList.add('open');
+  setTimeout(()=>document.getElementById('sp_popup_empid').focus(),100);
 }
-
-function goBack(){
-  document.getElementById('doneArea').style.display='none';
-  document.getElementById('formArea').style.display='block';
-  currentSubmitId=document.getElementById('doneId').textContent.replace('제출번호: ','').replace('수정 완료 · ','');
-  const btns=[document.getElementById('submitBtn'),document.getElementById('submitBtn2')];
-  btns.forEach(b=>{b.textContent='수정 제출';});
+function closeSpEmpIdPopup(){
+  const m=document.getElementById('spEmpIdPopupBg');m.style.display='none';m.classList.remove('open');
 }
+function doSpEmpIdLoad(){
+  const empId=document.getElementById('sp_popup_empid').value.trim();
+  const statusEl=document.getElementById('spPopupLoadStatus');
+  if(!empId){statusEl.className='load-status err';statusEl.textContent='사번을 입력해 주세요.';return;}
+  const btn=document.getElementById('spPopupLoadBtn');
+  btn.disabled=true;btn.textContent='불러오는 중...';
+  statusEl.className='load-status info';statusEl.textContent='조회 중...';
 
-// ── 탭 전환 ──
-let currentTab = 'task';
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', (i===0&&tab==='task')||(i===1&&tab==='spread')));
-  document.getElementById('tab-task').classList.toggle('active', tab==='task');
-  document.getElementById('tab-spread').classList.toggle('active', tab==='spread');
-  document.getElementById('headerTitle').textContent = tab==='task' ? "'26 피플 리더십 과제 정의서" : "'26 피플 리더십 현업 전파 계획서";
-  document.getElementById('previewBtn').style.display = tab==='task' ? '' : 'none';
-  document.getElementById('submitBtn').textContent = tab==='task' ? '제출하기' : '전파 계획서 저장';
-  document.getElementById('submitBtn2').textContent = tab==='task' ? '과제 정의서 제출' : '전파 계획서 저장';
-  if(tab==='spread'){
-    // 사이드바 값 자동 채우기
-    const org=document.getElementById('s_org').value.trim();
-    const author=document.getElementById('s_author').value.trim();
-    if(org && !document.getElementById('sp_org').value) document.getElementById('sp_org').value=org;
-    if(author && !document.getElementById('sp_name').value) document.getElementById('sp_name').value=author;
-    // 서명 이름도 자동 채우기
-    if(author && !document.getElementById('sp_sign_name').value) document.getElementById('sp_sign_name').value=author;
-    // 오늘 날짜 자동 채우기
-    if(!document.getElementById('sp_date').value){
-      const today=new Date();
-      const y=today.getFullYear();
-      const m=String(today.getMonth()+1).padStart(2,'0');
-      const d=String(today.getDate()).padStart(2,'0');
-      document.getElementById('sp_date').value=`${y}.${m}.${d}`;
-      document.getElementById('sp_sign_y').value=String(y);
-      document.getElementById('sp_sign_m').value=m;
-      document.getElementById('sp_sign_d').value=d;
+  if(window.spLoadCb)delete window.spLoadCb;
+  const old=document.getElementById('spLoadScript');if(old)old.remove();
+
+  window.spLoadCb=function(result){
+    btn.disabled=false;btn.textContent='불러오기';
+    if(result.status!=='ok'||!result.data||!result.data.length){
+      statusEl.className='load-status err';statusEl.textContent='저장된 내용이 없습니다.';return;
     }
-    setTimeout(calcSpScale, 100);
-  }
+    const match=result.data.filter(d=>String(d.empId).trim()===empId).pop();
+    if(!match){statusEl.className='load-status err';statusEl.textContent='해당 사번의 전파 계획서가 없습니다.';return;}
+    fillSpreadForm(match);
+    closeSpEmpIdPopup();
+    document.getElementById('loadStatus').className='load-status ok';
+    document.getElementById('loadStatus').textContent='✓ 전파 계획서 불러오기 완료';
+    showToast('✓ 전파 계획서 불러오기 완료','ok');
+  };
+
+  const s=document.createElement('script');s.id='spLoadScript';
+  s.src=APPS_SCRIPT_URL+'?sheet=spread&callback=spLoadCb&t='+Date.now();
+  s.onerror=()=>{btn.disabled=false;btn.textContent='불러오기';statusEl.className='load-status err';statusEl.textContent='불러오기 실패.';};
+  document.body.appendChild(s);
 }
 
-// ── 전파 계획서 스케일 ──
-function calcSpScale(){
-  const wrap=document.getElementById('spScaleWrap');
-  const inner=document.getElementById('spScaleInner');
-  if(!wrap||!inner)return;
-  const availW=wrap.clientWidth;
-  // 1.25배 확대 적용
-  const scale=Math.min((availW/1280)*1.25, 1.25);
-  inner.style.transform='scale('+scale+')';
-  inner.style.transformOrigin='top left';
-  inner.style.width='1280px';
-  wrap.style.height=(inner.scrollHeight*scale)+'px';
-  wrap.style.width=(1280*scale)+'px';
+function fillSpreadForm(d){
+  currentSpreadId=d.submitId;
+  if(d.org)document.getElementById('sp_org').value=d.org;
+  if(d.name)document.getElementById('sp_name').value=d.name;
+  if(d.date)document.getElementById('sp_date').value=d.date;
+  if(d.shareDate)document.getElementById('sp_share_date').value=d.shareDate;
+  if(d.keywords)document.getElementById('sp_keywords').value=d.keywords;
+  if(d.reveal)document.getElementById('sp_reveal').value=d.reveal;
+  if(d.win)document.getElementById('sp_win').value=d.win;
+  if(d.pledge1)document.getElementById('sp_pledge1').value=d.pledge1;
+  if(d.pledge2)document.getElementById('sp_pledge2').value=d.pledge2;
+  if(d.pledge3)document.getElementById('sp_pledge3').value=d.pledge3;
+  if(d.pledge4)document.getElementById('sp_pledge4').value=d.pledge4;
+  if(d.closing)document.getElementById('sp_closing').value=d.closing;
+  if(d.signY)document.getElementById('sp_sign_y').value=d.signY;
+  if(d.signM)document.getElementById('sp_sign_m').value=d.signM;
+  if(d.signD)document.getElementById('sp_sign_d').value=d.signD;
+  if(d.signName)document.getElementById('sp_sign_name').value=d.signName;
+  if(d.sharePlan)document.getElementById('sp_share_plan').value=d.sharePlan;
+  // textarea 높이 자동 조정
+  document.querySelectorAll('#tab-spread textarea').forEach(t=>autoGrow(t));
+  setTimeout(calcSpScale,100);
 }
-window.addEventListener('resize',()=>{calcDocScale();calcSpScale();});
 
-// ── 전파 계획서 HTML 저장 ──
-function saveSpreadHTML(){
-  const org=document.getElementById('sp_org').value||'';
-  const name=document.getElementById('sp_name').value||'';
-  const d={
-    docType:'spread',
-    submitId:currentSpreadId||('SP'+Date.now().toString(36).toUpperCase()),
-    isUpdate:!!currentSpreadId,
-    submittedAt:new Date().toLocaleString('ko-KR'),
-    org, name,
-    empId:document.getElementById('s_empid').value.trim()||'',
+// ── 전파 계획서 미리보기 ──
+function openSpreadPreview(){
+  const d=collectSpreadData();
+  document.getElementById('previewContent').innerHTML=buildSpreadPreviewHTML(d);
+  const m=document.getElementById('previewBg');m.style.display='flex';m.classList.add('open');
+}
+function collectSpreadData(){
+  return {
+    org:document.getElementById('sp_org').value||'',
+    name:document.getElementById('sp_name').value||'',
     date:document.getElementById('sp_date').value||'',
     shareDate:document.getElementById('sp_share_date').value||'',
     keywords:document.getElementById('sp_keywords').value||'',
@@ -1459,120 +1012,180 @@ function saveSpreadHTML(){
     signName:document.getElementById('sp_sign_name').value||'',
     sharePlan:document.getElementById('sp_share_plan').value||'',
   };
-  if(!d.submitId)currentSpreadId=d.submitId;
+}
+function buildSpreadPreviewHTML(d){
+  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
+  const val=s=>nl2br(s)||'-';
+  return `
+<div style="font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:12px">
+<div style="background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;width:1280px;max-width:100%;margin:0 auto">
+  <div style="padding:20px 32px 12px;border-bottom:2px solid #1a1a1a">
+    <div style="font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+    <div style="font-size:26px;font-weight:900;color:#1a1a1a;margin-bottom:4px">우리 팀의 <span style="color:#C8102E">REINVENT</span> 현업 전파 계획서</div>
+    <div style="font-size:11px;color:#888;margin-bottom:10px">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:12px">
+      <span style="color:#888;font-weight:600">소속</span><b>${d.org||'-'}</b>
+      <span style="color:#888;font-weight:600">성명</span><b>${d.name||'-'}</b>
+      <span style="color:#888;font-weight:600">작성일</span><b>${d.date||'-'}</b>
+      <span style="color:#888;font-weight:600">공유예정</span><b>${d.shareDate||'-'}</b>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;min-height:560px">
+    <div style="padding:20px 24px;border-right:1px solid #e0dbd6">
+      <div style="background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px">
+        <span style="font-size:28px;font-weight:900;line-height:1;color:#C8102E">01</span>
+        <div><div style="font-size:16px;font-weight:800">우리 조직의 언어로 재정리</div><div style="font-size:10px;color:rgba(255,255,255,.5)">TRANSLATE · From Corporate to Team Language</div></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px">1-1. REINVENT 핵심 키워드</div>
+      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7">${val(d.keywords)}</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-2. 우리 팀의 <em style="color:#C8102E;font-style:normal">「문제 드러내기」</em></div>
+      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:80px">${val(d.reveal)}</div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-3. 우리 팀의 <em style="color:#C8102E;font-style:normal">「이기는 실행하기」</em></div>
+      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:80px">${val(d.win)}</div>
+    </div>
+    <div style="padding:20px 24px">
+      <div style="background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px">
+        <span style="font-size:28px;font-weight:900;line-height:1;color:#C8102E">02</span>
+        <div><div style="font-size:16px;font-weight:800">팀장 선언문</div><div style="font-size:10px;color:rgba(255,255,255,.5)">DECLARE · A Leader's Public Commitment</div></div>
+      </div>
+      <div style="border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px">
+        <div style="text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px">— 우리 팀의 REINVENT를 시작하며 —</div>
+        <div style="font-size:13px;line-height:1.8">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+        ${d.pledge1?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge1)}</div>`:''}
+        ${d.pledge2?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge2)}</div>`:''}
+        ${d.pledge3?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge3)}</div>`:''}
+        ${d.pledge4?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge4)}</div>`:''}
+        ${d.closing?`<div style="font-size:13px;line-height:1.8;margin-top:6px">${nl2br(d.closing)}</div>`:''}
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:12px;color:#555;margin-top:10px;padding-top:8px;border-top:1px solid #eee">
+          ${d.signY}년 ${d.signM}월 ${d.signD}일 &nbsp; 팀장 <b style="font-size:14px;color:#1a1a1a">${d.signName||''}</b> &nbsp; (서명)
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:0 0 6px">2-1. 언제·어떻게 팀원에게 공유할 것인가?</div>
+      <div style="border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7;min-height:60px">${val(d.sharePlan)}</div>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px">
+    <span style="color:#C8102E;font-weight:700;font-size:11px">REINVENT 2.0</span>
+    <span>현업 전파 계획서 (1Page)</span>
+    <span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span>
+  </div>
+</div></div>`;
+}
 
-  // 시트 저장 (fire-and-forget)
-  fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
+// ── 전파 계획서 저장 ──
+function saveSpreadHTML(){
+  const org=document.getElementById('sp_org').value||'';
+  const name=document.getElementById('sp_name').value||'';
+  const d={
+    docType:'spread',
+    submitId:currentSpreadId||('SP'+Date.now().toString(36).toUpperCase()),
+    isUpdate:!!currentSpreadId,
+    submittedAt:new Date().toLocaleString('ko-KR'),
+    org,name,empId:document.getElementById('s_empid').value.trim()||'',
+    date:document.getElementById('sp_date').value||'',
+    shareDate:document.getElementById('sp_share_date').value||'',
+    keywords:document.getElementById('sp_keywords').value||'',
+    reveal:document.getElementById('sp_reveal').value||'',
+    win:document.getElementById('sp_win').value||'',
+    pledge1:document.getElementById('sp_pledge1').value||'',
+    pledge2:document.getElementById('sp_pledge2').value||'',
+    pledge3:document.getElementById('sp_pledge3').value||'',
+    pledge4:document.getElementById('sp_pledge4').value||'',
+    closing:document.getElementById('sp_closing').value||'',
+    signY:document.getElementById('sp_sign_y').value||'',
+    signM:document.getElementById('sp_sign_m').value||'',
+    signD:document.getElementById('sp_sign_d').value||'',
+    signName:document.getElementById('sp_sign_name').value||'',
+    sharePlan:document.getElementById('sp_share_plan').value||'',
+  };
   currentSpreadId=d.submitId;
-
-  // HTML 파일 저장
-  const html=buildSpreadHTML(d);
+  fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(d)}).catch(()=>{});
+  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${name} 현업 전파 계획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px}
+.doc{background:#fff;max-width:1280px;margin:0 auto;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.hd{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
+.body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.col{padding:20px 24px;border-right:1px solid #e0dbd6}
+.col:last-child{border-right:none}
+.sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
+.num{font-size:28px;font-weight:900;line-height:1;color:#C8102E}
+.box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7}
+.declare{border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px}
+.ft{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+</style></head><body>
+<div class="doc">
+<div class="hd">
+  <div style="font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
+  <div style="font-size:28px;font-weight:900;color:#1a1a1a;margin-bottom:4px">우리 팀의 <span style="color:#C8102E">REINVENT</span> 현업 전파 계획서</div>
+  <div style="font-size:11px;color:#888;margin-bottom:10px">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
+  <div style="display:flex;gap:24px;font-size:12px">
+    <span style="color:#888;font-weight:600">소속</span><b>${d.org}</b>
+    <span style="color:#888;font-weight:600">성명</span><b>${d.name}</b>
+    <span style="color:#888;font-weight:600">작성일</span><b>${d.date}</b>
+    <span style="color:#888;font-weight:600">공유예정</span><b>${d.shareDate}</b>
+  </div>
+</div>
+<div class="body">
+  <div class="col">
+    <div class="sec-hd"><span class="num">01</span><div><div style="font-size:16px;font-weight:800">우리 조직의 언어로 재정리</div><div style="font-size:10px;color:rgba(255,255,255,.5)">TRANSLATE · From Corporate to Team Language</div></div></div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px">1-1. REINVENT 핵심 키워드</div>
+    <div class="box">${nl2br(d.keywords)||'—'}</div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-2. 우리 팀의 <em style="color:#C8102E;font-style:normal">「문제 드러내기」</em></div>
+    <div class="box" style="min-height:80px">${nl2br(d.reveal)||'—'}</div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:16px 0 6px">1-3. 우리 팀의 <em style="color:#C8102E;font-style:normal">「이기는 실행하기」</em></div>
+    <div class="box" style="min-height:80px">${nl2br(d.win)||'—'}</div>
+  </div>
+  <div class="col">
+    <div class="sec-hd"><span class="num">02</span><div><div style="font-size:16px;font-weight:800">팀장 선언문</div><div style="font-size:10px;color:rgba(255,255,255,.5)">DECLARE · A Leader's Public Commitment</div></div></div>
+    <div class="declare">
+      <div style="text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px">— 우리 팀의 REINVENT를 시작하며 —</div>
+      <div style="font-size:13px;line-height:1.8">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
+      ${d.pledge1?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge1)}</div>`:''}
+      ${d.pledge2?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge2)}</div>`:''}
+      ${d.pledge3?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge3)}</div>`:''}
+      ${d.pledge4?`<div style="font-size:13px;line-height:1.8">${nl2br(d.pledge4)}</div>`:''}
+      ${d.closing?`<div style="font-size:13px;line-height:1.8;margin-top:6px">${nl2br(d.closing)}</div>`:''}
+      <div style="text-align:right;font-size:12px;color:#555;margin-top:10px;padding-top:8px;border-top:1px solid #eee">
+        ${d.signY}년 ${d.signM}월 ${d.signD}일 &nbsp; 팀장 <b>${d.signName}</b> (서명)
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin:0 0 6px">2-1. 언제·어떻게 팀원에게 공유할 것인가?</div>
+    <div class="box" style="min-height:60px">${nl2br(d.sharePlan)||'—'}</div>
+  </div>
+</div>
+<div class="ft"><span style="color:#C8102E;font-weight:700;font-size:11px">REINVENT 2.0</span><span>현업 전파 계획서 (1Page)</span><span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span></div>
+</div></body></html>`;
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const link=document.createElement('a');
-  link.download=`현업전파계획서_${org}_${name}.html`;
-  link.href=URL.createObjectURL(blob);link.click();
-  URL.revokeObjectURL(link.href);
+  const a=document.createElement('a');a.download=`현업전파계획서_${org}_${name}.html`;
+  a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
   showToast('전파 계획서가 저장됐습니다 (시트 + HTML)','ok');
 }
 
-function buildSpreadHTML(d){
-  const nl2br=s=>(s||'').replace(/\n/g,'<br>');
-  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${d.name} 현업 전파 계획서</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;background:#E8E8E8;padding:24px;-webkit-font-smoothing:antialiased}
-.sp-doc{background:#fff;max-width:1280px;margin:0 auto;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-.sp-header{padding:20px 32px 12px;border-bottom:2px solid #1a1a1a}
-.sp-header-top{font-size:11px;font-weight:700;color:#C8102E;letter-spacing:1px;margin-bottom:4px}
-.sp-title{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
-.sp-title .hl{color:#C8102E}
-.sp-subtitle{font-size:11px;color:#888;margin-bottom:10px}
-.sp-meta{display:flex;gap:24px;flex-wrap:wrap;font-size:12px}
-.sp-meta span{color:#888;font-weight:600} .sp-meta b{color:#1a1a1a}
-.sp-body{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
-.sp-col{padding:20px 24px;border-right:1px solid #e0dbd6}
-.sp-col:last-child{border-right:none}
-.sp-sec-hd{background:#1a1a1a;color:#fff;padding:12px 16px;margin:-20px -24px 16px;display:flex;align-items:flex-end;gap:12px}
-.sp-sec-num{font-size:28px;font-weight:900;line-height:1;color:#C8102E}
-.sp-sec-title{font-size:16px;font-weight:800;line-height:1.2}
-.sp-sec-sub{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px}
-.sp-guide{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
-.sp-sub-label{font-size:12px;font-weight:700;color:#1a1a1a;margin:12px 0 6px}
-.em{color:#C8102E}
-.sp-input-box{border:1px solid #d0ccc8;border-radius:4px;padding:10px 12px;min-height:40px;background:#fafaf9;font-size:13px;color:#1a1a1a;line-height:1.7}
-.sp-declare-box{border:2px solid #C8102E;border-radius:4px;padding:16px 18px;margin-bottom:14px}
-.sp-declare-title{text-align:center;font-size:13px;font-weight:800;color:#C8102E;margin-bottom:12px}
-.sp-declare-item{font-size:13px;line-height:1.8;color:#1a1a1a;padding:2px 0}
-.sp-sign{display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:12px;color:#555;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
-.sp-footer{background:#1a1a1a;color:rgba(255,255,255,.5);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
-.sp-footer .left{color:#C8102E;font-weight:700;font-size:11px}
-</style></head><body>
-<div class="sp-doc">
-  <div class="sp-header">
-    <div class="sp-header-top">REINVENT 2.0 · PEOPLE LEADERSHIP</div>
-    <div class="sp-title">우리 팀의 <span class="hl">REINVENT</span> 현업 전파 계획서</div>
-    <div class="sp-subtitle">전사 실/팀장 피플 리더십 과정 사후 과제 · One-Page Workshop Sheet</div>
-    <div class="sp-meta">
-      <span>소속</span> <b>${d.org}</b> &nbsp;
-      <span>성명</span> <b>${d.name}</b> &nbsp;
-      <span>작성일</span> <b>${d.date}</b> &nbsp;
-      <span>공유예정</span> <b>${d.shareDate}</b>
-    </div>
-  </div>
-  <div class="sp-body">
-    <div class="sp-col">
-      <div class="sp-sec-hd"><span class="sp-sec-num">01</span><div><div class="sp-sec-title">우리 조직의 언어로 재정리</div><div class="sp-sec-sub">TRANSLATE · From Corporate to Team Language</div></div></div>
-      <p class="sp-guide">전사 메시지를 그대로 옮기면 '남의 이야기'. <b>우리 팀이 매일 마주하는 일·고객·경쟁의 언어</b>로 다시 풀어쓸 때 살아 있는 메시지가 됩니다.</p>
-      <div class="sp-sub-label">1-1. REINVENT 핵심 키워드 — 우리 팀이 기억할 3~5개 단어로</div>
-      <div class="sp-input-box">${nl2br(d.keywords)||'—'}</div>
-      <div class="sp-sub-label" style="margin-top:16px">1-2. 우리 팀의 <em class="em">「문제 드러내기」</em></div>
-      <div class="sp-input-box" style="min-height:100px">${nl2br(d.reveal)||'—'}</div>
-      <div class="sp-sub-label" style="margin-top:16px">1-3. 우리 팀의 <em class="em">「이기는 실행하기」</em></div>
-      <div class="sp-input-box" style="min-height:100px">${nl2br(d.win)||'—'}</div>
-    </div>
-    <div class="sp-col">
-      <div class="sp-sec-hd"><span class="sp-sec-num">02</span><div><div class="sp-sec-title">팀장 선언문</div><div class="sp-sec-sub">DECLARE · A Leader's Public Commitment</div></div></div>
-      <p class="sp-guide">변화는 <b>리더의 약속이 공개될 때</b> 신뢰를 얻습니다. 팀원에게 직접 읽어주는 글. <b>약속 3~4개</b>를 구체적 행동 언어로.</p>
-      <div class="sp-declare-box">
-        <div class="sp-declare-title">— 우리 팀의 REINVENT를 시작하며 —</div>
-        <div class="sp-declare-item">우리 팀의 REINVENT를 시작하며 약속합니다.</div>
-        ${d.pledge1?`<div class="sp-declare-item">${nl2br(d.pledge1)}</div>`:''}
-        ${d.pledge2?`<div class="sp-declare-item">${nl2br(d.pledge2)}</div>`:''}
-        ${d.pledge3?`<div class="sp-declare-item">${nl2br(d.pledge3)}</div>`:''}
-        ${d.pledge4?`<div class="sp-declare-item">${nl2br(d.pledge4)}</div>`:''}
-        ${d.closing?`<div class="sp-declare-item" style="margin-top:6px">${nl2br(d.closing)}</div>`:''}
-        <div class="sp-sign">${d.signY} 년 ${d.signM} 월 ${d.signD} 일 &nbsp; 팀장 <b style="font-size:14px">${d.signName}</b> &nbsp; (서명)</div>
-      </div>
-      <div class="sp-sub-label">2-1. <b>언제·어떻게</b> 팀원에게 공유할 것인가?</div>
-      <div class="sp-input-box" style="min-height:60px">${nl2br(d.sharePlan)||'—'}</div>
-    </div>
-  </div>
-  <div class="sp-footer"><span class="left">REINVENT 2.0</span><span>전사 실/팀장 피플 리더십 과정 · 현업 전파 계획서 (1Page)</span><span>완성된 워크시트는 팀원 공유 세션의 자료로 사용됩니다.</span></div>
-</div></body></html>`;
-}
-
-// ── 탭에 따른 submitForm 분기 ──
+// ── 스케일 ──
 function calcDocScale(){
-  const wrap=document.getElementById('docScaleWrap');
-  const inner=document.getElementById('docScaleInner');
+  const wrap=document.getElementById('docScaleWrap');const inner=document.getElementById('docScaleInner');
   if(!wrap||!inner)return;
-  const availW=wrap.clientWidth;
-  // 1.25배 확대 적용
-  const scale=Math.min((availW/1280)*1.25, 1.25);
-  inner.style.transform='scale('+scale+')';
-  inner.style.transformOrigin='top left';
-  inner.style.width='1280px';
-  wrap.style.height=(inner.scrollHeight*scale)+'px';
-  wrap.style.width=(1280*scale)+'px';
+  const scale=Math.min((wrap.clientWidth/1280)*1.25,1.25);
+  inner.style.transform='scale('+scale+')';inner.style.transformOrigin='top left';inner.style.width='1280px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';wrap.style.width=(1280*scale)+'px';
 }
-window.addEventListener('resize',calcDocScale);
+function calcSpScale(){
+  const wrap=document.getElementById('spScaleWrap');const inner=document.getElementById('spScaleInner');
+  if(!wrap||!inner)return;
+  const scale=Math.min((wrap.clientWidth/1280)*1.25,1.25);
+  inner.style.transform='scale('+scale+')';inner.style.transformOrigin='top left';inner.style.width='1280px';
+  wrap.style.height=(inner.scrollHeight*scale)+'px';wrap.style.width=(1280*scale)+'px';
+}
+window.addEventListener('resize',()=>{calcDocScale();calcSpScale();});
 window.addEventListener('load',calcDocScale);
 setTimeout(calcDocScale,200);
 
 // ── 토스트 ──
 function showToast(msg,type){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast '+(type||'')+' show';
-  setTimeout(()=>t.classList.remove('show'),3000);
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';
+  setTimeout(()=>t.classList.remove('show'),4000);
 }
 </script>
 </body>
