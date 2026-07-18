@@ -1,0 +1,171 @@
+
+<h2 class="sr-only">C-Brand 대 자사 제품 비교 전시 스탬프 투어: 6개 부스를 모두 방문하고 원가지수 퀴즈와 설문을 완료하면 커피쿠폰이 발행됩니다.</h2>
+
+<div id="app"></div>
+
+<script>
+const zones = [
+  {id:'vs1', name:'VS · Head Unit', icon:'ti-car'},
+  {id:'vs2', name:'VS · 차량용 Display', icon:'ti-device-tv'},
+  {id:'hs1', name:'HS · Fan Motor 등', icon:'ti-fan'},
+  {id:'hs2', name:'HS · Insulator 등', icon:'ti-bulb'},
+  {id:'saenggi', name:'생기원 · 금형/DMM', icon:'ti-tool'},
+  {id:'ms', name:'MS · Speaker/Adaptor', icon:'ti-speaker'}
+];
+
+const quizQuestions = [
+  {
+    id:'q1',
+    text:'Head Unit / Telematics 통합 SIP의 원가지수(중국원가 100 기준)는?',
+    options:[{v:'121',l:'121'},{v:'145',l:'145'},{v:'173',l:'173'},{v:'200',l:'200'}],
+    answer:'200'
+  },
+  {
+    id:'q2',
+    text:'전시된 부품 중 원가지수가 가장 높은 품목은?',
+    options:[
+      {v:'dmm',l:'DMM 계측기 (IVI) · 340'},
+      {v:'bearing',l:'Bearing Housing (세탁기) · 173'},
+      {v:'valve',l:'Valve Assembly (컴프레셔) · 173'},
+      {v:'heatpump',l:'Heat Pump System (스타일러) · 166'}
+    ],
+    answer:'dmm'
+  },
+  {
+    id:'q3',
+    text:'전시된 부품 중 원가지수가 가장 낮은(자사 원가경쟁력이 가장 높은) 품목은?',
+    options:[
+      {v:'adaptor',l:'Adaptor (HKC↔자사) · 103'},
+      {v:'motor',l:'모터 (외장PCB↔내장PCB) · 112'},
+      {v:'heat',l:'열교환기 (Al↔Cu) · 118'},
+      {v:'ecm',l:'ECM PCB (中턴키↔자작PCB) · 116'}
+    ],
+    answer:'adaptor'
+  },
+  {
+    id:'q4',
+    text:'Bearing Housing (세탁기)의 원가지수는?',
+    options:[{v:'163',l:'163'},{v:'164',l:'164'},{v:'166',l:'166'},{v:'173',l:'173'}],
+    answer:'173'
+  }
+];
+
+let stamped = new Set();
+let quizAnswers = {};
+let surveyValue = null;
+let surveyText = '';
+let step = 'tour';
+let couponCode = null;
+
+function genCoupon(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c = '';
+  for(let i=0;i<6;i++) c += chars[Math.floor(Math.random()*chars.length)];
+  return 'CB-' + c;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  const allStamped = stamped.size === zones.length;
+  const allQuizAnswered = quizQuestions.every(q => quizAnswers[q.id]);
+
+  let html = '';
+
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">';
+  html += '<span style="font-size:15px;font-weight:500;">스탬프 투어</span>';
+  html += '<span style="font-size:13px;color:var(--text-secondary);">' + stamped.size + ' / ' + zones.length + '</span>';
+  html += '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:12px;margin-bottom:1.5rem;">';
+  zones.forEach(z => {
+    const on = stamped.has(z.id);
+    html += '<button data-zone="' + z.id + '" style="display:flex;align-items:center;gap:10px;padding:0.75rem 1rem;text-align:left;' +
+      (on ? 'border:0.5px solid var(--border-accent);background:var(--bg-accent);' : '') + '">' +
+      '<i class="ti ' + z.icon + '" style="font-size:20px;' + (on ? 'color:var(--text-accent);' : 'color:var(--text-secondary);') + '" aria-hidden="true"></i>' +
+      '<span style="font-size:14px;' + (on ? 'color:var(--text-accent);' : '') + '">' + z.name + '</span>' +
+      (on ? '<i class="ti ti-check" style="margin-left:auto;font-size:16px;color:var(--text-accent);" aria-hidden="true"></i>' : '') +
+      '</button>';
+  });
+  html += '</div>';
+
+  if(!allStamped){
+    html += '<p style="font-size:13px;color:var(--text-muted);margin:0;">모든 부스를 둘러본 뒤 탭하면 퀴즈로 이동합니다.</p>';
+  } else if(step === 'tour'){
+    step = 'quiz';
+  }
+
+  if(step === 'quiz' || step === 'survey' || step === 'done'){
+    html += '<div style="border-top:0.5px solid var(--border);margin:1.5rem 0;"></div>';
+    html += '<p style="font-size:14px;font-weight:500;margin:0 0 0.75rem;">부품 원가지수 퀴즈 — 전시를 자세히 본 분만 맞출 수 있습니다.</p>';
+    quizQuestions.forEach((q, idx) => {
+      html += '<p style="font-size:13px;color:var(--text-secondary);margin:1rem 0 0.5rem;">Q' + (idx+1) + '. ' + q.text + '</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:0.5rem;">';
+      q.options.forEach(o => {
+        const sel = quizAnswers[q.id] === o.v;
+        html += '<button data-quiz="' + q.id + '" data-val="' + o.v + '" style="text-align:left;padding:0.55rem 0.9rem;font-size:13px;' +
+          (sel ? 'border:0.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);' : '') + '">' + o.l + '</button>';
+      });
+      html += '</div>';
+    });
+  }
+
+  if(step === 'survey' || step === 'done'){
+    html += '<div style="border-top:0.5px solid var(--border);margin:1.5rem 0;"></div>';
+    html += '<p style="font-size:14px;font-weight:500;margin:0 0 0.5rem;">Q. C-Brand 제품을 보고 난 후, 중국 브랜드의 위협을 얼마나 체감하시나요?</p>';
+    html += '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px;"><span>전혀 아니다</span><span>매우 크다</span></div>';
+    html += '<div style="display:flex;gap:8px;margin-bottom:1.5rem;">';
+    for(let i=1;i<=5;i++){
+      const sel = surveyValue === i;
+      html += '<button data-survey="' + i + '" style="flex:1;padding:0.6rem 0;' +
+        (sel ? 'border:0.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);' : '') + '">' + i + '</button>';
+    }
+    html += '</div>';
+
+    html += '<p style="font-size:14px;font-weight:500;margin:0 0 0.5rem;">Q. 전시를 둘러본 소감을 자유롭게 작성해주세요.</p>';
+    html += '<textarea id="survey-text" placeholder="느낀 점을 자유롭게 적어주세요" style="width:100%;min-height:80px;padding:0.6rem;font-size:13px;resize:vertical;">' + surveyText + '</textarea>';
+  }
+
+  if(step === 'quiz'){
+    html += '<button id="next-btn" style="width:100%;padding:0.7rem;margin-top:1rem;border:0.5px solid var(--border-accent);background:' +
+      (allQuizAnswered ? 'var(--fill-accent)' : 'var(--surface-1)') + ';color:' + (allQuizAnswered ? 'var(--on-accent)' : 'var(--text-muted)') + ';">설문으로 이동</button>';
+  } else if(step === 'survey'){
+    html += '<button id="next-btn" style="width:100%;padding:0.7rem;margin-top:1rem;border:0.5px solid var(--border-accent);background:' +
+      ((surveyValue) ? 'var(--fill-accent)' : 'var(--surface-1)') + ';color:' + ((surveyValue) ? 'var(--on-accent)' : 'var(--text-muted)') + ';">설문 제출하고 쿠폰 받기</button>';
+  }
+
+  if(step === 'done'){
+    const correct = quizQuestions.filter(q => quizAnswers[q.id] === q.answer).length;
+    html += '<div style="text-align:center;padding:1.5rem 1rem;background:var(--surface-1);border-radius:12px;margin-top:1rem;">';
+    html += '<i class="ti ti-coffee" style="font-size:28px;color:var(--text-accent);" aria-hidden="true"></i>';
+    html += '<p style="font-size:14px;color:var(--text-secondary);margin:0.75rem 0 0.25rem;">투어 완료, 커피쿠폰이 발행되었습니다</p>';
+    html += '<p style="font-size:22px;font-weight:500;letter-spacing:1px;margin:0.25rem 0 0;">' + couponCode + '</p>';
+    html += '<p style="font-size:12px;color:var(--text-muted);margin-top:0.75rem;">퀴즈 정답 ' + correct + ' / ' + quizQuestions.length + ' · 이 화면을 안내 데스크에 보여주세요.</p>';
+    html += '</div>';
+  }
+
+  app.innerHTML = html;
+
+  zones.forEach(z => {
+    const btn = app.querySelector('[data-zone="' + z.id + '"]');
+    if(btn) btn.onclick = () => { stamped.has(z.id) ? stamped.delete(z.id) : stamped.add(z.id); render(); };
+  });
+  app.querySelectorAll('[data-quiz]').forEach(btn => {
+    btn.onclick = () => {
+      quizAnswers[btn.getAttribute('data-quiz')] = btn.getAttribute('data-val');
+      render();
+    };
+  });
+  app.querySelectorAll('[data-survey]').forEach(btn => {
+    btn.onclick = () => { surveyValue = parseInt(btn.getAttribute('data-survey')); render(); };
+  });
+  const textEl = app.querySelector('#survey-text');
+  if(textEl) textEl.oninput = (e) => { surveyText = e.target.value; };
+  const next = app.querySelector('#next-btn');
+  if(next) next.onclick = () => {
+    if(step === 'quiz' && allQuizAnswered){ step = 'survey'; render(); }
+    else if(step === 'survey' && surveyValue){ couponCode = genCoupon(); step = 'done'; render(); }
+  };
+}
+
+render();
+</script>
